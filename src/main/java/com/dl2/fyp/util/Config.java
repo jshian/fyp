@@ -1,4 +1,4 @@
-package com.dl2.fyp.config;
+package com.dl2.fyp.util;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
