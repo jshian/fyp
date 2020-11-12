@@ -1,6 +1,9 @@
 package com.dl2.fyp.entity;
 
+import com.dl2.fyp.enums.AccountCategory;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -9,9 +12,6 @@ import java.util.List;
 @Data
 @Entity(name = "t_account")
 public class Account {
-    public enum AccountCategory{
-        BANK,SHARE
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

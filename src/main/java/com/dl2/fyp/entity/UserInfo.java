@@ -1,12 +1,16 @@
 package com.dl2.fyp.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Data
+@Getter
+@Setter
 @Entity(name = "t_user_info")
 public class UserInfo {
 

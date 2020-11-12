@@ -1,16 +1,21 @@
 package com.dl2.fyp.entity;
 
-import lombok.Data;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "t_user")
-public class User{
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,15 +24,16 @@ public class User{
     private UserInfo userInfo;
 
     @Length(min = 3, max=20)
-    private String name;
-
-    @Size(min=1,max=10)
-    private Byte[] password;
+    @Column(nullable = false, unique = true)
+    private String username;
 
     @NotNull
-    private String salt;
+    @Getter
+    @Setter
+    private String password;
 
     @Email
+    @Column(nullable = false, unique = true)
     private String email;
 
     @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.DETACH})

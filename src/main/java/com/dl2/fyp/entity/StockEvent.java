@@ -1,12 +1,16 @@
 package com.dl2.fyp.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import java.sql.Date;
 
 @Data
+@Getter
+@Setter
 @Entity(name = "t_stock_event")
 public class StockEvent {
     @Id

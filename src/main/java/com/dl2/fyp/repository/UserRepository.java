@@ -4,7 +4,9 @@ import com.dl2.fyp.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface UserRepository extends JpaRepository<User,Integer> {
+public interface UserRepository extends JpaRepository<User,String> {
     @Query("select distinct count(User.id) from User")
     public Integer countAll();
+
+    User findByUsername(String username);
 }

@@ -2,6 +2,8 @@ package com.dl2.fyp.entity;
 
 import com.dl2.fyp.enums.SectorCategory;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -9,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Data
+@Getter
+@Setter
 @Entity(name="t_market_event")
 public class MarketEvent {
     @Id

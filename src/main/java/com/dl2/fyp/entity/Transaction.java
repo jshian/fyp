@@ -1,12 +1,16 @@
 package com.dl2.fyp.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
 @Data
+@Getter
+@Setter
 @Entity(name = "t_transaction")
 public class Transaction {
     @Id

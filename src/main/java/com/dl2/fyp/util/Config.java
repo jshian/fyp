@@ -6,6 +6,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -13,6 +14,7 @@ import javax.persistence.EntityManagerFactory;
  * Configuration of spring boot application.
  */
 @Configuration
+@EnableAsync
 public class Config {
 
     public EntityManagerFactory getEntityManagerFactory() {

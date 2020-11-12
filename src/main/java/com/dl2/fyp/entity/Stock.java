@@ -1,14 +1,17 @@
 package com.dl2.fyp.entity;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
 
 @Data
-@Entity(name = "t_stock_info")
-public class StockInfo {
+@Getter
+@Setter
+@Entity(name = "t_stock")
+public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,9 +23,9 @@ public class StockInfo {
     private Float recommendBuyPrice;
     private Float recommendSellPrice;
     private Integer holdingPeriod;
-    private Double expectedProfit;
-    private Double dividendProfit;
-    private Double volatilityProfit;
+    private Float expectedProfit;
+    private Float dividendProfit;
+    private Float volatilityProfit;
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 }
