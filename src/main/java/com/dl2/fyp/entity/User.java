@@ -1,41 +1,38 @@
 package com.dl2.fyp.entity;
 
-import lombok.*;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
+import java.sql.Date;
+import java.util.List;
 
 @Data
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity(name = "t_user")
-public class User implements Serializable {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    @Length(min = 3, max=20)
+    private String name;
+
+    @Column(name="password")
+    private String password;
+
     @OneToOne(cascade = CascadeType.ALL)
     private UserInfo userInfo;
 
-    @Length(min = 3, max=20)
-    @Column(nullable = false, unique = true)
-    private String username;
-
-    @NotNull
-    @Getter
-    @Setter
-    private String password;
-
     @Email
-    @Column(nullable = false, unique = true)
     private String email;
 
     @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.DETACH})
     private Account account;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastPasswordResetDate;
+
+    private List<String> roles;
 }

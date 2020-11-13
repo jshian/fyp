@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.math.BigDecimal;
 
 @Data
 @Getter
@@ -20,7 +21,7 @@ public class UserInfo {
     private Byte maritalStatus;
     private Byte familyNum;
     private Byte childNum;
-    private Integer monthlyIncome;
+    private BigDecimal monthlyIncome;
     private Integer monthlyExpense;
     private Integer livingExpense;
     private Integer housingExpense;
