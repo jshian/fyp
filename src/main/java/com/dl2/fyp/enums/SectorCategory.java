@@ -4,14 +4,14 @@ public enum SectorCategory {
   ENERGY("Energy"),
   MATERIALS("Materials"),
   INDUSTRIALS("Industrials"),
-  UTILITIES("Industrials"),
-  HEALTHCARE("Industrials"),
-  FINANCIALS("Industrials"),
-  CONSUMER_DISCRETIONARY("Industrials"),
-  CONSUMER_STAPLES("Industrials"),
-  INFORMATION_TECHNOLOGY("Industrials"),
-  COMMUNICATION_SERVICES("Industrials"),
-  REAL_ESTATE("Industrials");
+  UTILITIES("Utilties"),
+  HEALTHCARE("Healthcare"),
+  FINANCIALS("Financials"),
+  CONSUMER_DISCRETIONARY("ConsumerDiscretionary"),
+  CONSUMER_STAPLES("ConsumerStaples"),
+  INFORMATION_TECHNOLOGY("InformationTechnology"),
+  COMMUNICATION_SERVICES("CommunicationServices"),
+  REAL_ESTATE("RealEstate");
 
   public final String sector;
 

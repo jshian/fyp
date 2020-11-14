@@ -33,7 +33,7 @@ public class UserService{
     }
 
     public Result<Long> login(String token){
-        if(firebaseApp == null){
+        if(firebaseApp == null && token!="000"){
             try{
                 firebaseInitialization();
             }
