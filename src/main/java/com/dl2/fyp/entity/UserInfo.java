@@ -20,23 +20,22 @@ public class UserInfo {
     private Byte maritalStatus;
     private Byte familyNum;
     private Byte childNum;
-    private Integer monthlyIncome;
-    private Integer monthlyExpense;
-    private Integer livingExpense;
-    private Integer housingExpense;
-    private Integer taxExpense;
-    private Integer miscelExpense;
-    private Integer expectedProfit;
-    private Integer expectedRisk;
-    @Column(name = "goal", columnDefinition = "text")
+    private Float monthlyIncome;
+    private Float monthlyExpense;
+    private Float livingExpense;
+    private Float housingExpense;
+    private Float taxExpense;
+    private Float miscelExpense;
+    private Float expectedProfit;
+    private Float expectedRisk;
     private String investmentGoal;
     private Short targetYears;
-    private Integer totalAsset;
-    private Integer debt;
-    private Integer debtRate;
-    private Integer equity;
-    private Integer cashFlow;
-    private Integer commission;
-    private Integer dividend;
+    private Float totalAsset;
+    private Float debt;
+    private Float debtRate;
+    private Float equity;
+    private Float cashFlow;
+    private Float commission;
+    private Float dividendCollectionFee;
 
 }

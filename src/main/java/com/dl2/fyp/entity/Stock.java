@@ -1,15 +1,12 @@
 package com.dl2.fyp.entity;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.sql.Date;
 
 @Data
-@Getter
-@Setter
 @Entity(name = "t_stock")
 public class Stock {
     @Id
@@ -17,7 +14,6 @@ public class Stock {
     private Integer id;
     @Column(name = "code", length = 6)
     private String code;
-    private Integer amountPerShare;
     private Float currentPrice;
     private Float riskIndex;
     private Float recommendBuyPrice;

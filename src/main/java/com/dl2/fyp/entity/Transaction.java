@@ -1,5 +1,6 @@
 package com.dl2.fyp.entity;
 
+import com.dl2.fyp.enums.TransactionActionType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,17 +21,21 @@ public class Transaction {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Account accountIn;
 
-//    private Integer accountIn;
-//    private Integer accountOut;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Account accountOut;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private StockTrade stockTrade;
+
     @NotNull
-    private Integer amount;
+    private Float amount;
 
+    private Float accountInAmountAfter;
 
-    private Integer unitPrice;
-//    private Integer accountInAmountAfter;
-//    private Integer accountOutAmountAfter;
+    private Float accountOutAmountAfter;
 
-
-    private Boolean action;
+    private TransactionActionType action;
 }

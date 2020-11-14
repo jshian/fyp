@@ -1,7 +1,6 @@
 package com.dl2.fyp.controller;
 
 import com.dl2.fyp.domain.Result;
-import com.dl2.fyp.dto.user.*;
 import com.dl2.fyp.service.UserService;
 import com.dl2.fyp.util.ResultUtil;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,13 +20,4 @@ public class UserController {
         return ResultUtil.success(userService.countAll());
     }
 
-    @PostMapping("/login")
-    public Result login(UserLoginDto userRegisterDto){
-        return ResultUtil.success(userService.countAll());
-    }
-
-    @PostMapping("/register")
-    public Result register(UserRegisterDto userRegisterDto) {
-        return ResultUtil.success(userService.countAll());
-    }
 }
