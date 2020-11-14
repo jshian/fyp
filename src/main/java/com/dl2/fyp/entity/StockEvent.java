@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 @Getter

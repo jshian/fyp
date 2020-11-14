@@ -1,10 +1,9 @@
 package com.dl2.fyp.entity;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 @Entity(name = "t_stock")

@@ -9,17 +9,17 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
-    @Query("select User from User where User.firebaseUid = ?1")
+    @Query(value = "select User from User where User.firebaseUid = ?1", nativeQuery = true)
     User findByFirebaseUid(String FirebaseUid);
 
 
 //    User insert(User userToAdd);
 
-    @Query("select User from User where User.firebaseUid = ?1")
+    @Query(value = "select User from User where User.firebaseUid = ?1", nativeQuery = true)
     Optional<User> getByFirebaseUid(String FirebaseUid);
 
 
-    @Query("select distinct count(User.id) from User")
+    @Query(value = "select count(User.id) from User", nativeQuery = true)
     public Long countAll();
 
 }

@@ -5,13 +5,14 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 @Entity(name = "t_stock_trade")
 public class StockTrade {
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Transaction transaction;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private StockInTrade stock;

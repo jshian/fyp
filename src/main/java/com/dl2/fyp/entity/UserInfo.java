@@ -5,14 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Data
 @Getter
 @Setter
 @Entity(name = "t_user_info")
 public class UserInfo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private Float acceptableRisk;
     @Range(min = 18,max = 100)
