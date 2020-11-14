@@ -1,4 +1,4 @@
-package com.dl2.fyp.util;
+package com.dl2.fyp.config;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,7 +13,7 @@ import javax.persistence.EntityManagerFactory;
  * Configuration of spring boot application.
  */
 @Configuration
-public class Config {
+public class HibernateConfig {
 
     public EntityManagerFactory getEntityManagerFactory() {
         return entityManagerFactory;
