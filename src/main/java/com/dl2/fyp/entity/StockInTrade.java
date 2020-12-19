@@ -23,7 +23,7 @@ public class StockInTrade {
 
     @OneToMany(cascade = CascadeType.ALL)
     @OrderColumn
-    private List<StockTrade> stockTradesList = new LinkedList<>();
+    private List<Trade> tradesList = new LinkedList<>();
 
     @NotNull
     private Integer numOfShare;

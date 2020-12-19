@@ -28,7 +28,7 @@ public class Transaction {
     private Account accountOut;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    private StockTrade stockTrade;
+    private Trade trade;
 
     @NotNull
     private Float amount;

@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
-@Entity(name = "t_stock_trade")
-public class StockTrade {
+@Entity(name = "t_trade")
+public class Trade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
