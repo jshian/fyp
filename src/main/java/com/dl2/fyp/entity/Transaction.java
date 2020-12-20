@@ -1,6 +1,5 @@
 package com.dl2.fyp.entity;
 
-import com.dl2.fyp.enums.TransactionActionType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,5 +36,5 @@ public class Transaction {
 
     private Float accountOutAmountAfter;
 
-    private TransactionActionType action;
+    private boolean action;
 }

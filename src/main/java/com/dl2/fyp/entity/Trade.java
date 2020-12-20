@@ -15,7 +15,7 @@ public class Trade {
     private Long id;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    private StockInTrade stock;
+    private StockInTrade stockInTrade;
 
     @NotNull
     private Integer numOfShare;

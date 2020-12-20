@@ -24,4 +24,6 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     private AccountCategory category;
+
+    private float amount;
 }
