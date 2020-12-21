@@ -1,53 +1,56 @@
 package com.dl2.fyp.controller;
 
-import com.dl2.fyp.domain.JwtUser;
+import com.dl2.fyp.domain.Result;
+import com.dl2.fyp.entity.User;
+import com.dl2.fyp.entity.UserInfo;
+import com.dl2.fyp.service.UserInfoService;
 import com.dl2.fyp.service.UserService;
-import com.dl2.fyp.util.JwtTokenUtil;
+import com.dl2.fyp.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/user")
 public class UserController {
-
-    Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
 
-    @Value("${jwt.header}")
-    private String tokenHeader;
-
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private UserInfoService userInfoService;
 
-    @Autowired
-    @Qualifier("jwtUserDetailsServiceImpl")
-    private UserDetailsService userDetailsService;
-
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public JwtUser getAuthenticatedUser(HttpServletRequest request) {
-        String token = request.getHeader(tokenHeader).substring(7);
-        String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
-        return user;
+    @PostMapping("/count")
+    public Result countUser(){
+        return ResultUtil.success(userService.countAll());
     }
 
-//    @RequestMapping(value = "/login/{username}/{password}",method = RequestMethod.GET)
-//    public Result<Long> login(@PathVariable("username")String username, @PathVariable("password") String password){
-//        return userService.login(username,password);
-//    }
-//
-//    @PostMapping("/count")
-//    public Result countUser(){
-//        return ResultUtil.success(userService.countAll());
-//    }
+    @PostMapping("/info/add/{id}")
+    public Result addUserInfo(@RequestBody UserInfo userInfo, @PathVariable Long id){
+        User user = userService.find(id);
+        Assert.notNull(user,"id not exist");
+        UserInfo result = userInfoService.addUserInfo(userInfo);
+        user.setUserInfo(result);
+        return ResultUtil.success(result);
+    }
+
+    @GetMapping("/info/get/{id}")
+    public Result getUserInfo(@PathVariable Long id){
+        User user = userService.find(id);
+        Assert.notNull(user,"id not exist");
+        return ResultUtil.success(user);
+    }
+
+    @PostMapping("/info/update/{id}")
+    public Result updateUserInfo(@RequestBody UserInfo userInfo,@PathVariable Long id){
+        User user = userService.find(id);
+        Assert.notNull(user,"id not exist");
+        user.setUserInfo(userInfo);
+        userInfoService.updateUserInfo(userInfo);
+        return ResultUtil.success(user);
+    }
 }

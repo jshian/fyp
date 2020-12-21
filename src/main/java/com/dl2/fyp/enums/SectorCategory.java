@@ -1,15 +1,21 @@
 package com.dl2.fyp.enums;
 
 public enum SectorCategory {
-  COMMUNICATION_SERVICES,
-  CONSUMER_DISCRETIONARY,
-  CONSUMER_STAPLES,
-  ENERGY,
-  FINANCIALS,
-  HEALTH_CARE,
-  INDUSTRIALS,
-  INFORMATION_TECHNOLOGY,
-  MATERIALS,
-  REAL_ESTATE,
-  UTILITIES
+  ENERGY("Energy"),
+  MATERIALS("Materials"),
+  INDUSTRIALS("Industrials"),
+  UTILITIES("Utilties"),
+  HEALTHCARE("Healthcare"),
+  FINANCIALS("Financials"),
+  CONSUMER_DISCRETIONARY("ConsumerDiscretionary"),
+  CONSUMER_STAPLES("ConsumerStaples"),
+  INFORMATION_TECHNOLOGY("InformationTechnology"),
+  COMMUNICATION_SERVICES("CommunicationServices"),
+  REAL_ESTATE("RealEstate");
+
+  public final String sector;
+
+  private SectorCategory(String sector) {
+    this.sector = sector;
+  }
 }

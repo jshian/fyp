@@ -19,6 +19,7 @@ public class MarketEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ElementCollection(targetClass=SectorCategory.class)
     private List<SectorCategory> sector = new LinkedList<>();
     @Range(min=0,max=1,message = "Out of range")
     private Float severity;

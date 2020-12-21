@@ -5,39 +5,39 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import java.math.BigDecimal;
+import javax.persistence.*;
 
 @Data
 @Getter
 @Setter
 @Entity(name = "t_user_info")
 public class UserInfo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private Float acceptableRisk;
     @Range(min = 18,max = 100)
     private Integer age;
     private Byte maritalStatus;
-    private Byte familyNum;
-    private Byte childNum;
-    private BigDecimal monthlyIncome;
-    private Integer monthlyExpense;
-    private Integer livingExpense;
-    private Integer housingExpense;
-    private Integer taxExpense;
-    private Integer miscelExpense;
-    private Integer expectedProfit;
-    private Integer expectedRisk;
-    @Column(name = "goal", columnDefinition = "text")
-    private String investmentGoal;
-    private Short targetYears;
-    private Integer totalAsset;
-    private Integer debt;
-    private Integer debtRate;
-    private Integer equity;
-    private Integer cashFlow;
-    private Integer commission;
-    private Integer dividend;
+//    private Byte familyNum;
+//    private Byte childNum;
+//    private Float monthlyIncome;
+//    private Float monthlyExpense;
+//    private Float livingExpense;
+//    private Float housingExpense;
+//    private Float taxExpense;
+//    private Float miscelExpense;
+//    private Float expectedProfit;
+//    private Float expectedRisk;
+//    private String investmentGoal;
+//    private Short targetYears;
+//    private Float totalAsset;
+//    private Float debt;
+//    private Float debtRate;
+//    private Float equity;
+//    private Float cashFlow;
+//    private Float commission;
+//    private Float dividendCollectionFee;
 
 }

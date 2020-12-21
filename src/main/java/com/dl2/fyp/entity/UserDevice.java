@@ -16,4 +16,6 @@ public class UserDevice {
     private Integer id;
     @OneToOne(cascade = CascadeType.PERSIST)
     private User user;
+
+    private String firebaseDeviceId;
 }

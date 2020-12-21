@@ -14,17 +14,8 @@ public final class JwtUserFactory {
     public static JwtUser create(User user){
         return new JwtUser(
                 user.getId(),
-                user.getName(),
-                user.getPassword(),
-                user.getEmail(),
-                mapToGrantedAuthorities(user.getRoles()),
-                user.getLastPasswordResetDate()
+                user.getFirebaseUid(),
+                user.getEmail()
         );
-    }
-
-    private static List<GrantedAuthority> mapToGrantedAuthorities(List<String> authorities){
-        return authorities.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
     }
 }

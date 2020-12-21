@@ -4,6 +4,6 @@ import com.dl2.fyp.entity.User;
 
 public interface AuthService {
     User register(User userToAdd);
-    String login(String username, String password);
+    String login(String token);
     String refresh(String oldToken);
 }

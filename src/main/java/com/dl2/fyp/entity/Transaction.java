@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 @Getter
@@ -20,17 +20,21 @@ public class Transaction {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Account accountIn;
 
-//    private Integer accountIn;
-//    private Integer accountOut;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Account accountOut;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Trade trade;
+
     @NotNull
-    private Integer amount;
+    private Float amount;
 
+    private Float accountInAmountAfter;
 
-    private Integer unitPrice;
-//    private Integer accountInAmountAfter;
-//    private Integer accountOutAmountAfter;
+    private Float accountOutAmountAfter;
 
-
-    private Boolean action;
+    private boolean action;
 }
