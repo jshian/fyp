@@ -1,6 +1,6 @@
 package com.dl2.fyp.service.impl;
 
-import com.dl2.fyp.dao.UserRepository;
+import com.dl2.fyp.repository.UserRepository;
 import com.dl2.fyp.entity.User;
 import com.dl2.fyp.domain.JwtUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;

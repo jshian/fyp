@@ -2,21 +2,25 @@ package com.dl2.fyp.service;
 
 import com.dl2.fyp.domain.Result;
 import com.dl2.fyp.entity.User;
-import com.dl2.fyp.dao.UserRepository;
+import com.dl2.fyp.repository.UserRepository;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.*;
 import com.google.firebase.auth.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
 
 @Service
 public class UserService{
+    private static Logger LOG = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -98,6 +102,19 @@ public class UserService{
 
     public Long countAll() {
         return userRepository.countAll();
+    }
+
+    /**
+     * find one user
+     * @param id
+     * @return
+     */
+    public User find(Long id){
+        Assert.notNull(id, "required user id");
+        LOG.debug("find one user, id={}", id);
+        User user = userRepository.findById(id).orElse(null);
+        LOG.debug("find one user, result={}", user);
+        return user;
     }
 
 }

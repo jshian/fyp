@@ -1,6 +1,6 @@
 package com.dl2.fyp.service.impl;
 
-import com.dl2.fyp.dao.UserRepository;
+import com.dl2.fyp.repository.UserRepository;
 import com.dl2.fyp.entity.User;
 import com.dl2.fyp.domain.JwtUser;
 import com.dl2.fyp.service.AuthService;
@@ -18,14 +18,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
-import java.util.Arrays;
 
 @Service
 public class AuthServiceImpl implements AuthService {
