@@ -117,4 +117,17 @@ public class UserService{
         return user;
     }
 
+    /**
+     * create user
+     * @param id
+     * @return
+     */
+    public void add(Long id){
+        User user = new User();
+        user.setId(id);
+        user.setFirebaseUid("hello world");
+        userRepository.save(user);
+
+    }
+
 }

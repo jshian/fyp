@@ -37,15 +37,18 @@ public class UserInfoService {
 
     /**
      * update user info
-     * @param userInfo
+     * @param oldInfo
+     * @param newInfo
      * @return
      */
-    public UserInfo updateUserInfo(UserInfo userInfo){
-        LOG.debug("create user info, parameter:{}", userInfo);
-
-        UserInfo result = userInfoRepository.save(userInfo);
-        LOG.debug("create user info, result:{}",result);
-        return result;
+    public UserInfo updateUserInfo(UserInfo oldInfo, UserInfo newInfo){
+        LOG.debug("create user info, parameter:{}", oldInfo);
+        if (newInfo.getAge()!=null) oldInfo.setAge(newInfo.getAge());
+        if (newInfo.getAcceptableRisk()!=null) oldInfo.setAcceptableRisk(newInfo.getAcceptableRisk());
+        if (newInfo.getMaritalStatus()!=null) oldInfo.setMaritalStatus(newInfo.getMaritalStatus());
+//        UserInfo result = userInfoRepository.save(userInfo);
+        LOG.debug("create user info, result:{}",oldInfo);
+        return oldInfo;
     }
 
     /**

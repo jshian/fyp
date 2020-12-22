@@ -30,27 +30,40 @@ public class UserController {
     }
 
     @PostMapping("/info/add/{id}")
-    public Result addUserInfo(@RequestBody UserInfo userInfo, @PathVariable Long id){
+    public UserInfo addUserInfo(@RequestBody UserInfo userInfo, @PathVariable Long id){
         User user = userService.find(id);
         Assert.notNull(user,"id not exist");
         UserInfo result = userInfoService.addUserInfo(userInfo);
         user.setUserInfo(result);
-        return ResultUtil.success(result);
+        userService.add(user);
+        return result;
     }
 
     @GetMapping("/info/get/{id}")
     public Result getUserInfo(@PathVariable Long id){
         User user = userService.find(id);
         Assert.notNull(user,"id not exist");
-        return ResultUtil.success(user);
+        return ResultUtil.success(user.getUserInfo());
     }
 
     @PostMapping("/info/update/{id}")
     public Result updateUserInfo(@RequestBody UserInfo userInfo,@PathVariable Long id){
         User user = userService.find(id);
         Assert.notNull(user,"id not exist");
-        user.setUserInfo(userInfo);
-        userInfoService.updateUserInfo(userInfo);
+        UserInfo oldInfo = user.getUserInfo();
+        Assert.notNull(user,"info does not created");
+//        userInfo.setId(oldInfo.getId());
+        UserInfo newInfo = userInfoService.updateUserInfo(oldInfo,userInfo);
+        user.setUserInfo(newInfo);
+        userService.add(user);
+//        userInfoService.updateUserInfo(userInfo);
         return ResultUtil.success(user);
+    }
+
+    // for test
+    @PostMapping("/add/{id}")
+    public Result addUser(@PathVariable Long id){
+        userService.add(id);
+        return ResultUtil.success(id);
     }
 }
