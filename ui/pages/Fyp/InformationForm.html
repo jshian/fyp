@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Portfolio Management System</title>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- IonIcons -->
+  <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Bootstrap Color Picker -->
+  <link rel="stylesheet" href="../../plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+  <!-- Tempusdominus Bbootstrap 4 -->
+  <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  
+  
+	<!-- REQUIRED SCRIPTS -->
+	<!-- Angular Js -->
+	<script src="../../plugins/angularjs/angular.min.js"></script>
+	<!-- jQuery -->
+	<script src="../../plugins/jquery/jquery.min.js"></script>
+	<!-- jQuery UI -->
+	<script src="../../plugins/jquery-ui/jquery-ui.min.js"></script>
+	<!-- Bootstrap 4 -->
+	<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- Bootstrap4 Duallistbox -->
+	<script src="../../plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+	<!-- InputMask -->
+	<script src="../../plugins/moment/moment.min.js"></script>
+	<script src="../../plugins/inputmask/min/jquery.inputmask.bundle.min.js"></script>
+	<!-- Tempusdominus Bootstrap 4 -->
+	<script src="../../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+	<!-- DataTables -->
+	<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+	<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+	<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+	<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+	<!-- AdminLTE App -->
+	<script src="../../dist/js/adminlte.min.js"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="../../dist/js/demo.js"></script>
+	<script src="../../plugins/flot-old/jquery.flot.min.js"></script>
+	<!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
+	<script src="../../plugins/flot-old/jquery.flot.resize.min.js"></script>
+	<!-- FLOT PIE PLUGIN - also used to draw donut charts -->
+	<script src="../../plugins/flot-old/jquery.flot.pie.min.js"></script>
+	<!-- OPTIONAL SCRIPTS -->
+	<script src="../../plugins/chart.js/Chart.min.js"></script>
+	<script src="../../dist/js/pages/dashboard3.js"></script>
+	
+	<!-- Angular Module-->
+	<script src="../../dist/js/angular/user.js"></script>
+	
+</head>
+<!--
+BODY TAG OPTIONS:
+=================
+Apply one or more of the following classes to to the body tag
+to get the desired effect
+|---------------------------------------------------------|
+|LAYOUT OPTIONS | sidebar-collapse                        |
+|               | sidebar-mini                            |
+|---------------------------------------------------------|
+-->
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a  class="nav-link">Home</a>
+      </li>
+    </ul>
+	
+	 <ul class="navbar-nav ml-auto">
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="Login.html" class="nav-link">Logout</a>
+      </li>
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a class="brand-link">
+      <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+           style="opacity: .8">
+      <span class="brand-text font-weight-light">PMS</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="info">
+          <a href="#" class="d-block">Welcome!</a>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Registration Form</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12" >
+            <div class="card" ng-app="user" ng-controller="userAddInfoCtrl">
+				<div class="card-body">
+					<form>
+						<div>
+							<h4>Personal Information</h4>
+							<br>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Date of Birth: </label>
+								</div>
+								<div class="input-group date col-sm-3" id="reservationdate" data-target-input="nearest">
+									<input type="text" ng-model="userInfo.dateOfBirth" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+									<div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+										<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Marital Status: </label>
+								</div>
+								<div class="col-sm-3">
+									<select  ng-model="userInfo.maritalStatus" class="form-control select2" style="width: 100%;">
+										<option value=0>Married</option>
+										<option value=1>Single</option>
+									 </select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>No. of Family Member (Not include yourself): </label>
+								</div>
+								<div class="col-sm-3">
+									<input class="form-control" type="number" ng-model="userInfo.familyNum"/>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>No. of Children: </label>
+								</div>
+								<div class="col-sm-3">
+									<input class="form-control" type="number" ng-model="userInfo.childNum"/>
+								</div>
+							</div>
+							<hr>
+						</div>
+						<div>					
+							<h4>Income & Expense</h4>
+							<br>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Monthly Income: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+										  <i class="fas fa-dollar-sign"></i>
+										</span>
+									 </div>
+									<input class="form-control" type="number" ng-model="userInfo.monthlyIncome"/>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Living Expense (Monthly): </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+										  <i class="fas fa-dollar-sign"></i>
+										</span>
+									 </div>
+									<input class="form-control" type="number" ng-model="userInfo.livingExpense"/>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Housing Expense (Monthly): </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+										  <i class="fas fa-dollar-sign"></i>
+										</span>
+									 </div>
+									<input class="form-control" type="number" ng-model="userInfo.housingExpense"/>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Miscel Expense (Monthly): </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+										  <i class="fas fa-dollar-sign"></i>
+										</span>
+									 </div>
+									<input class="form-control" type="number" ng-model="userInfo.miscelExpense"/>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Tax Expense (Yearly): </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+										  <i class="fas fa-dollar-sign"></i>
+										</span>
+									 </div>
+									<input class="form-control" type="number" ng-model="userInfo.taxExpense"/>
+								</div>
+							</div>
+							<hr>
+						</div>
+						<div>
+							<h4>Investment</h4>
+							<br>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Investment Goal: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+										  <i class="fas fa-dollar-sign"></i>
+										</span>
+									 </div>
+									<input class="form-control" type="number" ng-model="userInfo.investmentGoal"/>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Target Years: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<input class="form-control" type="number" ng-model="userInfo.targetYears"/>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Expected Profit Level: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<span class="col-sm-6">Low</span>
+									<span class="col-sm-6" align="right">High</span>
+									<input type="range" ng-model="userInfo.expectedProfit" class="custom-range" min="0" max="1" step="0.2">
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Expected Risk Level: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<span class="col-sm-6">Low</span>
+									<span class="col-sm-6" align="right">High</span>
+									<input type="range" ng-model="userInfo.expectedRisk" class="custom-range" min="0" max="1" step="0.2">
+								</div>
+							</div>
+							<hr>
+						</div>
+						<div>
+							<h4>Financial Situation</h4>
+							<br>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Total Asset: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+										  <i class="fas fa-dollar-sign"></i>
+										</span>
+									 </div>
+									<input class="form-control" type="number" ng-model="userInfo.totalAsset"/>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Total Debt: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+										  <i class="fas fa-dollar-sign"></i>
+										</span>
+									 </div>
+									<input class="form-control" type="number" ng-model="userInfo.debt"/>
+								</div>
+								<div class="col-sm-3">
+									<label>Interest Rate: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<input class="form-control" type="number" ng-model="userInfo.debtRate" step=".01"/>
+									<div class="input-group-append">
+										<span class="input-group-text">
+										  <i class="fas fa-percent"></i>
+										</span>
+									 </div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Cash Flow: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+										  <i class="fas fa-dollar-sign"></i>
+										</span>
+									 </div>
+									<input class="form-control" type="number" ng-model="userInfo.cashFlow"/>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Trading Commission Fee: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+										  <i class="fas fa-dollar-sign"></i>
+										</span>
+									 </div>
+									<input class="form-control" type="number" ng-model="userInfo.commission" step=".01"/>
+								</div>
+								<div class="col-sm-3">
+									per share
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3">
+									<label>Dividend Collection Fee: </label>
+								</div>
+								<div class="col-sm-3 input-group">
+									<input class="form-control" type="number" ng-model="userInfo.dividendCollectionFee" step=".01"/>
+									<div class="input-group-append">
+										<span class="input-group-text">
+										  <i class="fas fa-percent"></i>
+										</span>
+									 </div>
+								</div>
+							</div>
+						</div>
+					 </form>
+				</div>
+				<div class="card-footer">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</div>
+		  </div>
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
+      <b>Version</b> 3.0.5
+    </div>
+  </footer>
+</div>
+<!-- ./wrapper -->
+<script>
+$('#reservationdate').datetimepicker({
+    format: 'L'
+});
+</script>
+</body>
+</html>

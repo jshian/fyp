@@ -50,8 +50,6 @@
 	<!-- Angular Module-->
 	<script src="../../dist/js/angular/account.js"></script>
 	<script src="../../dist/js/angular/stock.js"></script>
-	<script src="../../dist/js/angular/market.js"></script>
-	
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -146,12 +144,12 @@ to get the desired effect
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Dashboard</h1>
+            <h1 class="m-0 text-dark">Portfolio Management</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard</li>
+              <li class="breadcrumb-item"><a href="Index.html">Home</a></li>
+              <li class="breadcrumb-item active">Portfolio Management</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -163,116 +161,19 @@ to get the desired effect
     <div class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-lg-6" >
-            <div class="card" ng-app="account" ng-controller="accountGetAccountChartsCtrl">
+          <div class="col-lg-12" >
+            <div class="card" ng-app="account" ng-controller="accountGetStockInTradeCtrl">
               <div class="card-header border-0">
-                <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Portfolio Overview</h3>
-                  <a href="javascript:void(0);">View Portfolio</a>
-                </div>
+				<h4>Your Portfolio</h4>
               </div>
               <div class="card-body">
-                <div class="d-flex">
-                  <p class="d-flex flex-column">
-                    <span class="text-bold text-lg">${{totalAsset}}</span>
-                    <span>Total Asset</span>
-                  </p>
-                </div>
-                <!-- /.d-flex -->
-
-                <div class="position-relative mb-4">
-                  <div id="account-donut-chart" style="height: 200px;"></div>
-                </div>
-				
-              </div>
-            </div>
-            <!-- /.card -->
-			
-			<div class="card" ng-app="stock" ng-controller="stockGetNewsCtrl">
-              <div class="card-header border-0">
-                <h3 class="card-title">Stock News</h3>
-                <div class="card-tools">
-                  <a href="#" class="btn btn-sm btn-tool">
-                    <i class="fas fa-download"></i>
-                  </a>
-                  <a href="#" class="btn btn-sm btn-tool">
-                    <i class="fas fa-bars"></i>
-                  </a>
-                </div>
-              </div>
-              <div class="card-body" >
-                <table id="stock-news-table" class="table table-striped table-valign-middle">
-                  <thead>
-                  <tr>
-					<th>Related Stock</th>
-                    <th>Title</th>
-                    <th>Detail</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-				  <tr ng-repeat="stockNew in stockNews">
-                    <td>
-                      {{stockNew.stockSymbol}}
-                    </td>
-                    <td>
-                      {{stockNew.title}}
-					</td>
-                    <td>
-                      <a ng-href="\stock\news-{{stockNew.id}}.html" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-                <!-- /.d-flex -->
-              </div>
-            </div>
-            
-          </div>
-          <!-- /.col-md-6 -->
-          <div class="col-lg-6" ng-app="account" ng-controller="accountGetStockInTradeChartsCtrl">
-			<div class="card">
-              <div class="card-header border-0">
-                <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Stock Overview</h3>
-                  <a href="javascript:void(0);">View Portfolio</a>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="d-flex">
-                  <p class="d-flex flex-column">
-                    <span class="text-bold text-lg">${{stockSum}}</span>
-                    <span>Net Liquidation Value</span>
-                  </p>
-                </div>
-                <!-- /.d-flex -->
-
-                <div class="position-relative mb-4">
-                  <div id="stock-donut-chart" style="height: 200px;"></div>
-                </div>
-				
-              </div>
-            </div>
-            <!-- /.card -->
-
-            
-			<div class="card">
-              <div class="card-header border-0">
-                <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Stock Watchlist</h3>
-                  <a href="javascript:void(0);">View Statements</a>
-                </div>
-              </div>
-              <div class="card-body">
-                <table id="stock-table" class="table table-bordered table-striped">
+				<table id="stock-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>Stock</th>
                     <th>No. of Share</th>
                     <th>Current Price (Cost)</th>
-                    <th>Total Amount</th>
-                    <th>P/L</th>
+                    <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -280,13 +181,11 @@ to get the desired effect
 						<td>{{stock.symbol}}</td>
 						<td>{{stock.noOfShare}}</td>
 						<td>${{stock.currentPrice}} (${{stock.cost}})</td>
-						<td>${{stock.amount}}</td>
 						<td>
-						  <small ng-class="stock.textClass">
-							<i ng-class="stock.arrowClass"></i>
-							{{stock.changePercent}}%
-						  </small>
-						  ${{stock.change}}
+							<span>
+								<button class="btn btn-success">Buy</button>
+								<button class="btn btn-danger">Sell</button>
+							</span>
 						</td>
 					  </tr>
                   </tbody>
@@ -294,6 +193,36 @@ to get the desired effect
               </div>
             </div>
             <!-- /.card -->
+			<div class="card" ng-app="stock" ng-controller="stockGetRecommendationCtrl">
+			  <div class="card-header border-0">
+				<h4>Recommended Portfolio</h4>
+              </div>
+              <div class="card-body" >
+				<table id="stock-recommendation-table" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>Stock</th>
+                    <th>No. of Share</th>
+                    <th>Current Price (Cost)</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+					  <tr ng-repeat="stockRecommendation in stockRecommendations">
+						<td>{{stockRecommendation.symbol}}</td>
+						<td>{{stockRecommendation.noOfShare}}</td>
+						<td>${{stockRecommendation.currentPrice}} (${{stockRecommendation.cost}})</td>
+						<td>
+							<span>
+								<button class="btn btn-success">Buy</button>
+								<button class="btn btn-danger">Sell</button>
+							</span>
+						</td>
+					  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
           <!-- /.col-md-6 -->
         </div>
@@ -322,6 +251,15 @@ to get the desired effect
 </div>
 <!-- ./wrapper -->
 <script>
+$('#stock-recommendation-table').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": false,
+      "info": false,
+      "autoWidth": false,
+      "responsive": false,
+    });
 $('#stock-table').DataTable({
       "paging": true,
       "lengthChange": false,
@@ -330,30 +268,9 @@ $('#stock-table').DataTable({
       "info": false,
       "autoWidth": false,
       "responsive": false,
-	  "pageLength": 5
-    });
-$('#stock-news-table').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": false,
-      "info": false,
-      "autoWidth": false,
-      "responsive": false,
-	  "pageLength": 5
-    });
-$('#market-news-table').DataTable({
-      "paging": true,
-	  "pageLength": 5,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": false,
-      "info": false,
-      "autoWidth": false,
-      "responsive": false
     });
 angular.element(function() {
-  angular.bootstrap(document, ['account','stock','market']);
+  angular.bootstrap(document, ['account','stock']);
 });
 </script>
 </body>
