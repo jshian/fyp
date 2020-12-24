@@ -1,6 +1,7 @@
 package com.dl2.fyp.controller;
 
 import com.dl2.fyp.domain.Result;
+import com.dl2.fyp.entity.Account;
 import com.dl2.fyp.entity.User;
 import com.dl2.fyp.entity.UserInfo;
 import com.dl2.fyp.service.UserInfoService;
@@ -11,6 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
+import java.util.List;
 
 
 @RestController
@@ -30,13 +35,13 @@ public class UserController {
     }
 
     @PostMapping("/info/add/{id}")
-    public UserInfo addUserInfo(@RequestBody UserInfo userInfo, @PathVariable Long id){
-        User user = userService.find(id);
-        Assert.notNull(user,"id not exist");
-        UserInfo result = userInfoService.addUserInfo(userInfo);
-        user.setUserInfo(result);
-        userService.add(user);
-        return result;
+    public Result addUserInfo(@RequestBody UserInfo userInfo, @PathVariable Long id){
+        return userService.addUserInfo(userInfo, id);
+    }
+
+    @PostMapping("/account/add/{id}")
+    public Result addAccount(@RequestBody Account account, @PathVariable Long id){
+        return userService.addAccount(account, id);
     }
 
     @GetMapping("/info/get/{id}")
@@ -55,15 +60,32 @@ public class UserController {
 //        userInfo.setId(oldInfo.getId());
         UserInfo newInfo = userInfoService.updateUserInfo(oldInfo,userInfo);
         user.setUserInfo(newInfo);
-        userService.add(user);
+        userService.addUser(user);
 //        userInfoService.updateUserInfo(userInfo);
         return ResultUtil.success(user);
+    }
+
+    @GetMapping("/account/{id}")
+    public Result getAllAccount(@PathVariable Long id){
+        List accounts = userService.getAllAccount(id);
+        return ResultUtil.success(accounts);
+    }
+
+    @GetMapping("/account/stockInTrade/{id}")
+    public String getAllStockInTrade(@PathVariable Long id, HttpServletRequest httpServletRequest){
+        List<Account> accounts = userService.getAllAccount(id);
+        List<Long> ids = new LinkedList<>();
+        for (int i = 0; i < accounts.size(); i++) {
+            ids.add(accounts.get(i).getId());
+        }
+        httpServletRequest.setAttribute("ids", ids);
+        return "forward:/account/stockInTrade/";
     }
 
     // for test
     @PostMapping("/add/{id}")
     public Result addUser(@PathVariable Long id){
-        userService.add(id);
-        return ResultUtil.success(id);
+        return userService.addUser(id);
     }
+
 }

@@ -20,7 +20,7 @@ public class MarketEvent {
     private Integer id;
 
     @ElementCollection(targetClass=SectorCategory.class)
-    private List<SectorCategory> sector = new LinkedList<>();
+    private List<SectorCategory> sector;
     @Range(min=0,max=1,message = "Out of range")
     private Float severity;
     private Integer expectedPeriod;

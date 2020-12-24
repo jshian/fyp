@@ -1,8 +1,11 @@
 package com.dl2.fyp.service;
 
 import com.dl2.fyp.domain.Result;
+import com.dl2.fyp.entity.Account;
 import com.dl2.fyp.entity.User;
+import com.dl2.fyp.entity.UserInfo;
 import com.dl2.fyp.repository.UserRepository;
+import com.dl2.fyp.util.ResultUtil;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.*;
 import com.google.firebase.auth.*;
@@ -10,11 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 
 @Service
@@ -23,6 +28,12 @@ public class UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserInfoService userInfoService;
+
+    @Autowired
+    private AccountService accountService;
 
     private FirebaseApp firebaseApp;
 
@@ -55,7 +66,7 @@ public class UserService{
                 u = new User();
                 u.setEmail("fyp2020group10@gmail.com");
                 u.setFirebaseUid("AVEO2GefpydRxMLmKGzPX8ERjEV2");
-                add(u);
+                addUser(u);
             }
             result.setCode(0);
             result.setData(u.getId());
@@ -72,7 +83,7 @@ public class UserService{
                 u = new User();
                 u.setEmail(userRecord.getEmail());
                 u.setFirebaseUid(uid);
-                add(u);
+                addUser(u);
             }
             result.setCode(0);
             result.setData(u.getId());
@@ -86,7 +97,8 @@ public class UserService{
         return result;
     }
 
-    public Result<User> add(User user){
+    @Transactional
+    public Result<User> addUser(User user){
         Result<User> result = new Result<>();
         User u = userRepository.save(user);
         if(u != null){
@@ -113,21 +125,54 @@ public class UserService{
         Assert.notNull(id, "required user id");
         LOG.debug("find one user, id={}", id);
         User user = userRepository.findById(id).orElse(null);
+        Assert.notNull(user, "user not exits");
         LOG.debug("find one user, result={}", user);
         return user;
     }
 
     /**
-     * create user
-     * @param id
-     * @return
+     *
      */
-    public void add(Long id){
-        User user = new User();
-        user.setId(id);
-        user.setFirebaseUid("hello world");
-        userRepository.save(user);
+    public List<Account> getAllAccount(Long id){
+        Assert.notNull(id, "required user id");
+        LOG.debug("find one user, id={}", id);
+        User user = userRepository.findById(id).orElse(null);
+        List<Account> accounts = user.getAccountList();
+        LOG.debug("find one user, result={}", accounts);
+        return accounts;
+    }
 
+    @Transactional
+    public Result<User> addUser(Long id){
+        User user = new User();
+        user.setFirebaseUid("test");
+        user.setId(id);
+        return addUser(user);
+    }
+
+    @Transactional
+    public Result<User> addUserInfo(UserInfo userInfo, Long id){
+        User user = userRepository.findById(id).orElse(null);
+        Assert.notNull(user, "user not exits");
+        if (user.getUserInfo()!=null) return ResultUtil.error(-1,"user info already set");
+        userInfoService.addUserInfo(userInfo);
+        LOG.debug("add user info, user info={}",userInfo);
+        user.setUserInfo(userInfo);
+        return addUser(user);
+    }
+
+    @Transactional
+    public Result<User> addAccount(Account account, Long id){
+        User user = userRepository.findById(id).orElse(null);
+        Assert.notNull(user, "user not exits");
+        accountService.setAccount(account);
+        LOG.debug("add account, account={}",account);
+        for(Account a:user.getAccountList()){
+            if(a.getCategory().equals(account.getCategory()))
+                return ResultUtil.error(-1,"account already exists");
+        }
+        user.getAccountList().add(account);
+        return addUser(user);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.dl2.fyp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -25,6 +26,6 @@ public class User{
     @Email
     private String email;
 
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.DETACH})
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<Account> accountList;
 }

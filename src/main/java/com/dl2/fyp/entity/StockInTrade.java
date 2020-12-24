@@ -1,6 +1,7 @@
 package com.dl2.fyp.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class StockInTrade {
     private Long id;
 
     @OneToOne(cascade = CascadeType.PERSIST)
+    @JsonIgnore
     private Account account;
 
     @OneToOne(cascade = CascadeType.PERSIST)
@@ -23,7 +25,8 @@ public class StockInTrade {
 
     @OneToMany(cascade = CascadeType.ALL)
     @OrderColumn
-    private List<Trade> tradesList = new LinkedList<>();
+    @JsonIgnore
+    private List<Trade> tradesList;
 
     @NotNull
     private Integer numOfShare;

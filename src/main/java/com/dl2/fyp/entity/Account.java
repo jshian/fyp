@@ -1,6 +1,7 @@
 package com.dl2.fyp.entity;
 
 import com.dl2.fyp.enums.AccountCategory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,15 +13,18 @@ import java.util.List;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @OneToMany(cascade = CascadeType.ALL)
     @OrderColumn
-    private List<Transaction> transactionsList = new LinkedList<>();
+    @JsonIgnore
+    private List<Transaction> transactionsList;
 
     @OneToMany(cascade = CascadeType.ALL)
     @OrderColumn
-    private List<StockInTrade> stockInTradesList = new LinkedList<>();
+    @JsonIgnore
+    private List<StockInTrade> stockInTradesList;
 
     @Enumerated(EnumType.STRING)
     private AccountCategory category;

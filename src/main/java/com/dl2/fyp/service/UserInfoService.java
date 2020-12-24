@@ -1,7 +1,6 @@
 package com.dl2.fyp.service;
 
 import com.dl2.fyp.entity.UserInfo;
-import com.dl2.fyp.repository.UserInfoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,6 @@ import org.springframework.stereotype.Service;
 public class UserInfoService {
     private static Logger LOG = LoggerFactory.getLogger(UserInfoService.class);
 
-    @Autowired
-    private UserInfoRepository userInfoRepository;
-
     /**
      * create user info
      * @param userInfo
@@ -30,9 +26,9 @@ public class UserInfoService {
 
         setDefault(userInfo);
 
-        UserInfo result = userInfoRepository.save(userInfo);
-        LOG.debug("create user info, result:{}",result);
-        return result;
+//        UserInfo result = userInfoRepository.save(userInfo);
+        LOG.debug("create user info, result:{}",userInfo);
+        return userInfo;
     }
 
     /**
@@ -46,7 +42,6 @@ public class UserInfoService {
         if (newInfo.getAge()!=null) oldInfo.setAge(newInfo.getAge());
         if (newInfo.getAcceptableRisk()!=null) oldInfo.setAcceptableRisk(newInfo.getAcceptableRisk());
         if (newInfo.getMaritalStatus()!=null) oldInfo.setMaritalStatus(newInfo.getMaritalStatus());
-//        UserInfo result = userInfoRepository.save(userInfo);
         LOG.debug("create user info, result:{}",oldInfo);
         return oldInfo;
     }
