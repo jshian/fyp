@@ -1,13 +1,11 @@
 package com.dl2.fyp.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.LinkedList;
-import java.util.List;
+
 
 @Data
 @Entity(name = "t_stock_in_trade")
@@ -16,17 +14,13 @@ public class StockInTrade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE}, optional = false)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE}, optional = false)
+    @JoinColumn(name = "stock_id", referencedColumnName = "id")
     private Stock stock;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @OrderColumn
-    @JsonIgnore
-    private List<Trade> tradesList;
 
     @NotNull
     private Integer numOfShare;

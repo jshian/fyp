@@ -1,11 +1,11 @@
 package com.dl2.fyp.entity;
 
 import com.dl2.fyp.enums.AccountCategory;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.LinkedList;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -13,21 +13,27 @@ import java.util.List;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @OrderColumn
-    @JsonIgnore
-    private List<Transaction> transactionsList;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @OrderColumn
+//    private List<Transaction> transactionsList;
+
+    @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderColumn
-    @JsonIgnore
+    private List<Trade> tradeList;
+
+    @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OrderColumn
     private List<StockInTrade> stockInTradesList;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private AccountCategory category;
 
-    private float amount;
+    @NotNull
+    private BigDecimal amount;
 }

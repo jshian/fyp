@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -14,23 +15,25 @@ public class Trade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private StockInTrade stockInTrade;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE}, optional = false)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private Account account;
 
     @NotNull
-    private Integer numOfShare;
+    private Long numOfShare;
 
     @NotNull
-    private Float price;
+    private BigDecimal price;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
     private Date date;
 
-    private float costAfter;
+    private BigDecimal costAfter;
 
-    private float profit;
+    private BigDecimal profit;
 
-    private float profitPercentage;
+    private BigDecimal profitPercentage;
 
     @NotNull
     private Boolean action;
