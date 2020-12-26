@@ -22,11 +22,11 @@ public class Transaction {
     private Date date;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "accountIn_id", referencedColumnName = "id")
+    @JoinColumn(name = "accountIn_id")
     private Account accountIn;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(name = "accountOut_id", referencedColumnName = "id")
+    @JoinColumn(name = "accountOut_id")
     private Account accountOut;
 
     @NotNull

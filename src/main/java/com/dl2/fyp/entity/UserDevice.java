@@ -14,9 +14,9 @@ public class UserDevice {
     @JsonIgnore
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE},optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+//    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE},optional = false)
+//    @JoinColumn(name = "user_id", referencedColumnName = "id")
+//    private User user;
 
     @NotNull
     private String firebaseDeviceId;

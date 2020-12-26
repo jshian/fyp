@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity(name = "t_user")
@@ -22,7 +21,13 @@ public class User{
     @Valid
     private UserInfo userInfo;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    @Valid
+    private List<Account> accountList;
+
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     @Valid
     private List<UserDevice> userDevice;
 
@@ -31,8 +36,4 @@ public class User{
 
     @Email
     private String email;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Valid
-    private List<Account> accountList;
 }

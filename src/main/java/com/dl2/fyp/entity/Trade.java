@@ -5,11 +5,13 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity(name = "t_trade")
@@ -18,9 +20,10 @@ public class Trade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.MERGE}, optional = false)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
-    private Account account;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "trade_id")
+    @Valid
+    private List<StockInTrade> tradeList;
 
     @NotNull
     @Min(value = 0, message = "invalid negative input")

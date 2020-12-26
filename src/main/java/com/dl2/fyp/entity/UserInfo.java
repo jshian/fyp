@@ -2,13 +2,14 @@ package com.dl2.fyp.entity;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 @Entity(name = "t_user_info")
@@ -24,6 +25,7 @@ public class UserInfo {
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Past
+    @CreatedDate
     private Date dateOfBirth;
     @NotNull
     private Boolean maritalStatus;
