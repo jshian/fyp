@@ -1,4 +1,4 @@
-package com.dl2.fyp.controller.account;
+package com.dl2.fyp.controller;
 
 
 import com.dl2.fyp.domain.Result;

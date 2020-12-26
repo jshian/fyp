@@ -1,6 +1,7 @@
 package com.dl2.fyp.entity;
 
 import com.dl2.fyp.enums.SectorCategory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -18,7 +19,7 @@ import java.util.List;
 public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -26,6 +27,7 @@ public class Stock {
 
     @OneToMany(mappedBy = "stock",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Valid
+    @JsonIgnore
     private List<StockInTrade> stockInTradeList;
 
     @Column(name = "code", length = 6)

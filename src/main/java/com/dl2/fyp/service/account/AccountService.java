@@ -1,19 +1,13 @@
 package com.dl2.fyp.service.account;
 
-import com.dl2.fyp.domain.Result;
 import com.dl2.fyp.entity.Account;
 import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockInTrade;
-import com.dl2.fyp.entity.User;
 import com.dl2.fyp.repository.account.AccountRepository;
-import com.dl2.fyp.repository.user.UserRepository;
-import com.dl2.fyp.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,14 +23,22 @@ public class AccountService {
 
     /**
      * return all accounts under the given user id
-     * @param id
+     * @param userId
      * @return
      */
-    public List<Account> getAllAccount(Long id){
-        if(id == null) return null;
-        LOG.debug("get accounts, id={}", id);
-        List<Account> accounts = accountRepository.getAccountsByUser(id).orElse(null);
+    public List<Account> getAllAccount(Long userId){
+        if(userId == null) return null;
+        LOG.debug("get accounts, id={}", userId);
+        List<Account> accounts = accountRepository.findAllAccount(userId).orElse(null);
         if (accounts==null && accounts.size()<=0) return null;
+        List list = new LinkedList();
+        for (Account account : accounts) {
+            Map map = new HashMap<String, Object>();
+            map.put("id",account.getId());
+            map.put("category", account.getCategory());
+            map.put("amount", account.getAmount());
+            list.add(map);
+        }
         LOG.debug("get accounts, result={}", accounts);
         return accounts;
     }

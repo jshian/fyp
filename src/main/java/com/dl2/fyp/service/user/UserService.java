@@ -7,8 +7,6 @@ import com.dl2.fyp.entity.UserDevice;
 import com.dl2.fyp.entity.UserInfo;
 import com.dl2.fyp.repository.user.UserDeviceRepository;
 import com.dl2.fyp.repository.user.UserRepository;
-import com.dl2.fyp.service.account.AccountService;
-import com.dl2.fyp.util.ResultUtil;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.*;
 import com.google.firebase.auth.*;
@@ -17,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,9 +28,6 @@ public class UserService{
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UserDeviceRepository userDeviceRepository;
 
     @Autowired
     private UserInfoService userInfoService;
@@ -175,8 +169,8 @@ public class UserService{
         User user = userRepository.findById(id).orElse(null);
         if(user == null) return null;
         try {
-            userDevice.setUser(user);
-            userDeviceRepository.save(userDevice);
+            user.getUserDevice().add(userDevice);
+            userRepository.save(user);
         }catch (IllegalArgumentException e){
             return null;
         }
@@ -199,7 +193,7 @@ public class UserService{
             List<Account> list = user.getAccountList();
             if (list == null) return null;
             for (Account a : list) {
-                if (a.getCategory().equals(account.getCategory())) {
+                if (a.getCategory().getCategory().toLowerCase().equals(account.getCategory().getCategory().toLowerCase())){
                     return null;
                 }
             }

@@ -1,4 +1,4 @@
-package com.dl2.fyp.controller.user;
+package com.dl2.fyp.controller;
 
 import com.dl2.fyp.domain.Result;
 import com.dl2.fyp.entity.Account;
@@ -11,12 +11,7 @@ import com.dl2.fyp.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedList;
-import java.util.List;
 
 
 @RestController

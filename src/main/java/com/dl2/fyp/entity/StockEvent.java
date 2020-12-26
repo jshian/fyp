@@ -17,7 +17,7 @@ public class StockEvent {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "stock_id", referencedColumnName = "id")
+    @JoinColumn(name = "stock_id")
     private Stock stock;
     @Range(min=0,max=1,message = "Out of range")
     @NotNull
