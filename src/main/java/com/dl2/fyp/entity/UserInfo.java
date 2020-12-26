@@ -26,8 +26,7 @@ public class UserInfo {
     @Past
     private Date dateOfBirth;
     @NotNull
-    @Min(value = 0, message = "invalid negative input")
-    private Byte maritalStatus;
+    private Boolean maritalStatus;
     @NotNull
     @Min(value = 0, message = "invalid negative input")
     private Byte familyNum;
@@ -59,7 +58,8 @@ public class UserInfo {
     @Range(min = 0, max = 1, message = "Out of range")
     private BigDecimal expectedRisk;
     @NotNull
-    private String investmentGoal;
+    @Min(value = 0, message = "invalid negative input")
+    private BigDecimal investmentGoal;
     @NotNull
     @Min(value = 0, message = "invalid negative input")
     private Short targetYears;
