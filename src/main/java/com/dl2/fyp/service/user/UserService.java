@@ -184,6 +184,33 @@ public class UserService{
         return userDevice;
     }
 
+    /**
+     * add account
+     * @param account
+     * @param userId
+     * @return
+     */
+    @Transactional
+    public Account addAccount(Account account, Long userId){
+        LOG.debug("add account, param:{}", account);
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null || account.getCategory()==null) return null;
+        try {
+            List<Account> list = user.getAccountList();
+            if (list == null) return null;
+            for (Account a : list) {
+                if (a.getCategory().equals(account.getCategory())) {
+                    return null;
+                }
+            }
+            list.add(account);
+            userRepository.save(user);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        LOG.debug("add account, result:{}", account);
+        return account;
+    }
 
 
 }
