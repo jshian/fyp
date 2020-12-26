@@ -2,6 +2,7 @@ package com.dl2.fyp.entity;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -31,6 +32,7 @@ public class StockEvent {
     private Date expectedEnd;
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
+    @LastModifiedDate
     private Date lastUpdate;
     @Column(name = "title", columnDefinition = "text")
     @NotNull

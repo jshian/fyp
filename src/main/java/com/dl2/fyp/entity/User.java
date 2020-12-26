@@ -4,6 +4,7 @@ package com.dl2.fyp.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -18,9 +19,11 @@ public class User{
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_info_id", referencedColumnName = "id")
+    @Valid
     private UserInfo userInfo;
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @Valid
     private List<UserDevice> userDevice;
 
     @NotNull
@@ -30,5 +33,6 @@ public class User{
     private String email;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Valid
     private List<Account> accountList;
 }

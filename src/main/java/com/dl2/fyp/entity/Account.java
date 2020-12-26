@@ -4,6 +4,7 @@ import com.dl2.fyp.enums.AccountCategory;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,16 +19,11 @@ public class Account {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     private User user;
 
-//    @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @OrderColumn
-//    private List<Transaction> transactionsList;
 
     @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @OrderColumn
     private List<Trade> tradeList;
 
     @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @OrderColumn
     private List<StockInTrade> stockInTradesList;
 
     @Enumerated(EnumType.STRING)
@@ -35,5 +31,6 @@ public class Account {
     private AccountCategory category;
 
     @NotNull
+    @DecimalMin("0")
     private BigDecimal amount;
 }

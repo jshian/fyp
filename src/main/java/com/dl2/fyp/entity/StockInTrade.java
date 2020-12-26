@@ -4,7 +4,9 @@ package com.dl2.fyp.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 
 @Data
@@ -23,8 +25,10 @@ public class StockInTrade {
     private Stock stock;
 
     @NotNull
+    @Min(value = 0, message = "invalid negative input")
     private Integer numOfShare;
 
     @NotNull
-    private Float averageCost;
+    @Min(value = 0, message = "invalid negative input")
+    private BigDecimal averageCost;
 }
