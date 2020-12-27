@@ -31,14 +31,6 @@ public class AccountService {
         LOG.debug("get accounts, id={}", userId);
         List<Account> accounts = accountRepository.findAllAccount(userId).orElse(null);
         if (accounts==null && accounts.size()<=0) return null;
-        List list = new LinkedList();
-        for (Account account : accounts) {
-            Map map = new HashMap<String, Object>();
-            map.put("id",account.getId());
-            map.put("category", account.getCategory());
-            map.put("amount", account.getAmount());
-            list.add(map);
-        }
         LOG.debug("get accounts, result={}", accounts);
         return accounts;
     }

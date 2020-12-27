@@ -20,7 +20,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/GetCharts/{userId}")
     public Result getAllAccount(@PathVariable Long userId){
         if(userId==null) return ResultUtil.error(-1,"invalid input");
         List<Account> accounts = accountService.getAllAccount(userId);
