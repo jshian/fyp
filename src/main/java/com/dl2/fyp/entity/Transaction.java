@@ -1,16 +1,15 @@
 package com.dl2.fyp.entity;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@Getter
-@Setter
 @Entity(name = "t_transaction")
 public class Transaction {
     @Id
@@ -18,23 +17,28 @@ public class Transaction {
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    @CreatedDate
     private Date date;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "accountIn_id")
     private Account accountIn;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name = "accountOut_id")
     private Account accountOut;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Trade trade;
+    @NotNull
+    @Min(value = 0, message = "invalid negative input")
+    private BigDecimal amount;
 
     @NotNull
-    private Float amount;
+    @Min(value = 0, message = "invalid negative input")
+    private BigDecimal accountInAmountAfter;
 
-    private Float accountInAmountAfter;
+    @NotNull
+    @Min(value = 0, message = "invalid negative input")
+    private BigDecimal accountOutAmountAfter;
 
-    private Float accountOutAmountAfter;
-
-    private boolean action;
 }

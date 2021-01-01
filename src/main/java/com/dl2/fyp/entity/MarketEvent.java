@@ -2,17 +2,14 @@ package com.dl2.fyp.entity;
 
 import com.dl2.fyp.enums.SectorCategory;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
-import java.util.LinkedList;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
 @Entity(name="t_market_event")
 public class MarketEvent {
     @Id
@@ -20,14 +17,19 @@ public class MarketEvent {
     private Integer id;
 
     @ElementCollection(targetClass=SectorCategory.class)
-    private List<SectorCategory> sector = new LinkedList<>();
+    private List<SectorCategory> sector;
     @Range(min=0,max=1,message = "Out of range")
-    private Float severity;
+    @NotNull
+    private BigDecimal severity;
+    @NotNull
     private Integer expectedPeriod;
     @Column(name = "title", columnDefinition = "text")
+    @NotNull
     private String title;
     @Column(name = "description", columnDefinition = "text")
+    @NotNull
     private String description;
     @Column(name = "source", columnDefinition = "text")
+    @NotNull
     private String source;
 }

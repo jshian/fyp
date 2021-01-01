@@ -4,7 +4,9 @@ import com.dl2.fyp.enums.AccountCategory;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.LinkedList;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -14,16 +16,14 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @OrderColumn
-    private List<Transaction> transactionsList = new LinkedList<>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @OrderColumn
-    private List<StockInTrade> stockInTradesList = new LinkedList<>();
+    @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<StockInTrade> stockInTradesList;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private AccountCategory category;
 
-    private float amount;
+    @NotNull
+    @Min(value = 0,message = "invalid negative input")
+    private BigDecimal amount;
 }

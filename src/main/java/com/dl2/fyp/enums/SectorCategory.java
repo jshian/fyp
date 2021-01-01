@@ -1,5 +1,6 @@
 package com.dl2.fyp.enums;
 
+
 public enum SectorCategory {
   ENERGY("Energy"),
   MATERIALS("Materials"),
@@ -13,9 +14,13 @@ public enum SectorCategory {
   COMMUNICATION_SERVICES("CommunicationServices"),
   REAL_ESTATE("RealEstate");
 
-  public final String sector;
+  private final String sector;
 
-  private SectorCategory(String sector) {
+  SectorCategory(String sector) {
     this.sector = sector;
+  }
+
+  public String getSector() {
+    return sector;
   }
 }
