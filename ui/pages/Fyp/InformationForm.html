@@ -172,7 +172,7 @@ to get the desired effect
 									<label>No. of Family Member (Not include yourself): </label>
 								</div>
 								<div class="col-sm-3">
-									<input class="form-control" type="number" ng-model="userInfo.familyNum"/>
+									<input class="form-control" type="number" ng-model="userInfo.familyNum" min="0"/>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -180,7 +180,7 @@ to get the desired effect
 									<label>No. of Children: </label>
 								</div>
 								<div class="col-sm-3">
-									<input class="form-control" type="number" ng-model="userInfo.childNum"/>
+									<input class="form-control" type="number" ng-model="userInfo.childNum" min="0"/>
 								</div>
 							</div>
 							<hr>
@@ -198,7 +198,7 @@ to get the desired effect
 										  <i class="fas fa-dollar-sign"></i>
 										</span>
 									 </div>
-									<input class="form-control" type="number" ng-model="userInfo.monthlyIncome"/>
+									<input class="form-control" type="number" ng-model="userInfo.monthlyIncome" min="0"/>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -211,7 +211,7 @@ to get the desired effect
 										  <i class="fas fa-dollar-sign"></i>
 										</span>
 									 </div>
-									<input class="form-control" type="number" ng-model="userInfo.livingExpense"/>
+									<input class="form-control" type="number" ng-model="userInfo.livingExpense" min="0"/>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -224,7 +224,7 @@ to get the desired effect
 										  <i class="fas fa-dollar-sign"></i>
 										</span>
 									 </div>
-									<input class="form-control" type="number" ng-model="userInfo.housingExpense"/>
+									<input class="form-control" type="number" ng-model="userInfo.housingExpense" min="0"/>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -237,7 +237,7 @@ to get the desired effect
 										  <i class="fas fa-dollar-sign"></i>
 										</span>
 									 </div>
-									<input class="form-control" type="number" ng-model="userInfo.miscelExpense"/>
+									<input class="form-control" type="number" ng-model="userInfo.miscelExpense" min="0"/>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -250,7 +250,7 @@ to get the desired effect
 										  <i class="fas fa-dollar-sign"></i>
 										</span>
 									 </div>
-									<input class="form-control" type="number" ng-model="userInfo.taxExpense"/>
+									<input class="form-control" type="number" ng-model="userInfo.taxExpense" min="0"/>
 								</div>
 							</div>
 							<hr>
@@ -268,7 +268,7 @@ to get the desired effect
 										  <i class="fas fa-dollar-sign"></i>
 										</span>
 									 </div>
-									<input class="form-control" type="number" ng-model="userInfo.investmentGoal"/>
+									<input class="form-control" type="number" ng-model="userInfo.investmentGoal" min="0"/>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -276,7 +276,7 @@ to get the desired effect
 									<label>Target Years: </label>
 								</div>
 								<div class="col-sm-3 input-group">
-									<input class="form-control" type="number" ng-model="userInfo.targetYears"/>
+									<input class="form-control" type="number" ng-model="userInfo.targetYears" min="0"/>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -314,7 +314,7 @@ to get the desired effect
 										  <i class="fas fa-dollar-sign"></i>
 										</span>
 									 </div>
-									<input class="form-control" type="number" ng-model="userInfo.totalAsset"/>
+									<input class="form-control" type="number" ng-model="userInfo.totalAsset" min="0"/>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -327,13 +327,13 @@ to get the desired effect
 										  <i class="fas fa-dollar-sign"></i>
 										</span>
 									 </div>
-									<input class="form-control" type="number" ng-model="userInfo.debt"/>
+									<input class="form-control" type="number" ng-model="userInfo.debt" min="0"/>
 								</div>
 								<div class="col-sm-3">
 									<label>Interest Rate: </label>
 								</div>
 								<div class="col-sm-3 input-group">
-									<input class="form-control" type="number" ng-model="userInfo.debtRate" step=".01"/>
+									<input class="form-control" type="number" ng-model="userInfo.debtRate" step=".01" min="0"/>
 									<div class="input-group-append">
 										<span class="input-group-text">
 										  <i class="fas fa-percent"></i>
@@ -351,7 +351,7 @@ to get the desired effect
 										  <i class="fas fa-dollar-sign"></i>
 										</span>
 									 </div>
-									<input class="form-control" type="number" ng-model="userInfo.cashFlow"/>
+									<input class="form-control" type="number" ng-model="userInfo.cashFlow" min="0"/>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -364,7 +364,7 @@ to get the desired effect
 										  <i class="fas fa-dollar-sign"></i>
 										</span>
 									 </div>
-									<input class="form-control" type="number" ng-model="userInfo.commission" step=".01"/>
+									<input class="form-control" type="number" ng-model="userInfo.commission" step=".01" min="0"/>
 								</div>
 								<div class="col-sm-3">
 									per share
@@ -375,7 +375,7 @@ to get the desired effect
 									<label>Dividend Collection Fee: </label>
 								</div>
 								<div class="col-sm-3 input-group">
-									<input class="form-control" type="number" ng-model="userInfo.dividendCollectionFee" step=".01"/>
+									<input class="form-control" type="number" ng-model="userInfo.dividendCollectionFee" min="0" step=".01"/>
 									<div class="input-group-append">
 										<span class="input-group-text">
 										  <i class="fas fa-percent"></i>

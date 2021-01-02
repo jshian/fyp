@@ -84,3 +84,27 @@ stockApp.controller('stockGetRecommendationCtrl', function($scope, $http) {
 	];
 	$scope.stockRecommendations= stockRecommendations;
 });
+
+//For Portfolio Managemet
+stockApp.controller('stockGetStockListCtrl', function($scope, $http) {
+  //$http.get("/account/stockInTrade/GetAll/{userId}")
+  //.then(function (response) {$scope.names = response.data.records;});
+	
+	var stocks = [
+		{
+			"stockId" : 1,
+			"symbol":"AAPL"
+		},
+		{
+			"stockId" : 2,
+			"symbol":"TSLA"
+		},
+		{
+			"stockId" : 3,
+			"symbol":"BNTX"
+		}
+	];
+	$scope.stocks= stocks;
+	$scope.trade = {};
+	$scope.trade.stock = stocks[0];
+});

@@ -6,10 +6,23 @@ userApp.controller('userAddInfoCtrl', function($scope, $http) {
 })
 
 userApp.controller('userGetInfoCtrl', function($scope, $http) {
+	
+	maritalStatusOptions = 
+		[
+			{
+				"value" : 0,
+				"label" : "Single"
+			},
+			{
+				"value" : 1,
+				"label" : "Married"
+			},
+		];
+	$scope.maritalStatusOptions = maritalStatusOptions;
 	$scope.userInfo = {
 		"id":1,
 		"dateOfBirth":"1998-01-01",
-		"maritalStatus":0,
+		"maritalStatus":maritalStatusOptions[0],
 		"familyNum":4,
 		"childNum":1,
 		"monthlyIncome":100000,
@@ -33,7 +46,7 @@ userApp.controller('userGetInfoCtrl', function($scope, $http) {
 	$scope.userNewInfo = {
 		"id":1,
 		"dateOfBirth":"1998-01-01",
-		"maritalStatus":0,
+		"maritalStatus":maritalStatusOptions[0],
 		"familyNum":4,
 		"childNum":1,
 		"monthlyIncome":100000,

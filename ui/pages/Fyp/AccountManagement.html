@@ -184,7 +184,7 @@ to get the desired effect
 								<label>Marital Status: </label>
 							</div>
 							<div class="col-sm-3">
-								{{userInfo.maritalStatus}}
+								{{userInfo.maritalStatus.label}}
 							</div>
 						</div>
 						<div class="form-group row">
@@ -362,9 +362,7 @@ to get the desired effect
 								<label>Marital Status: </label>
 							</div>
 							<div class="col-sm-3">
-								<select  ng-model="userNewInfo.maritalStatus" class="form-control select2" style="width: 100%;">
-									<option value=0>Married</option>
-									<option value=1>Single</option>
+								<select  ng-model="userNewInfo.maritalStatus" class="form-control select2" style="width: 100%;" ng-options="maritalStatusOption as maritalStatusOption.label for maritalStatusOption in maritalStatusOptions track by maritalStatusOption.value">
 								 </select>
 							</div>
 						</div>

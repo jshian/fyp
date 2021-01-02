@@ -17,7 +17,9 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+  <!-- Select2 -->
+  <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
   
 	<!-- REQUIRED SCRIPTS -->
 	<!-- Angular Js -->
@@ -43,6 +45,10 @@
 	<script src="../../plugins/flot-old/jquery.flot.resize.min.js"></script>
 	<!-- FLOT PIE PLUGIN - also used to draw donut charts -->
 	<script src="../../plugins/flot-old/jquery.flot.pie.min.js"></script>
+	<!-- Bootstrap Switch -->
+	<script src="../../plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+	<!-- Select2 -->
+	<script src="../../plugins/select2/js/select2.full.min.js"></script>
 	<!-- OPTIONAL SCRIPTS -->
 	<script src="../../plugins/chart.js/Chart.min.js"></script>
 	<script src="../../dist/js/pages/dashboard3.js"></script>
@@ -177,14 +183,14 @@ to get the desired effect
                   </tr>
                   </thead>
                   <tbody>
-					  <tr ng-repeat="stock in stocks">
-						<td>{{stock.symbol}}</td>
-						<td>{{stock.noOfShare}}</td>
-						<td>${{stock.currentPrice}} (${{stock.cost}})</td>
+					  <tr ng-repeat="stockInTrade in stockInTrades">
+						<td>{{stockInTrade.symbol}}</td>
+						<td>{{stockInTrade.noOfShare}}</td>
+						<td>${{stockInTrade.currentPrice}} (${{stockInTrade.cost}})</td>
 						<td>
 							<span>
-								<button class="btn btn-success">Buy</button>
-								<button class="btn btn-danger">Sell</button>
+								<button class="btn btn-success" data-toggle="modal" data-target="#trade-modal">Buy</button>
+								<button class="btn btn-danger" data-toggle="modal" data-target="#trade-modal">Sell</button>
 							</span>
 						</td>
 					  </tr>
@@ -193,7 +199,7 @@ to get the desired effect
               </div>
             </div>
             <!-- /.card -->
-			<div class="card" ng-app="stock" ng-controller="stockGetRecommendationCtrl">
+			<div id="stock-recommendation" class="card" ng-app="stock" ng-controller="stockGetRecommendationCtrl">
 			  <div class="card-header border-0">
 				<h4>Recommended Portfolio</h4>
               </div>
@@ -203,7 +209,7 @@ to get the desired effect
                   <tr>
                     <th>Stock</th>
                     <th>No. of Share</th>
-                    <th>Current Price (Cost)</th>
+                    <th>Current Price</th>
                     <th>Action</th>
                   </tr>
                   </thead>
@@ -211,11 +217,11 @@ to get the desired effect
 					  <tr ng-repeat="stockRecommendation in stockRecommendations">
 						<td>{{stockRecommendation.symbol}}</td>
 						<td>{{stockRecommendation.noOfShare}}</td>
-						<td>${{stockRecommendation.currentPrice}} (${{stockRecommendation.cost}})</td>
+						<td>${{stockRecommendation.currentPrice}}</td>
 						<td>
 							<span>
-								<button class="btn btn-success">Buy</button>
-								<button class="btn btn-danger">Sell</button>
+								<button class="btn btn-success" data-toggle="modal" data-target="#trade-modal">Buy</button>
+								<button class="btn btn-danger" data-toggle="modal" data-target="#trade-modal">Sell</button>
 							</span>
 						</td>
 					  </tr>
@@ -234,6 +240,64 @@ to get the desired effect
   </div>
   <!-- /.content-wrapper -->
 
+<!-- Modal -->
+  <div class="modal fade" id="trade-modal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content" id="trade-form" ng-app="stock">
+        <div class="modal-header">
+          <h4> Trade</h4>
+        </div>
+        <div class="modal-body">
+          <form role="form">
+			<div class="form-group row">
+				<div class="col-sm-4">
+					<label>Stock: </label>
+				</div>
+				<div class="col-sm-4">
+					<select ng-model="trade.stock" ng-controller="stockGetStockListCtrl" class="form-control select2bs4" style="width: 100%;"  ng-options="stock as stock.symbol for stock in stocks track by stock.stockId">
+					 </select>
+				</div>
+            </div>
+            <div class="form-group row">
+				<div class="col-sm-4">
+					<label>Action: </label>
+				</div>
+				<div class="col-sm-8">
+					<input type="checkbox" name="my-checkbox" ng-model="trade.action" data-on-text="Buy" data-off-text="Sell" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+				</div>
+            </div>
+            <div class="form-group row">
+				<div class="col-sm-4">
+					<label>No. of Share: </label>
+				</div>
+				<div class="input-group col-sm-4">
+					<input class="form-control" type="number" ng-model="trade.numOfShare"/>
+				</div>
+			</div>
+            <div class="form-group row">
+				<div class="col-sm-4">
+					<label>Price: </label>
+				</div>
+				<div class="input-group col-sm-4">
+					<div class="input-group-prepend">
+						<span class="input-group-text">
+						  <i class="fas fa-dollar-sign"></i>
+						</span>
+					 </div>
+					<input class="form-control" type="number" ng-model="trade.price" min="0" step=".01"/>
+				</div>
+			</div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-warning" data-dismiss="modal"> Cancel</button>
+		  <button type="submit" class="btn btn-success" data-dismiss="modal">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -269,9 +333,22 @@ $('#stock-table').DataTable({
       "autoWidth": false,
       "responsive": false,
     });
+
+$("input[data-bootstrap-switch]").each(function(){
+      $(this).bootstrapSwitch('state', $(this).prop('checked'));
+    })
 angular.element(function() {
-  angular.bootstrap(document, ['account','stock']);
+  angular.bootstrap($('#stock-recommendation'), ['stock']);
 });
+angular.element(function() {
+  angular.bootstrap($('#trade-modal'), ['stock']);
+});
+
+
+//Initialize Select2 Elements
+$('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
 </script>
 </body>
 </html>

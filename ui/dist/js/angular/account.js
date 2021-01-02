@@ -94,7 +94,7 @@ accountApp.controller('accountGetStockInTradeCtrl', function($scope, $http) {
 			"cost":160
 		}
 	];
-	$scope.stocks = stockInTrades;
+	$scope.stockInTrades = stockInTrades;
 });
 
 
@@ -144,50 +144,74 @@ accountApp.controller('accountGetAccountAndStockInTradeListCtrl', function($scop
 			stockInTrades = account.stockInTrades;
 		}
 	});
+	stockInTrades.unshift(
+		{
+			"stockInTradeId" : 0,
+			"symbol":""
+		}
+	)
+	periods = [
+		{
+			"value" : 30,
+			"label" : "Last 30 days"
+		},
+		{
+			"value" : 60,
+			"label" : "Last 60 days"
+		},
+		{
+			"value" : 180,
+			"label" : "Last 180 days"
+		}
+	];
+	$scope.data = {};
 	$scope.accounts = accounts;
 	$scope.stockInTrades = stockInTrades;
-	$scope.data = {};
-	$scope.data.periodSelected = 30;
+	$scope.periods = periods;
+	$scope.data.periodSelected = periods.find(element => element.value == 30);
+	$scope.data.stockSelected = stockInTrades.find(element => element.stockInTradeId == 0);
+	$scope.data.accountSelected = accounts.find(element => element.accountCategory == "Cash");
+	$scope.statement = 
+	   [
+			{
+				"id" : 1,
+				"date" : "2020-12-22 T11:20:33.123456",
+				"accountTo" : "Stock",
+				"stockSymbol" : "AAPL",
+				"amount" : -100000,
+				"balance" : 900000
+		   },
+		   {
+				"id" : 2,
+				"date" : "2020-12-22 T11:20:33.123456",
+				"accountTo" : "ETF",
+				"stockSymbol" : "",
+				"amount" : 50000,
+				"balance" : 950000
+		   },
+	   ]
+   $scope.stockStatement = 
+	   [
+		   {
+				"id" : 1,
+				"date" : "2020-12-22 T11:20:33.123456",
+				"numOfShare" : 1000,
+				"price" : 100,
+				"totalShare" : 1000,
+				"avgCost" : 100
+		   }
+	   ]
 	$scope.updateStatement = function() {
 		//$http.get("/account/GetList/{userId}")
 	  //.then(function (response) {$scope.names = response.data.records;});
 	  
-	   if($scope.data.stockSelected == null){
+	   if($scope.data.stockSelected.stockInTradeId == 0){
 		   document.getElementById("transaction-table").style.display = "block";
 		   document.getElementById("trade-table").style.display = "none";
-		   $scope.statement = 
-		   [
-				{
-				    "id" : 1,
-					"date" : "2020-12-22 T11:20:33.123456",
-					"accountTo" : "Stock",
-					"stockSymbol" : "AAPL",
-					"amount" : -100000,
-					"balance" : 900000
-			   },
-			   {
-				    "id" : 2,
-					"date" : "2020-12-22 T11:20:33.123456",
-					"accountTo" : "ETF",
-					"stockSymbol" : "",
-					"amount" : 50000,
-					"balance" : 950000
-			   },
-		   ]
 	   }else{
 		   document.getElementById("transaction-table").style.display = "none";
 		   document.getElementById("trade-table").style.display = "block";
-		   $scope.stockStatement = 
-		   [
-			   {
-				    "id" : 1,
-					"date" : "2020-12-22 T11:20:33.123456",
-					"numOfShare" : 1000,
-					"price" : 100,
-					"totalShare" : 1000,
-					"avgCost" : 100
-			   }
-		   ]
+		   
 	   }
 	};
 	$scope.updateAccount = function() {
@@ -195,7 +219,7 @@ accountApp.controller('accountGetAccountAndStockInTradeListCtrl', function($scop
 			document.getElementById("selected-stock-div").style.visibility = "visible";
 		}else{
 			document.getElementById("selected-stock-div").style.visibility = "hidden";
-			$scope.data.stockSelected = null;
+			$scope.data.stockSelected = stockInTrades.find(element => element.stockInTradeId == 0);
 		}
 	    $scope.updateStatement();
 	};

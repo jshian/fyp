@@ -17,6 +17,9 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
   
   
 	<!-- REQUIRED SCRIPTS -->
@@ -43,6 +46,8 @@
 	<script src="../../plugins/flot-old/jquery.flot.resize.min.js"></script>
 	<!-- FLOT PIE PLUGIN - also used to draw donut charts -->
 	<script src="../../plugins/flot-old/jquery.flot.pie.min.js"></script>
+	<!-- Select2 -->
+	<script src="../../plugins/select2/js/select2.full.min.js"></script>
 	<!-- OPTIONAL SCRIPTS -->
 	<script src="../../plugins/chart.js/Chart.min.js"></script>
 	<script src="../../dist/js/pages/dashboard3.js"></script>
@@ -167,22 +172,17 @@ to get the desired effect
 				<div id="selected-account" class="row" >
 					<div class="col-sm-4" >
 					  <label>Account</label>
-					  <select ng-change="updateAccount()" ng-model="data.accountSelected" class="form-control select2" style="width: 100%;">
-						<option ng-repeat="account in accounts" ng-value={{account}}>{{account.accountCategory}}</option>
+					  <select ng-change="updateAccount()" ng-model="data.accountSelected" class="form-control select2bs4" style="width: 100%;" ng-options="account as account.accountCategory for account in accounts track by account.accountId">
 					  </select>
 					</div>
 					<div  class="col-sm-4" id="selected-stock-div" style="visibility: hidden;">
 					  <label>Stock</label>
-					  <select ng-change="updateStatement()" ng-model="data.stockSelected" class="form-control select2" style="width: 100%;">
-						<option ng-repeat="stockInTrade in stockInTrades" ng-value={{stockInTrade}}>{{stockInTrade.symbol}}</option>
+					  <select ng-change="updateStatement()" ng-model="data.stockSelected" class="form-control select2bs4" style="width: 100%;" ng-options="stockInTrade as stockInTrade.symbol for stockInTrade in stockInTrades track by stockInTrade.stockInTradeId">
 					  </select>
 					</div>
 					<div class="col-sm-4">
 					  <label>Statement Period</label>
-					  <select ng-change="updateStatement()" ng-model="data.periodSelected" class="form-control select2" style="width: 100%;">
-						<option value=30>Last 30 days</option>
-						<option value=60>Last 60 days</option>
-						<option value=180>Last 180 days</option>
+					  <select ng-change="updateStatement()" ng-model="data.periodSelected" class="form-control select2bs4" style="width: 100%;"  ng-options="period as period.label for period in periods track by period.value">
 					  </select>
 					</div>
                 </div>
@@ -208,7 +208,7 @@ to get the desired effect
 						  </tr>
 					  </tbody>
 					</table>
-					<table id="transaction-table" style="display:none" class="table table-striped">
+					<table id="transaction-table" style="display:block" class="table table-striped">
 					  <thead>
 					  <tr>
 						<th>Date</th>
@@ -260,7 +260,7 @@ to get the desired effect
 </div>
 <!-- ./wrapper -->
 <script>
-	$('#stock-table').DataTable({
+	$('#trade-table').DataTable({
       "paging": false,
       "lengthChange": false,
       "searching": false,
@@ -270,7 +270,7 @@ to get the desired effect
       "responsive": false,
 	  "pageLength": 5
     });
-	$('#stock-news-table').DataTable({
+	$('#transaction-table').DataTable({
       "paging": false,
       "lengthChange": false,
       "searching": false,
@@ -280,6 +280,7 @@ to get the desired effect
       "responsive": false,
 	  "pageLength": 5
     });
+	
 </script>
 </body>
 </html>
