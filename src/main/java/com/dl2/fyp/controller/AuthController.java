@@ -3,7 +3,6 @@ package com.dl2.fyp.controller;
 import com.dl2.fyp.domain.JwtAuthenticationRequest;
 import com.dl2.fyp.domain.JwtAuthenticationResponse;
 import com.dl2.fyp.entity.User;
-import com.dl2.fyp.domain.JwtUser;
 import com.dl2.fyp.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +24,7 @@ public class AuthController {
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest jwtAuthenticationRequest) throws AuthenticationException {
-        final String token = authService.login(jwtAuthenticationRequest.getUsername(), jwtAuthenticationRequest.getPassword());
+        final String token = authService.login(jwtAuthenticationRequest.getToken());
 
         // Return the token
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));

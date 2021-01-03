@@ -18,7 +18,7 @@ public class MethodProtectedController {
         return ResponseEntity.ok("Greetings from admin protected method!");
     }
 
-    //only user can request /protectedadmin
+    //only user can request /protecteduser
     @RequestMapping(value = "/protecteduser", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getProtectedUser() {

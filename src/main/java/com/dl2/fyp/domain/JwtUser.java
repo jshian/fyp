@@ -10,24 +10,13 @@ import java.util.Collection;
 
 public class JwtUser implements UserDetails {
     private final Long id;
-    private final String username;
-    private final String password;
     private final String email;
-    private final Collection<? extends GrantedAuthority> authorities;
-    private final Date lastPasswordResetDate;
+    private final String uid;
 
-    public JwtUser(Long id, String username, String password, String email, Collection<? extends GrantedAuthority> authorities, Date lastPasswordResetDate) {
+    public JwtUser(Long id, String uid, String email) {
         this.id = id;
-        this.username = username;
-        this.password = password;
         this.email = email;
-        this.authorities = authorities;
-        this.lastPasswordResetDate = lastPasswordResetDate;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        this.uid = uid;
     }
 
     @JsonIgnore
@@ -35,15 +24,19 @@ public class JwtUser implements UserDetails {
         return id;
     }
 
-    @JsonIgnore
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
     @Override
     public String getPassword() {
-        return password;
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return uid;
     }
 
     @JsonIgnore
@@ -72,6 +65,6 @@ public class JwtUser implements UserDetails {
 
     @JsonIgnore
     public Date getLastPasswordResetDate() {
-        return lastPasswordResetDate;
+        return (Date) new java.util.Date();
     }
 }

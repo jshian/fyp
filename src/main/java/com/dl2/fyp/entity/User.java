@@ -1,11 +1,12 @@
 package com.dl2.fyp.entity;
 
+
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
-import java.sql.Date;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -15,24 +16,24 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    @Length(min = 3, max=20)
-    private String name;
-
-    @Column(name="password")
-    private String password;
-
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_info_id", referencedColumnName = "id")
+    @Valid
     private UserInfo userInfo;
+
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    @Valid
+    private List<Account> accountList;
+
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    @Valid
+    private List<UserDevice> userDevice;
+
+    @NotNull
+    private String firebaseUid;
 
     @Email
     private String email;
-
-    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.DETACH})
-    private Account account;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastPasswordResetDate;
-
-    private List<String> roles;
 }

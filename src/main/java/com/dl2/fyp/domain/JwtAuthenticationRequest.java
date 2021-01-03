@@ -8,16 +8,14 @@ import java.io.Serializable;
 public class JwtAuthenticationRequest implements Serializable {
 
     private static final long serialVersionUID = 8420107889454644763L;
-    private String username;
-    private String password;
+    private String token;
 
 
     public JwtAuthenticationRequest() {
         super();
     }
 
-    public JwtAuthenticationRequest(String username, String password) {
-        this.setUsername(username);
-        this.setPassword(password);
+    public JwtAuthenticationRequest(String token) {
+        this.setToken(token);
     }
 }
