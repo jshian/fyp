@@ -44,6 +44,50 @@ stockApp.controller('stockGetNewsCtrl', function($scope, $http) {
 	$scope.stockNews = stockNews;
 });
 
+stockApp.controller('stockGetNewsCtrl', function($scope, $http) {
+  //$http.get("/stock/news/{userId}")
+  //.then(function (response) {$scope.names = response.data.records;});
+	var stockNews = [
+		{
+			"id" : 4,
+			"date" : "2020-12-22 T11:20:33.123456",
+			"stockSymbol" : "AAPL",
+			"title" : "AAPL will go above $150"
+		},
+		{
+			"id" : 3,
+			"date" : "2020-12-21 T11:20:33.123456",
+			"stockSymbol" : "TSLA",
+			"title" : "TSLA Drop Drop Drop, IFC's rooftop is very crowded now"
+		},
+		{
+			"id" : 2,
+			"date" : "2020-12-20 T11:20:33.123456",
+			"stockSymbol" : "BNTX",
+			"title" : "BNTX Up Up Up !!!"
+		},
+		{
+			"id" : 1,
+			"date" : "2020-12-19 T11:20:33.123456",
+			"stockSymbol" : "PFE",
+			"title" : "PFE falls"
+		},
+		{
+			"id" : 5,
+			"date" : "2020-12-18 T11:20:33.123456",
+			"stockSymbol" : "PFE",
+			"title" : "PFE falls"
+		},
+		{
+			"id" : 6,
+			"date" : "2020-12-18 T11:20:33.123456",
+			"stockSymbol" : "PFE",
+			"title" : "PFE rises"
+		}
+	];
+	$scope.stockNews = stockNews;
+});
+
 
 //For Portfolio Managemet
 stockApp.controller('stockGetRecommendationCtrl', function($scope, $http) {
