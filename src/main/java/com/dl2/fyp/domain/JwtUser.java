@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.sql.Date;
 import java.util.Collection;
+import java.util.Date;
 
 
 public class JwtUser implements UserDetails {
@@ -31,7 +31,7 @@ public class JwtUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return "$2a$10$lB6/PKg2/JC4XgdMDXyjs.dLC9jFNAuuNbFkL9udcXe/EBjxSyqxW";
     }
 
     @Override
@@ -65,6 +65,6 @@ public class JwtUser implements UserDetails {
 
     @JsonIgnore
     public Date getLastPasswordResetDate() {
-        return (Date) new java.util.Date();
+        return null;
     }
 }

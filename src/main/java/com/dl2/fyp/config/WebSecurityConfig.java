@@ -70,8 +70,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // don't create session
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
-            .antMatchers("/auth/**").permitAll()
-                .antMatchers("/user/**").permitAll()
                 .antMatchers("/account/**").permitAll()
                 .antMatchers("/stock/**").permitAll()
                 .antMatchers("/market/**").permitAll()
@@ -91,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .ignoring()
             .antMatchers(
                     HttpMethod.POST,
-                    authenticationPath
+                    authenticationPath+"/**"
             )
 
             // allow anonymous resource requests
@@ -101,7 +99,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     HttpMethod.GET,
                     "/",
                     "/*.html",
-                    "/favicon.ico",
+                    "/**/favicon.ico",
                     "/**/*.html",
                     "/**/*.css",
                     "/**/*.js"

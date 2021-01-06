@@ -8,18 +8,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long>, CrudRepository<User, Long>{
 
-    @Query(value = "select User from User where User.firebaseUid = ?1", nativeQuery = true)
+    @Query(value = "select * from t_user where firebase_uid = ?1", nativeQuery = true)
     User findByFirebaseUid(String FirebaseUid);
 
-    @Query(value = "select User from User where User.firebaseUid = ?1", nativeQuery = true)
+    @Query(value = "select * from t_user u where u.firebaseUid = ?1", nativeQuery = true)
     Optional<User> getByFirebaseUid(String FirebaseUid);
 
-    @Query(value = "select count(User.id) from User", nativeQuery = true)
+    @Query(value = "select count(id) from t_user", nativeQuery = true)
     Long countAll();
 
 }
