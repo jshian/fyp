@@ -13,6 +13,7 @@ import com.google.firebase.auth.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,68 +32,6 @@ public class UserService{
 
     @Autowired
     private UserInfoService userInfoService;
-
-    private FirebaseApp firebaseApp;
-
-    private void firebaseInitialization() throws IOException {
-        FileInputStream serviceAccount =
-                (FileInputStream) new URL("https://s3.ap-east-1.amazonaws.com/test.howard.gnil/fyp/fyp2020-e4f03-firebase-adminsdk-lx3fd-92e24818ed.json").openStream();
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseUrl("https://fyp2020-e4f03.firebaseio.com")
-                .build();
-        firebaseApp = FirebaseApp.initializeApp(options);
-    }
-
-    public Result<Long> login(String token){
-        if(firebaseApp == null && token!="000"){
-            try{
-                firebaseInitialization();
-            }
-            catch (IOException ex)
-            {
-                System.out.println(ex.toString());
-            }
-        }
-        Result<Long> result = new Result<>();
-
-        //<Testing Admin access>
-        if(token == "000"){
-            User u = userRepository.getByFirebaseUid("AVEO2GefpydRxMLmKGzPX8ERjEV2").get();
-            if(u == null){
-                u = new User();
-                u.setEmail("fyp2020group10@gmail.com");
-                u.setFirebaseUid("AVEO2GefpydRxMLmKGzPX8ERjEV2");
-                addUser(u);
-            }
-            result.setCode(0);
-            result.setData(u.getId());
-            return result;
-        }
-        //</Testing Admin access>
-
-        try{
-            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-            String uid = decodedToken.getUid();
-            User u = userRepository.getByFirebaseUid(uid).get();
-            if(u == null){
-                UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
-                u = new User();
-                u.setEmail(userRecord.getEmail());
-                u.setFirebaseUid(uid);
-                addUser(u);
-            }
-            result.setCode(0);
-            result.setData(u.getId());
-            return result;
-        }
-        catch(FirebaseAuthException ex)
-        {
-            result.setCode(1);
-            result.setMsg("Wrong token");
-        }
-        return result;
-    }
 
     /**
      * return user after adding user entity, return null if not success
@@ -115,6 +54,14 @@ public class UserService{
 
     public Long countAll() {
         return userRepository.countAll();
+    }
+
+    public User findByFirebaseUid(String firebaseUid){
+        if(firebaseUid == null) return null;
+        LOG.debug("find one user, param={}", firebaseUid);
+        User user = userRepository.findByFirebaseUid(firebaseUid);
+        LOG.debug("find one user, result={}", user);
+        return user;
     }
 
     /**
@@ -150,13 +97,15 @@ public class UserService{
         LOG.debug("add user info, param={}",userInfo);
         User user = userRepository.findById(id).orElse(null);
         // can't find user record or user info already exists
-        if (user == null || user.getUserInfo()!=null) return null;
+        if (user == null || user.getUserInfo()!=null)
+            return null;
         UserInfo info = userInfoService.setUserInfo(userInfo);
-        if (info == null) return null;
+        if (info == null)
+            return null;
         user.setUserInfo(info);
         try{
             userRepository.save(user);
-        }catch (IllegalArgumentException e){
+        }catch (Exception e){
             return null;
         }
         LOG.debug("add user info, result={}",userInfo);
@@ -205,6 +154,4 @@ public class UserService{
         LOG.debug("add account, result:{}", account);
         return account;
     }
-
-
 }

@@ -83,7 +83,7 @@ to get the desired effect
 	
 	 <ul class="navbar-nav ml-auto">
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="Login.html" class="nav-link">Logout</a>
+        <a href="Login.html" onclick="logout()" class="nav-link">Logout</a>
       </li>
     </ul>
   </nav>
@@ -92,8 +92,8 @@ to get the desired effect
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
-      <img src="img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+    <a href="Index.html" class="brand-link">
+      <img src="image/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">PMS</span>
     </a>
@@ -314,6 +314,8 @@ to get the desired effect
   </footer>
 </div>
 <!-- ./wrapper -->
+
+<script src="js/pages/common.js"></script>
 <script>
 $('#stock-recommendation-table').DataTable({
       "paging": true,

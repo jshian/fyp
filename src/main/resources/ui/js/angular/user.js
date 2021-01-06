@@ -1,12 +1,43 @@
 var userApp = angular.module('user', []);
-
+var addUserInfoUrl ="user/info/add"
+var getUserInfoUrl ="user/info/get"
 userApp.controller('userAddInfoCtrl', function($scope, $http) {
-	
-	
+	$scope.submitUserInfo =
+	function()
+		{
+			var method = "POST";
+			var url = addUserInfoUrl;
+			var data = $scope.userInfo;
+			data.maritalStatus = parseInt(data.maritalStatus);
+			data.dateOfBirth = $('#date-input').val();
+			var json = JSON.stringify($scope.userInfo);
+			console.log(json)
+			$scope.loading=true;
+			$.ajax({
+				type: method,
+				url: url,
+				contentType: "application/json; charset=utf-8",
+				headers : 
+					{
+						"Authorization" : getCookie("Authorization")
+					},
+				dataType: "json",
+				data: json,
+				success: function(data)
+					{
+						document.cookie = "IsFirstLogin=0;";
+						location.replace('Index.html');
+					},
+				always: function(data)
+					{
+						$scope.loading=false;
+					}
+			});
+		}
 })
 
 userApp.controller('userGetInfoCtrl', function($scope, $http) {
-	
+	$scope.refreshUserInfo = refreshUserInfo;
 	maritalStatusOptions = 
 		[
 			{
@@ -19,53 +50,38 @@ userApp.controller('userGetInfoCtrl', function($scope, $http) {
 			},
 		];
 	$scope.maritalStatusOptions = maritalStatusOptions;
-	$scope.userInfo = {
-		"id":1,
-		"dateOfBirth":"1998-01-01",
-		"maritalStatus":maritalStatusOptions[0],
-		"familyNum":4,
-		"childNum":1,
-		"monthlyIncome":100000,
-		"monthlyExpense":30000,
-		"livingExpense":10000,
-		"housingExpense":10000,
-		"taxExpense":100000,
-		"miscelExpense":10000,
-		"expectedProfit":1,
-		"expectedRisk":0.6,
-		"investmentGoal":10000000,
-		"targetYears":10,
-		"totalAsset":5000000,
-		"debt":1000000,
-		"debtRate":3.25,
-		"equity":2000000,
-		"cashFlow":2000000,
-		"commission":0.5,
-		"dividendCollectionFee":3
-	}
-	$scope.userNewInfo = {
-		"id":1,
-		"dateOfBirth":"1998-01-01",
-		"maritalStatus":maritalStatusOptions[0],
-		"familyNum":4,
-		"childNum":1,
-		"monthlyIncome":100000,
-		"monthlyExpense":30000,
-		"livingExpense":10000,
-		"housingExpense":10000,
-		"taxExpense":100000,
-		"miscelExpense":10000,
-		"expectedProfit":1,
-		"expectedRisk":0.6,
-		"investmentGoal":10000000,
-		"targetYears":10,
-		"totalAsset":5000000,
-		"debt":1000000,
-		"debtRate":3.25,
-		"equity":2000000,
-		"cashFlow":2000000,
-		"commission":0.5,
-		"dividendCollectionFee":3
+	$scope.loading=true;
+	$scope.userInfo = {};
+	$scope.userNewInfo = {};
+	refreshUserInfo();
+	function refreshUserInfo(){
+		
+		$scope.loading=true;
+		$.ajax({
+			type: "GET",
+			url: getUserInfoUrl,
+			headers : 
+			{
+				"Authorization" : getCookie("Authorization")
+			},
+			success: function(data)
+				{
+					var userInfo = data.data;
+					if (userInfo.maritalStatus){
+						userInfo.maritalStatus = maritalStatusOptions[1];
+					}else{
+						userInfo.maritalStatus = maritalStatusOptions[0];
+					}
+					userInfo.dateOfBirth = userInfo.dateOfBirth.substring(0, 10);
+					$scope.userInfo = userInfo;
+					$scope.userNewInfo = userInfo;
+					$scope.$apply();
+				},
+			always: function(data)
+				{
+					$scope.loading=false;
+				}
+		});
 	}
 })
 

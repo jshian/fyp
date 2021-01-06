@@ -4,6 +4,7 @@ import com.dl2.fyp.repository.user.UserRepository;
 import com.dl2.fyp.entity.User;
 import com.dl2.fyp.domain.JwtUser;
 import com.dl2.fyp.service.AuthService;
+import com.dl2.fyp.service.firebase.FirebaseService;
 import com.dl2.fyp.util.JwtTokenUtil;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -22,38 +23,31 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-
+    private FirebaseService firebaseService;
     private AuthenticationManager authenticationManager;
     private JwtUserDetailsServiceImpl jwtUserDetailsService;
     private JwtTokenUtil jwtTokenUtil;
     private UserRepository userRepository;
 
-    private FirebaseApp firebaseApp;
-
-    private void firebaseInitialization() throws IOException {
-        FileInputStream serviceAccount =
-                (FileInputStream) new URL("https://s3.ap-east-1.amazonaws.com/test.howard.gnil/fyp/fyp2020-e4f03-firebase-adminsdk-lx3fd-92e24818ed.json").openStream();
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseUrl("https://fyp2020-e4f03.firebaseio.com")
-                .build();
-        firebaseApp = FirebaseApp.initializeApp(options);
-    }
+    private static FirebaseApp firebaseApp;
 
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
     @Autowired
-    public AuthServiceImpl(AuthenticationManager authenticationManager, JwtUserDetailsServiceImpl jwtUserDetailsService, JwtTokenUtil jwtTokenUtil, UserRepository userRepository) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, JwtUserDetailsServiceImpl jwtUserDetailsService, JwtTokenUtil jwtTokenUtil, UserRepository userRepository, FirebaseService firebaseService) {
         this.authenticationManager = authenticationManager;
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userRepository = userRepository;
+        this.firebaseService = firebaseService;
     }
 
     @Override
@@ -68,31 +62,38 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String login(String token) {
         if(firebaseApp == null && token!="000"){
-            try{
-                firebaseInitialization();
-            }
-            catch (IOException ex)
-            {
-                System.out.println(ex.toString());
-            }
+            firebaseApp = firebaseService.getFirebaseApp();
         }
         try{
             String uid;
-            if (token == "000"){
-                uid = "AVEO2GefpydRxMLmKGzPX8ERjEV2";
+            if (token.equals("000")){
+                uid = "BGtGgQJRNNeQe5Bf6HOCdm5RYJo1";
             }else{
-                FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-                uid = decodedToken.getUid();
+                try {
+                    FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+                    uid = decodedToken.getUid();
+                }
+                catch(FirebaseAuthException ex){
+                    System.out.println(ex.toString());
+                    return null;
+                }
+            }
+            User user = userRepository.findByFirebaseUid(uid);
+            if(user==null) {
+                User userToAdd = new User();
+                userToAdd.setFirebaseUid(uid);
+                register(userToAdd);
             }
 
-            UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(uid, null);
+            UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(uid, "123456");
             final Authentication authentication = authenticationManager.authenticate(upToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(uid);
             final String jwtToken = jwtTokenUtil.generateToken(userDetails);
             return jwtToken;
-        }catch(FirebaseAuthException ex){
+        }
+        catch(Exception ex){
             System.out.println(ex.toString());
             return null;
         }

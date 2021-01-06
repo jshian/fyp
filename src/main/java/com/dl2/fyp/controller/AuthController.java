@@ -14,20 +14,22 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("${jwt.route.authentication.path}")
 public class AuthController {
     @Value("${jwt.header}")
     private String tokenHeader;
 
+    @Value("${jwt.tokenHead}")
+    private String tokenHeadString;
+
     @Autowired
     private AuthService authService;
 
-    @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
+    @RequestMapping(value = "${jwt.route.authentication.login}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest jwtAuthenticationRequest) throws AuthenticationException {
         final String token = authService.login(jwtAuthenticationRequest.getToken());
-
         // Return the token
-        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(tokenHeadString+token));
     }
 
     @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
@@ -41,10 +43,12 @@ public class AuthController {
         }
     }
 
+    /**
     @RequestMapping(value = "${jwt.route.authentication.register}", method = RequestMethod.POST)
     public User register(@RequestBody User addedUser) throws AuthenticationException{
         return authService.register(addedUser);
     }
+    **/
 
     @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {

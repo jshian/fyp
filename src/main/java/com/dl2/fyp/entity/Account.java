@@ -25,5 +25,9 @@ public class Account {
 
     @NotNull
     @Min(value = 0,message = "invalid negative input")
-    private BigDecimal amount;
+    private BigDecimal amount = new BigDecimal(0);
+
+    @NotNull
+    @Min(value = 0,message = "invalid negative input")
+    private BigDecimal growthRate = new BigDecimal(0);
 }
