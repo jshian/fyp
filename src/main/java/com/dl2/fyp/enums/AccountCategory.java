@@ -1,6 +1,8 @@
 package com.dl2.fyp.enums;
 
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum AccountCategory {
     CASH("Cash"),
     STOCK("Stock"),
@@ -12,6 +14,7 @@ public enum AccountCategory {
         this.category = category;
     }
 
+    @JsonValue
     public String getCategory() {
         return category;
     }

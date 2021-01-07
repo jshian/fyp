@@ -1,18 +1,20 @@
 package com.dl2.fyp.enums;
 
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum SectorCategory {
   ENERGY("Energy"),
   MATERIALS("Materials"),
   INDUSTRIALS("Industrials"),
-  UTILITIES("Utilties"),
-  HEALTHCARE("Healthcare"),
+  UTILITIES("Utilities"),
+  HEALTHCARE("Health Care"),
   FINANCIALS("Financials"),
-  CONSUMER_DISCRETIONARY("ConsumerDiscretionary"),
-  CONSUMER_STAPLES("ConsumerStaples"),
-  INFORMATION_TECHNOLOGY("InformationTechnology"),
-  COMMUNICATION_SERVICES("CommunicationServices"),
-  REAL_ESTATE("RealEstate");
+  CONSUMER_DISCRETIONARY("Consumer Discretionary"),
+  CONSUMER_STAPLES("Consumer Staples"),
+  INFORMATION_TECHNOLOGY("Information Technology"),
+  COMMUNICATION_SERVICES("Communication Services"),
+  REAL_ESTATE("Real Estate");
 
   private final String sector;
 
@@ -20,6 +22,7 @@ public enum SectorCategory {
     this.sector = sector;
   }
 
+  @JsonValue
   public String getSector() {
     return sector;
   }

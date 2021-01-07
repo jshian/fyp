@@ -40,10 +40,10 @@ public class FirebaseService{
 
     private void firebaseInitialization() throws IOException {
         InputStream serviceAccount =
-                 new URL("https://s3.ap-east-1.amazonaws.com/test.howard.gnil/fyp/fyp2020-80b5e-firebase-adminsdk-lppqp-c51e0a22b2.json").openStream();
+                 new URL(keyUrl).openStream();
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseUrl("https://fyp2020-80b5e.firebaseio.com")
+                .setDatabaseUrl(dataBaseUrl)
                 .build();
         firebaseApp = FirebaseApp.initializeApp(options);
     }

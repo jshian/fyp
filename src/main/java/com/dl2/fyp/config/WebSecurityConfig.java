@@ -70,9 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // don't create session
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
-                .antMatchers("/account/**").permitAll()
-                .antMatchers("/stock/**").permitAll()
-                .antMatchers("/market/**").permitAll()
+                .antMatchers("/data/**").permitAll()
                 .antMatchers("/image/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
@@ -99,6 +97,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     HttpMethod.GET,
                     "/",
                     "/*.html",
+                    "/favicon.ico",
                     "/**/favicon.ico",
                     "/**/*.html",
                     "/**/*.css",
