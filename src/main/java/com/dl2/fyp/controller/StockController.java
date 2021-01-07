@@ -26,14 +26,6 @@ public class StockController {
         return ResultUtil.success("add or update stock");
     }
 
-    @PostMapping("/event/add")
-    public Result addStockEvent(StockEvent stockEvent){
-        if(stockEvent==null) return ResultUtil.error(-1, "invalid input");
-        if(stockService.addStockEvent(stockEvent)==null)
-            return ResultUtil.error(-1,"failed to add");
-        return ResultUtil.success("add stock event");
-    }
-
     @GetMapping("/{code}")
     public Result getStockByCode(@PathVariable String code){
         if (code == null) return ResultUtil.error(-1, "invalid input");

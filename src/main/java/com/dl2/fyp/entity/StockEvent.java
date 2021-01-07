@@ -22,25 +22,15 @@ public class StockEvent {
     @Range(min=0,max=1,message = "Out of range")
     @NotNull
     private BigDecimal severity;
-    @NotNull
-    private Integer expectedPeriod;
-    @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
-    private Date begin;
-    @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
-    private Date expectedEnd;
-    @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
-    @LastModifiedDate
-    private Date lastUpdate;
+
+    private Date datetime;
     @Column(name = "title", columnDefinition = "text")
     @NotNull
     private String title;
-    @Column(name = "description", columnDefinition = "text")
+    @Column(name = "content", columnDefinition = "text")
     @NotNull
-    private String description;
-    @Column(name = "source", columnDefinition = "text")
+    private String content;
+    @Column(name = "link")
     @NotNull
-    private String source;
+    private String link;
 }
