@@ -1,4 +1,4 @@
-package com.dl2.fyp.dto.stock;
+package com.dl2.fyp.dto.stock_event;
 
 import com.dl2.fyp.entity.StockEvent;
 import lombok.Data;

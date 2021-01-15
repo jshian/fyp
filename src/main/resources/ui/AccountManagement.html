@@ -48,7 +48,7 @@
 	<script src="js/pages/dashboard3.js"></script>
 	
 	<!-- Angular Module-->
-	<script src="js/angular/user.js"></script>
+	<script src="js/angular/account-management-angular.js"></script>
 	
 </head>
 <!--
@@ -213,7 +213,7 @@ to get the desired effect
 								<label>Monthly Income: </label>
 							</div>
 							<div class="col-sm-3">
-								${{userInfo.monthlyIncome}}
+								{{userInfo.monthlyIncome| currency:"$"}}
 							</div>
 						</div>
 						<div class="form-group row">
@@ -221,7 +221,7 @@ to get the desired effect
 								<label>Living Expense (Monthly): </label>
 							</div>
 							<div class="col-sm-3">
-								${{userInfo.livingExpense}}
+								{{userInfo.livingExpense| currency:"$"}}
 							</div>
 						</div>
 						<div class="form-group row">
@@ -229,7 +229,7 @@ to get the desired effect
 								<label>Housing Expense (Monthly): </label>
 							</div>
 							<div class="col-sm-3">
-								${{userInfo.housingExpense}}
+								{{userInfo.housingExpense| currency:"$"}}
 							</div>
 						</div>
 						<div class="form-group row">
@@ -237,7 +237,7 @@ to get the desired effect
 								<label>Miscel Expense (Monthly): </label>
 							</div>
 							<div class="col-sm-3">
-								${{userInfo.miscelExpense}}
+								{{userInfo.miscelExpense| currency:"$"}}
 							</div>
 						</div>
 						<div class="form-group row">
@@ -245,7 +245,7 @@ to get the desired effect
 								<label>Tax Expense (Yearly): </label>
 							</div>
 							<div class="col-sm-3">
-								${{userInfo.taxExpense}}
+								{{userInfo.taxExpense| currency:"$"}}
 							</div>
 						</div>
 						<hr>
@@ -258,7 +258,7 @@ to get the desired effect
 								<label>Investment Goal: </label>
 							</div>
 							<div class="col-sm-3">
-								${{userInfo.investmentGoal}}
+								{{userInfo.investmentGoal| currency:"$"}}
 							</div>
 						</div>
 						<div class="form-group row">
@@ -299,7 +299,7 @@ to get the desired effect
 								<label>Total Asset: </label>
 							</div>
 							<div class="col-sm-3">
-								${{userInfo.totalAsset}}
+								{{userInfo.totalAsset| currency:"$"}}
 							</div>
 						</div>
 						<div class="form-group row">
@@ -307,7 +307,7 @@ to get the desired effect
 								<label>Total Debt: </label>
 							</div>
 							<div class="col-sm-3">
-								${{userInfo.debt}}
+								{{userInfo.debt| currency:"$"}}
 							</div>
 							<div class="col-sm-3">
 								<label>Interest Rate: </label>
@@ -321,7 +321,7 @@ to get the desired effect
 								<label>Cash Flow: </label>
 							</div>
 							<div class="col-sm-3">
-								${{userInfo.cashFlow}}
+								{{userInfo.cashFlow| currency:"$"}}
 							</div>
 						</div>
 						<div class="form-group row">
@@ -329,7 +329,7 @@ to get the desired effect
 								<label>Trading Commission Fee: </label>
 							</div>
 							<div class="col-sm-3 input-group">
-								${{userInfo.commission}} per share
+								{{userInfo.commission| currency:"$"}} per share
 							</div>
 						</div>
 						<div class="form-group row">
@@ -351,7 +351,7 @@ to get the desired effect
 								<label>Date of Birth: </label>
 							</div>
 							<div class="input-group date col-sm-3" id="reservationdate" data-target-input="nearest">
-								<input type="text" ng-model="userNewInfo.dateOfBirth" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+								<input id="date-input" type="text" ng-model="userNewInfo.dateOfBirth" class="form-control datetimepicker-input" data-target="#reservationdate"/>
 								<div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
 									<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 								</div>
@@ -586,7 +586,7 @@ to get the desired effect
 					<hr>
 					<div align="right">
 						<button onclick="cancel()" class="btn btn-warning">Cancel</button>
-						<button onclick="save()" class="btn btn-primary">Save</button>
+						<button ng-click="updateUserInfo()" class="btn btn-primary">Save</button>
 					</div>
 				 </form>
                 <!-- /.d-flex -->
@@ -622,19 +622,6 @@ to get the desired effect
 </div>
 <!-- ./wrapper -->
 <script src="js/pages/common.js"></script>
-<script>
-function update(){
-	document.getElementById("view-form").style.display = "none";
-	document.getElementById("update-form").style.display = "block";
-}
-function cancel(){
-	document.getElementById("view-form").style.display = "block";
-	document.getElementById("update-form").style.display = "none";
-}
-function save(){
-	location.reload();
-}
-
-</script>
+<script src="js/pages/account-management.js"></script>
 </body>
 </html>

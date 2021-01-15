@@ -20,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StockService {
@@ -79,7 +79,7 @@ public class StockService {
         Stock result;
         try {
             result = stockRepository.save(stock);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return null;
         }
         return result;
@@ -103,23 +103,34 @@ public class StockService {
         return result;
     }
 
-    public StockEvent getStockEvent(Long id){
+    public List<StockEvent> getStockEvent(Long id){
         LOG.debug("get stock event, id={}",id);
-        Stock stock = stockRepository.findById(id).orElse(null);
-        StockEvent result = stockEventRepository.findByStock(stock).orElse(null);
+        List<StockEvent> result = stockEventRepository.findByStockId(id).orElse(null);
         LOG.debug("get stock event, result={}",result);
-        return result;
+        return result.stream()
+                .filter(
+                        o -> o.getDatetime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                                .isAfter(LocalDate.now(ZoneId.systemDefault()).minusDays(7)))
+                .collect(Collectors.toList());
     }
 
-    public List<Map<String, Object>> getAllStock(){
+    public List<Map<String, Object>> getAllStockDto(){
         List list = new LinkedList();
         for (Stock stock : stockRepository.findAll()) {
             Map<String, Object> map = new HashMap<>();
-            map.put("stockId",stock.getId());
-            map.put("stockSymbol",stock.getCode());
+            map.put("id",stock.getId());
+            map.put("code",stock.getCode());
             list.add(map);
         }
         return list;
+    }
+
+    public List<Stock> getAllStock(){
+        List<Stock> stocks = new ArrayList<>();
+        for (Stock stock : stockRepository.findAll()) {
+            stocks.add(stock);
+        }
+        return stocks;
     }
 
 }

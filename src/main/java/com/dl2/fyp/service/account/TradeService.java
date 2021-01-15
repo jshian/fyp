@@ -1,6 +1,7 @@
 package com.dl2.fyp.service.account;
 
 import com.dl2.fyp.domain.Result;
+import com.dl2.fyp.dto.stock_event.StockEventDto;
 import com.dl2.fyp.entity.*;
 import com.dl2.fyp.enums.AccountCategory;
 import com.dl2.fyp.repository.account.AccountRepository;
@@ -16,7 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TradeService {
@@ -39,15 +46,15 @@ public class TradeService {
 
 
     @Transactional
-    public Result addTrade(Map<String, String> jsonInput){
-        LOG.debug("add stock in trade, param={}",jsonInput);
+    public Result addTrade(User user, Trade trade, Long stockId ){
+        LOG.debug("add stock in trade, param={}",trade);
         // get the json input
-        Account cashAccount = accountRepository.findAccount(Long.valueOf(jsonInput.get("userId")), AccountCategory.CASH).orElse(null);
-        Account stockAccount = accountRepository.findAccount(Long.valueOf(jsonInput.get("userId")), AccountCategory.STOCK).orElse(null);
-        Stock stock = stockRepository.findById(Long.valueOf(jsonInput.get("stockId"))).orElse(null);
-        Boolean action = Boolean.valueOf(jsonInput.get("action"));
-        BigDecimal price = new BigDecimal(jsonInput.get("price"));
-        Long numOfShare = Long.valueOf(jsonInput.get("numOfShare"));
+        Account cashAccount = user.getAccountList().stream().filter(o -> o.getCategory() == AccountCategory.CASH).findFirst().orElse(null);
+        Account stockAccount = user.getAccountList().stream().filter(o -> o.getCategory() == AccountCategory.STOCK).findFirst().orElse(null);
+        Stock stock = stockRepository.findById(stockId).orElse(null);
+        Boolean action = trade.getAction();
+        BigDecimal price = trade.getPrice();
+        Long numOfShare = trade.getNumOfShare();
         StockInTrade stockInTrade = stockInTradeRepository.findByAccountIdAndStockId(stockAccount.getId(),stock.getId()).orElse(null);
 
         // check input
@@ -68,56 +75,50 @@ public class TradeService {
             return ResultUtil.error(400,"not enough numOfShare in StockInTrade");
         }
         try {
-            //set trade
-            Trade trade = new Trade();
-            trade.setAction(action);
-            trade.setNumOfShare(numOfShare);
-            trade.setPrice(price);
-
             //set stock in trade
             if (action==true){
                 trade.setProfit(BigDecimal.ZERO);
                 trade.setProfitPercentage(BigDecimal.ZERO);
-                BigDecimal newAverageCost = stockInTrade.getAverageCost().add(price.multiply(BigDecimal.valueOf(numOfShare)))
-                        .divide(BigDecimal.valueOf(numOfShare).add(BigDecimal.valueOf(stockInTrade.getNumOfShare())));
+                BigDecimal newAverageCost =
+                        stockInTrade.getAverageCost()
+                        .multiply(BigDecimal.valueOf(stockInTrade.getNumOfShare()))
+                        .add(price.multiply(BigDecimal.valueOf(numOfShare)))
+                        .divide(BigDecimal.valueOf(stockInTrade.getNumOfShare()+numOfShare),2, RoundingMode.HALF_UP)
+                        ;
                 stockInTrade.setNumOfShare(numOfShare+stockInTrade.getNumOfShare());
                 stockInTrade.setAverageCost(newAverageCost);
                 trade.setCostAfter(newAverageCost);
+                trade.setTotalShareAfter(stockInTrade.getNumOfShare());
 
                 addTransaction(stockAccount,cashAccount,price.multiply(BigDecimal.valueOf(numOfShare)));
             }else{
                 BigDecimal profit = price.subtract(stockInTrade.getAverageCost()).multiply(BigDecimal.valueOf(numOfShare));
                 trade.setProfit(profit);
-                trade.setProfitPercentage(profit.divide(price.divide(stockInTrade.getAverageCost())));
+                trade.setProfitPercentage(price.subtract(stockInTrade.getAverageCost()).divide(stockInTrade.getAverageCost(), 2, RoundingMode.HALF_UP));
+                if(stockInTrade.getNumOfShare() > numOfShare)
+                    trade.setCostAfter(stockInTrade.getAverageCost());
+                else
+                    trade.setCostAfter(new BigDecimal(0));
+                stockInTrade.setAverageCost(trade.getCostAfter());
                 stockInTrade.setNumOfShare(stockInTrade.getNumOfShare()-numOfShare);
+                trade.setTotalShareAfter(stockInTrade.getNumOfShare());
 
                 addTransaction(cashAccount,stockAccount,price.multiply(BigDecimal.valueOf(numOfShare)));
             }
             stockInTrade.getTradeList().add(trade);
             stockInTradeRepository.save(stockInTrade);
-        }catch (IllegalArgumentException e){
+        }catch (Exception e){
             return ResultUtil.error(404, "failed to trade");
         }
         LOG.debug("add stock in trade, result={}",stockInTrade);
         return ResultUtil.success("added trading stock");
     }
 
-    public Result addTransaction(Map<String, String> jsonInput) {
-        LOG.debug("add transaction, param={}",jsonInput);
-        // get the json input
-        Account accountIn = accountRepository.findById(Long.valueOf(jsonInput.get("accountIn"))).orElse(null);
-        Account accountOut = accountRepository.findById(Long.valueOf(jsonInput.get("accountOut"))).orElse(null);
-        BigDecimal amount = new BigDecimal(jsonInput.get("amount"));
-        Result result = addTransaction(accountIn,accountOut,amount);
-        LOG.debug("add transaction, result={}",result);
-        return result;
-    }
-
     @Transactional
     public Result addTransaction(Account accountIn, Account accountOut, BigDecimal amount) {
         if (accountIn==null||accountOut==null) return ResultUtil.error(404,"account not founded");
         else if (amount.compareTo(BigDecimal.ZERO)<1) return ResultUtil.error(404, "require valid transaction amount");
-        else if (accountOut.getAmount().compareTo(amount)<1) return ResultUtil.error(400, "not enough cash in account");
+        else if (accountOut.getAmount().compareTo(amount)<1 && accountOut.getCategory() != AccountCategory.STOCK) return ResultUtil.error(400, "not enough cash in account");
         Transaction transaction = new Transaction();
         try {
             transaction.setAccountIn(accountIn);
@@ -127,15 +128,59 @@ public class TradeService {
             transaction.setAccountInAmountAfter(accountInAfter);
             accountIn.setAmount(accountInAfter);
             accountRepository.save(accountIn);
-            BigDecimal accountOutAfter = accountIn.getAmount().subtract(amount);
+            BigDecimal accountOutAfter = new BigDecimal(0);
+            if(accountOut.getCategory() == AccountCategory.STOCK){
+                for (StockInTrade stockInTrade :accountOut.getStockInTradesList()) {
+                    accountOutAfter = accountOutAfter.add(stockInTrade.getStock().getCurrentPrice().multiply(BigDecimal.valueOf(stockInTrade.getNumOfShare())));
+                }
+            }else{
+                accountOutAfter = accountOut.getAmount().subtract(amount);
+            }
             accountOut.setAmount(accountOutAfter);
             accountRepository.save(accountOut);
             transaction.setAccountOutAmountAfter(accountOutAfter);
             transactionRepository.save(transaction);
-        }catch (IllegalArgumentException e){
+        }catch (Exception e){
             return ResultUtil.error(404, "failed to trade");
         }
 
         return ResultUtil.success("added transaction");
+    }
+
+    public List<Trade> getTradeByStockInTradeId(User user, Long stockInTradeId, Long days){
+        Account stockAccount = user.getAccountList().stream()
+                .filter(o -> o.getCategory() == AccountCategory.STOCK)
+                .findFirst().orElse(null);
+        if(stockAccount==null)
+            return null;
+        StockInTrade stockInTrade = stockAccount.getStockInTradesList().stream()
+                .filter(o -> o.getId() == stockInTradeId)
+                .findFirst().orElse(null);
+        if(stockInTrade==null)
+            return null;
+        var result = stockInTrade.getTradeList().stream()
+                .filter(
+                        o -> o.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                                .isAfter(LocalDate.now(ZoneId.systemDefault()).minusDays(days)))
+                .collect(Collectors.toList());
+        result.sort(Comparator.comparing(Trade::getDate));
+        return result;
+    }
+
+    public List<Transaction> getTransactionByAccountId(User user, Long accountId, Long days){
+        Account account = user.getAccountList().stream()
+                .filter(o -> o.getId() == accountId)
+                .findFirst().orElse(null);
+        if(account==null)
+            return null;
+        var result = transactionRepository.getAllTransactionByAccountId(accountId).orElse(new ArrayList<>())
+                .stream()
+                .filter(
+                        o -> o.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                                .isAfter(LocalDate.now(ZoneId.systemDefault()).minusDays(days)))
+                .collect(Collectors.toList())
+                ;
+        result.sort(Comparator.comparing(Transaction::getDate));
+        return result;
     }
 }

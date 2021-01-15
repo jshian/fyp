@@ -1,14 +1,23 @@
 package com.dl2.fyp.controller;
 
 import com.dl2.fyp.domain.Result;
+import com.dl2.fyp.dto.stock_event.StockEventDto;
 import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockEvent;
+import com.dl2.fyp.entity.StockInTrade;
+import com.dl2.fyp.entity.User;
+import com.dl2.fyp.service.account.AccountService;
+import com.dl2.fyp.service.risk.RiskService;
 import com.dl2.fyp.service.stock.StockService;
+import com.dl2.fyp.service.user.UserService;
 import com.dl2.fyp.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.*;
 
 @RestController
 @RequestMapping("/stock")
@@ -18,13 +27,12 @@ public class StockController {
     @Autowired
     private StockService stockService;
 
-    @PostMapping("/add_update")
-    public Result addOrUpdateStock(Stock stock){
-        if(stock==null) return ResultUtil.error(-1, "invalid input");
-        if(stockService.addStock(stock)==null)
-            return ResultUtil.error(-1,"failed to add or update");
-        return ResultUtil.success("add or update stock");
-    }
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private RiskService riskService;
 
     @GetMapping("/{code}")
     public Result getStockByCode(@PathVariable String code){
@@ -35,17 +43,36 @@ public class StockController {
         return ResultUtil.success(stock);
     }
 
-    @GetMapping("/event/{id}")
-    public Result getStockEvent(@PathVariable Long id){
-        if (id == null) return ResultUtil.error(-1, "invalid input");
-        StockEvent stockEvent = stockService.getStockEvent(id);
-        if(stockEvent==null)
+    @GetMapping("/GetAllEvent")
+    public Result getStockEvent(Principal principal){
+        User user = userService.findByFirebaseUid(principal.getName());
+        if (user == null) return ResultUtil.error(-1, "invalid input");
+        List<StockInTrade> stockList = accountService.getAllStockInTrade(user);
+        List<StockEventDto> dtoList = new LinkedList<>();
+        for (StockInTrade stockInTrade : stockList){
+            Map map = new HashMap<String, Object>();
+            for(StockEvent stockEvent : stockService.getStockEvent(stockInTrade.getStock().getId())){
+                dtoList.add(new StockEventDto(stockEvent));
+            }
+        }
+        dtoList.sort(Comparator.comparing(StockEventDto::getDatetime).reversed());
+        dtoList.sort(Comparator.comparing(StockEventDto::getCode));
+        if(dtoList==null)
             return ResultUtil.error(-1,"failed to get");
-        return ResultUtil.success(stockEvent);
+        return ResultUtil.success(dtoList);
     }
 
     @GetMapping("/GetAll")
     public Result getAllStock(){
         return ResultUtil.success(stockService.getAllStock());
+    }
+
+
+    @GetMapping("/recommendation")
+    public Result getStockRecommendation(Principal principal){
+        User user = userService.findByFirebaseUid(principal.getName());
+        if (user == null) return ResultUtil.error(-1, "invalid input");
+        List<Stock> stocks = stockService.getAllStock();
+        return ResultUtil.success(riskService.getRecommendationByUser(user, stocks));
     }
 }

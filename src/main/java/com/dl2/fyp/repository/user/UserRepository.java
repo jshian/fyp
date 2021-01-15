@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User,Long>, CrudRepository
     @Query(value = "select * from t_user where firebase_uid = ?1", nativeQuery = true)
     User findByFirebaseUid(String FirebaseUid);
 
-    @Query(value = "select * from t_user u where u.firebaseUid = ?1", nativeQuery = true)
+    @Query(value = "select * from t_user where firebaseUid = ?1", nativeQuery = true)
     Optional<User> getByFirebaseUid(String FirebaseUid);
 
     @Query(value = "select count(id) from t_user", nativeQuery = true)

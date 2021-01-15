@@ -53,7 +53,7 @@
 	<script src="js/pages/dashboard3.js"></script>
 	
 	<!-- Angular Module-->
-	<script src="js/angular/account.js"></script>
+	<script src="js/angular/historical-statement-angular.js"></script>
 	
 </head>
 <!--
@@ -172,12 +172,12 @@ to get the desired effect
 				<div id="selected-account" class="row" >
 					<div class="col-sm-4" >
 					  <label>Account</label>
-					  <select ng-change="updateAccount()" ng-model="data.accountSelected" class="form-control select2bs4" style="width: 100%;" ng-options="account as account.accountCategory for account in accounts track by account.accountId">
+					  <select ng-change="updateAccount()" ng-model="data.accountSelected" class="form-control select2bs4" style="width: 100%;" ng-options="account as account.category for account in accounts track by account.id">
 					  </select>
 					</div>
 					<div  class="col-sm-4" id="selected-stock-div" style="visibility: hidden;">
 					  <label>Stock</label>
-					  <select ng-change="updateStatement()" ng-model="data.stockSelected" class="form-control select2bs4" style="width: 100%;" ng-options="stockInTrade as stockInTrade.symbol for stockInTrade in stockInTrades track by stockInTrade.stockInTradeId">
+					  <select ng-change="updateStatement()" ng-model="data.stockSelected" class="form-control select2bs4" style="width: 100%;" ng-options="stockInTrade as stockInTrade.code for stockInTrade in stockInTrades track by stockInTrade.stockInTradeId">
 					  </select>
 					</div>
 					<div class="col-sm-4">
@@ -192,39 +192,47 @@ to get the desired effect
 					  <thead>
 					  <tr>
 						<th>Date</th>
+						<th>Action</th>
 						<th>No. of Share</th>
 						<th>Price</th>
-						<th>Total no. of Share</th>
+						<th>Balance (Share)</th>
 						<th>Average Cost</th>
+						<th>Profit</th>
 					  </tr>
 					  </thead>
-					  <tbody>
+					  <tbody ng-controller="accountGetTradeCtrl">
 						  <tr ng-repeat="trade in stockStatement">
 							<td>{{trade.date}}</td>
-							<td>{{trade.numOfShare}}</td>
-							<td>${{trade.price}}</td>
-							<td>{{trade.totalShare}}</td>
-							<td>${{trade.avgCost}}</td>
+							<td>{{trade.action}}</td>
+							<td>{{trade.numOfShare| number}}</td>
+							<td>{{trade.price| currency:"$"}}</td>
+							<td>{{trade.totalShareAfter| number}}</td>
+							<td>{{trade.costAfter| currency:"$"}}</td>
+							<td>{{trade.profit| currency:"$"}}</td>
 						  </tr>
 					  </tbody>
 					</table>
+				</div>
+				<div  class="row" >
 					<table id="transaction-table" style="display:block" class="table table-striped">
 					  <thead>
 					  <tr>
 						<th>Date</th>
-						<th>Account To</th>
-						<th>Stock</th>
-						<th>Amount</th>
+						<th>From</th>
+						<th>To</th>
+						<th>Deposit</th>
+						<th>Withdraw</th>
 						<th>Balance</th>
 					  </tr>
 					  </thead>
-					  <tbody>
+					  <tbody ng-controller="accountGetTransactionCtrl">
 						  <tr ng-repeat="transaction in statement">
 							<td>{{transaction.date}}</td>
+							<td>{{transaction.accountFrom}}</td>
 							<td>{{transaction.accountTo}}</td>
-							<td>{{transaction.stockSymbol}}</td>
-							<td>${{transaction.amount}}</td>
-							<td>${{transaction.balance}}</td>
+							<td>{{transaction.deposit | currency:"$"}}</td>
+							<td>{{transaction.withdraw | currency:"$"}}</td>
+							<td>{{transaction.balance | currency:"$"}}</td>
 						  </tr>
 					  </tbody>
 					</table>
@@ -260,28 +268,6 @@ to get the desired effect
 </div>
 <!-- ./wrapper -->
 <script src="js/pages/common.js"></script>
-<script>
-	$('#trade-table').DataTable({
-      "paging": false,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": false,
-      "info": false,
-      "autoWidth": true,
-      "responsive": false,
-	  "pageLength": 5
-    });
-	$('#transaction-table').DataTable({
-      "paging": false,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": false,
-      "info": false,
-      "autoWidth": true,
-      "responsive": false,
-	  "pageLength": 5
-    });
-	
-</script>
+<script src="js/pages/historical-statement.js"></script>
 </body>
 </html>
