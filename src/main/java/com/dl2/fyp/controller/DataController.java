@@ -1,7 +1,7 @@
 package com.dl2.fyp.controller;
 
 import com.dl2.fyp.domain.Result;
-import com.dl2.fyp.dto.stock.StockEventInputDto;
+import com.dl2.fyp.dto.stock_event.StockEventInputDto;
 import com.dl2.fyp.dto.stock.StockPriceInputDto;
 import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockEvent;

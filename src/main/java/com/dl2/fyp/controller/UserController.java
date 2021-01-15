@@ -85,7 +85,7 @@ public class UserController {
         );
     }
 
-    @PostMapping("/info/update")
+    @PutMapping("/info/update")
     public Result updateUserInfo(@RequestBody UserInfo userInfo,Principal principal){
         User user = userService.findByFirebaseUid(principal.getName());
         if(user==null)

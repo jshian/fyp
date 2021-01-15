@@ -3,6 +3,7 @@ package com.dl2.fyp.entity;
 import com.dl2.fyp.enums.SectorCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +30,8 @@ public class Stock {
     @OneToMany(mappedBy = "stock",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Valid
     @JsonIgnore
-    private List<StockInTrade> stockInTradeList;
+    @ToString.Exclude
+    private List<StockInTrade> stockInTradeList  = new ArrayList<>();;
 
     @Column(name = "code", length = 6)
     @NotNull

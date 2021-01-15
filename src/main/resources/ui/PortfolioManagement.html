@@ -22,10 +22,13 @@
   <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
   
 	<!-- REQUIRED SCRIPTS -->
-	<!-- Angular Js -->
-	<script src="plugins/angularjs/angular.min.js"></script>
 	<!-- jQuery -->
 	<script src="plugins/jquery/jquery.min.js"></script>
+	<!-- Angular Js -->
+	<script src="plugins/angularjs/angular.min.js"></script>
+<script src="https://code.angularjs.org/1.4.7/angular-animate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.js"></script>
+	<script src="plugins/angular-ui/ui-bootstrap-tpls-2.5.0.min.js"></script>
 	<!-- jQuery UI -->
 	<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
 	<!-- Bootstrap 4 -->
@@ -45,17 +48,19 @@
 	<script src="plugins/flot-old/jquery.flot.resize.min.js"></script>
 	<!-- FLOT PIE PLUGIN - also used to draw donut charts -->
 	<script src="plugins/flot-old/jquery.flot.pie.min.js"></script>
-	<!-- Bootstrap Switch -->
-	<script src="plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 	<!-- Select2 -->
 	<script src="plugins/select2/js/select2.full.min.js"></script>
+	<!-- Bootstrap Switch -->
+<script src="https://rawgit.com/nostalgiaz/bootstrap-switch/master/dist/js/bootstrap-switch.js"></script>
+
+  <script src="https://rawgit.com/frapontillo/angular-bootstrap-switch/develop/common/module.js"></script>
+  <script src="https://rawgit.com/frapontillo/angular-bootstrap-switch/develop/src/directives/bsSwitch.js"></script>
 	<!-- OPTIONAL SCRIPTS -->
 	<script src="plugins/chart.js/Chart.min.js"></script>
 	<script src="js/pages/dashboard3.js"></script>
 	
 	<!-- Angular Module-->
-	<script src="js/angular/account.js"></script>
-	<script src="js/angular/stock.js"></script>
+	<script src="js/angular/portfolio-management-angular.js"></script>
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -67,7 +72,7 @@ to get the desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini" ng-app="portfolio" ng-controller="pageCtrl">
 <div class="wrapper">
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -168,9 +173,19 @@ to get the desired effect
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-12" >
-            <div class="card" ng-app="account" ng-controller="accountGetStockInTradeCtrl">
+            <div class="card"  ng-controller="accountGetStockInTradeCtrl">
               <div class="card-header border-0">
-				<h4>Your Portfolio</h4>
+				<div class="row">
+					<div class="col-sm-6">
+						<h4>Your Portfolio</h4>
+					</div>
+					<div class="col-sm-3 ml-auto">
+						<div align="right">Search:</div>
+					</div>
+					<div class="col-sm-3">
+						<input class="form-control" type="text" ng-model="searchText"/>
+					</div>
+				</div>
               </div>
               <div class="card-body">
 				<table id="stock-table" class="table table-bordered table-striped">
@@ -179,18 +194,30 @@ to get the desired effect
                     <th>Stock</th>
                     <th>No. of Share</th>
                     <th>Current Price (Cost)</th>
+					<th>Current Profit</th>
+					<th>Expected Price</th>
+					<th>Risk Index</th>
                     <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
-					  <tr ng-repeat="stockInTrade in stockInTrades">
-						<td>{{stockInTrade.symbol}}</td>
-						<td>{{stockInTrade.noOfShare}}</td>
-						<td>${{stockInTrade.currentPrice}} (${{stockInTrade.cost}})</td>
+					  <tr ng-repeat="stockInTrade in stockInTrades| filter:searchText">
+						<td>{{stockInTrade.code}}</td>
+						<td>{{stockInTrade.numOfShare| number}}</td>
+						<td>{{stockInTrade.currentPrice|currency:"$"}} ({{stockInTrade.averageCost|currency:"$"}})</td>
+						<td>
+							{{stockInTrade.profit| currency:"$"}}
+							<small ng-class="stockInTrade.textClass">
+								<i ng-class="stockInTrade.arrowClass"></i>
+								{{stockInTrade.profitPercentage| number:2}}%
+							</small>
+						</td>
+						<td>{{stockInTrade.expectedPrice|currency:"$"}}</td>
+						<td>{{stockInTrade.riskIndex|number:2}}</td>
 						<td>
 							<span>
-								<button class="btn btn-success" data-toggle="modal" data-target="#trade-modal">Buy</button>
-								<button class="btn btn-danger" data-toggle="modal" data-target="#trade-modal">Sell</button>
+								<button ng-click="selectStock($event, true)" ng-attr-for="{{stockInTrade.code}}"  class="btn btn-success" data-toggle="modal" data-target="#trade-modal">Buy</button>
+								<button ng-click="selectStock($event, false)" ng-attr-for="{{stockInTrade.code}}" class="btn btn-danger" data-toggle="modal" data-target="#trade-modal">Sell</button>
 							</span>
 						</td>
 					  </tr>
@@ -199,33 +226,50 @@ to get the desired effect
               </div>
             </div>
             <!-- /.card -->
-			<div id="stock-recommendation" class="card" ng-app="stock" ng-controller="stockGetRecommendationCtrl">
+			<div id="stock-recommendation" class="card" ng-controller="stockGetRecommendationCtrl">
 			  <div class="card-header border-0">
-				<h4>Recommended Portfolio</h4>
+				<div class="row">
+					<div class="col-sm-6">
+						<h4>Recommended Portfolio</h4>
+					</div>
+					<div class="col-sm-3 ml-auto">
+						<div align="right">Search:</div>
+					</div>
+					<div class="col-sm-3">
+						<input class="form-control" type="text" ng-model="searchText"/>
+					</div>
+				</div>
               </div>
               <div class="card-body" >
 				<table id="stock-recommendation-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>Stock</th>
-                    <th>No. of Share</th>
+                    <th>Sector</th>
                     <th>Current Price</th>
+                    <th>Recommended Buy-in Price</th>
+                    <th>Expected Price</th>
+                    <th>Expected Profit</th>
                     <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
-					  <tr ng-repeat="stockRecommendation in stockRecommendations">
-						<td>{{stockRecommendation.symbol}}</td>
-						<td>{{stockRecommendation.noOfShare}}</td>
-						<td>${{stockRecommendation.currentPrice}}</td>
+					  <tr ng-repeat="stockRecommendation in filtered = filterList | start: (currentPage - 1) * perPage | limitTo: perPage">
+						<td>{{stockRecommendation.code}}</td>
+						<td>{{stockRecommendation.sector}}</td>
+						<td>{{stockRecommendation.currentPrice|currency:"$"}}</td>
+						<td>{{stockRecommendation.recommendBuyPrice|currency:"$"}}</td>
+						<td>{{stockRecommendation.recommendSellPrice|currency:"$"}}</td>
+						<td>{{stockRecommendation.expectedProfit|currency:"$"}}</td>
 						<td>
 							<span>
-								<button class="btn btn-success" data-toggle="modal" data-target="#trade-modal">Buy</button>
-								<button class="btn btn-danger" data-toggle="modal" data-target="#trade-modal">Sell</button>
+								<button ng-click="selectStock($event, true)" ng-attr-for="{{stockRecommendation.code}}" class="btn btn-success" data-toggle="modal" data-target="#trade-modal">Buy</button>
+								<button ng-click="selectStock($event, false)" ng-attr-for="{{stockRecommendation.code}}" class="btn btn-danger" data-toggle="modal" data-target="#trade-modal">Sell</button>
 							</span>
 						</td>
 					  </tr>
                   </tbody>
+				  <uib-pagination total-items="filterList.length" items-per-page="10" next-text="Next" previous-text="Previous" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true"></uib-pagination>
                 </table>
               </div>
             </div>
@@ -241,11 +285,11 @@ to get the desired effect
   <!-- /.content-wrapper -->
 
 <!-- Modal -->
-  <div class="modal fade" id="trade-modal" role="dialog">
+  <div class="modal fade" id="trade-modal" role="dialog" ng-controller="stockTradeCtrl">
     <div class="modal-dialog">
 
       <!-- Modal content-->
-      <div class="modal-content" id="trade-form" ng-app="stock">
+      <div class="modal-content" id="trade-form">
         <div class="modal-header">
           <h4> Trade</h4>
         </div>
@@ -256,7 +300,7 @@ to get the desired effect
 					<label>Stock: </label>
 				</div>
 				<div class="col-sm-4">
-					<select ng-model="trade.stock" ng-controller="stockGetStockListCtrl" class="form-control select2bs4" style="width: 100%;"  ng-options="stock as stock.symbol for stock in stocks track by stock.stockId">
+					<select ng-model="shared.trade.stock" class="form-control select2bs4" style="width: 100%;"  ng-options="stock as stock.code for stock in stocks track by stock.id">
 					 </select>
 				</div>
             </div>
@@ -265,7 +309,8 @@ to get the desired effect
 					<label>Action: </label>
 				</div>
 				<div class="col-sm-8">
-					<input type="checkbox" name="my-checkbox" ng-model="trade.action" data-on-text="Buy" data-off-text="Sell" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+					<input bs-switch checked type="checkbox" ng-model="shared.trade.action" switch-on-text="Buy" switch-off-text="Sell" switch-off-color="danger" switch-on-color="success" switch-active="{{shared.trade.isInTrade}}">
+					
 				</div>
             </div>
             <div class="form-group row">
@@ -273,7 +318,7 @@ to get the desired effect
 					<label>No. of Share: </label>
 				</div>
 				<div class="input-group col-sm-4">
-					<input class="form-control" type="number" ng-model="trade.numOfShare"/>
+					<input class="form-control" type="number" ng-model="shared.trade.numOfShare"/>
 				</div>
 			</div>
             <div class="form-group row">
@@ -286,14 +331,14 @@ to get the desired effect
 						  <i class="fas fa-dollar-sign"></i>
 						</span>
 					 </div>
-					<input class="form-control" type="number" ng-model="trade.price" min="0" step=".01"/>
+					<input class="form-control" type="number" ng-model="shared.trade.price" min="0" step=".01"/>
 				</div>
 			</div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-warning" data-dismiss="modal"> Cancel</button>
-		  <button type="submit" class="btn btn-success" data-dismiss="modal">Save</button>
+		  <button type="submit" ng-click="submit()" class="btn btn-success" data-dismiss="modal">Save</button>
         </div>
       </div>
     </div>
@@ -316,41 +361,7 @@ to get the desired effect
 <!-- ./wrapper -->
 
 <script src="js/pages/common.js"></script>
-<script>
-$('#stock-recommendation-table').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": false,
-      "info": false,
-      "autoWidth": false,
-      "responsive": false,
-    });
-$('#stock-table').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": false,
-      "info": false,
-      "autoWidth": false,
-      "responsive": false,
-    });
-
-$("input[data-bootstrap-switch]").each(function(){
-      $(this).bootstrapSwitch('state', $(this).prop('checked'));
-    })
-angular.element(function() {
-  angular.bootstrap($('#stock-recommendation'), ['stock']);
-});
-angular.element(function() {
-  angular.bootstrap($('#trade-modal'), ['stock']);
-});
-
-
-//Initialize Select2 Elements
-$('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
+<script src="js/pages/portfolio-management.js">
 </script>
 </body>
 </html>

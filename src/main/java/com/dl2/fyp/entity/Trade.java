@@ -3,6 +3,7 @@ package com.dl2.fyp.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -12,6 +13,7 @@ import java.util.Date;
 
 @Data
 @Entity(name = "t_trade")
+@EntityListeners(AuditingEntityListener.class)
 public class Trade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +22,10 @@ public class Trade {
     @NotNull
     @Min(value = 0, message = "invalid negative input")
     private Long numOfShare;
+
+    @NotNull
+    @Min(value = 0, message = "invalid negative input")
+    private Long totalShareAfter;
 
     @NotNull
     @Min(value = 0, message = "invalid negative input")

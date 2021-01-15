@@ -48,9 +48,7 @@
 	<script src="js/pages/dashboard3.js"></script>
 	
 	<!-- Angular Module-->
-	<script src="js/angular/account.js"></script>
-	<script src="js/angular/stock.js"></script>
-	<script src="js/angular/market.js"></script>
+	<script src="js/angular/index-angular.js"></script>
 	
 </head>
 <!--
@@ -63,7 +61,7 @@ to get the desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini"  ng-app="index">
 <div class="wrapper">
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -164,7 +162,7 @@ to get the desired effect
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-6" >
-            <div class="card" ng-app="account" ng-controller="accountGetAccountChartsCtrl">
+            <div class="card" ng-controller="accountGetAccountChartsCtrl">
               <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
                   <h3 class="card-title">Portfolio Overview</h3>
@@ -174,7 +172,7 @@ to get the desired effect
               <div class="card-body">
                 <div class="d-flex">
                   <p class="d-flex flex-column">
-                    <span class="text-bold text-lg">${{totalAsset}}</span>
+                    <span class="text-bold text-lg">{{totalAsset| currency:"$"}}</span>
                     <span>Total Asset</span>
                   </p>
                 </div>
@@ -188,7 +186,7 @@ to get the desired effect
             </div>
             <!-- /.card -->
 			
-			<div class="card" ng-app="stock" ng-controller="stockGetNewsCtrl">
+			<div class="card" ng-controller="stockGetNewsCtrl">
               <div class="card-header border-0">
                 <h3 class="card-title">Stock News</h3>
                 <div class="card-tools">
@@ -212,13 +210,13 @@ to get the desired effect
                   <tbody>
 				  <tr ng-repeat="stockNew in stockNews">
                     <td>
-                      {{stockNew.stockSymbol}}
+                      {{stockNew.code}}
                     </td>
                     <td>
                       {{stockNew.title}}
 					</td>
                     <td>
-                      <a ng-href="\stock\news-{{stockNew.id}}.html" class="text-muted">
+                      <a ng-href="{{stockNew.link}}" target="_blank" class="text-muted">
                         <i class="fas fa-search"></i>
                       </a>
                     </td>
@@ -231,7 +229,7 @@ to get the desired effect
             
           </div>
           <!-- /.col-md-6 -->
-          <div class="col-lg-6" ng-app="account" ng-controller="accountGetStockInTradeChartsCtrl">
+          <div class="col-lg-6" ng-controller="accountGetStockInTradeChartsCtrl">
 			<div class="card">
               <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
@@ -242,7 +240,7 @@ to get the desired effect
               <div class="card-body">
                 <div class="d-flex">
                   <p class="d-flex flex-column">
-                    <span class="text-bold text-lg">${{stockSum}}</span>
+                    <span class="text-bold text-lg">{{stockSum| currency:"$"}}</span>
                     <span>Net Liquidation Value</span>
                   </p>
                 </div>
@@ -278,15 +276,15 @@ to get the desired effect
                   <tbody>
 					  <tr ng-repeat="stock in stocks">
 						<td>{{stock.symbol}}</td>
-						<td>{{stock.noOfShare}}</td>
-						<td>${{stock.currentPrice}} (${{stock.cost}})</td>
-						<td>${{stock.amount}}</td>
+						<td>{{stock.noOfShare| number}}</td>
+						<td>{{stock.currentPrice| currency:"$"}} ({{stock.cost| currency:"$"}})</td>
+						<td>{{stock.amount| currency:"$"}}</td>
 						<td>
 						  <small ng-class="stock.textClass">
 							<i ng-class="stock.arrowClass"></i>
-							{{stock.changePercent}}%
+							{{stock.changePercent| number:2}}%
 						  </small>
-						  ${{stock.change}}
+						  {{stock.change| currency:"$"}}
 						</td>
 					  </tr>
                   </tbody>

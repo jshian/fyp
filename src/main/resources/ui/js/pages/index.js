@@ -29,8 +29,4 @@ $('#market-news-table').DataTable({
       "autoWidth": false,
       "responsive": false
     });
-//</page config>
-
-angular.element(function() {
-  angular.bootstrap(document, ['account','stock','market']);
-});
+//</page config>\
