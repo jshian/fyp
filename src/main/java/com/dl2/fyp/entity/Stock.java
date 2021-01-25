@@ -41,12 +41,22 @@ public class Stock {
     @NotNull
     private String name;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    @LastModifiedDate
+    private Date lastUpdated = new Date();
+
     @Min(value = 0, message = "invalid negative input")
     @NotNull
-    private BigDecimal currentPrice = new BigDecimal(0);
+    private BigDecimal currentPrice = new BigDecimal(-1);
+    private BigDecimal upperStop;
+    private BigDecimal downStop;
     @Range(min = 0, max = 1, message = "Out of range")
-    @NotNull
-    private BigDecimal riskIndex = new BigDecimal(0);
+    private BigDecimal accuracy;
+    private Boolean isDelist = false;
+    private BigDecimal expectedOutcome;
+
+
     @Min(value = 0, message = "invalid negative input")
     @NotNull
     private BigDecimal recommendBuyPrice = new BigDecimal(0);
@@ -56,16 +66,10 @@ public class Stock {
     @Min(value = 0, message = "invalid negative input")
     @NotNull
     private Integer holdingPeriod = 0;
-    @NotNull
-    private BigDecimal expectedProfit = new BigDecimal(0);
     @Min(value = 0, message = "invalid negative input")
     @NotNull
     private BigDecimal dividendProfit = new BigDecimal(0);
     @Min(value = 0, message = "invalid negative input")
     @NotNull
     private BigDecimal volatilityProfit = new BigDecimal(0);
-    @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
-    @LastModifiedDate
-    private Date lastUpdated = new Date();
 }
