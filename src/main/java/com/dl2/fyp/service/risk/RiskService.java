@@ -1,13 +1,12 @@
 package com.dl2.fyp.service.risk;
 
-import com.dl2.fyp.entity.Account;
-import com.dl2.fyp.entity.Stock;
-import com.dl2.fyp.entity.User;
-import com.dl2.fyp.entity.UserInfo;
+import com.dl2.fyp.entity.*;
 import com.dl2.fyp.enums.AccountCategory;
-import com.dl2.fyp.service.stock.StockService;
+import com.dl2.fyp.repository.account.StockInTradeRepository;
+import com.dl2.fyp.repository.stock.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,11 +17,41 @@ import java.util.List;
 public class RiskService {
     private static Logger LOG = LoggerFactory.getLogger(RiskService.class);
 
+    @Autowired
+    private StockRepository stockRepository;
+
+    @Autowired
+    private StockInTradeRepository stockInTradeRepository;
+
     public BigDecimal calculateRiskFromUserInfo(UserInfo userInfo){
         return new BigDecimal(0);
     }
-    public BigDecimal calculateRiskFromStock(Stock stock){
-        return new BigDecimal(0);
+
+    /**
+     *
+     * @param stock stock
+     * @param user
+     * @return -1 if the stock is delisted, return risk index otherwise
+     */
+    public BigDecimal calculateRiskFromStock(Stock stock, User user){
+        BigDecimal A = user.getUserInfo().getAcceptableRisk();
+        StockInTrade stockInTrade = null;
+        for (Account account : user.getAccountList()) {
+            stockInTrade = stockInTradeRepository.findByAccountIdAndStockId(account.getId(),stock.getId()).orElse(null);
+            if(stockInTrade!=null) break;
+        }
+        BigDecimal investmentPrice = stockInTrade == null? stock.getCurrentPrice():stockInTrade.getAverageCost();
+        // expected return = expected outcome / investment *100
+        BigDecimal expectedReturn = stock.getExpectedOutcome().divide(investmentPrice).scaleByPowerOfTen(2);
+        // upperStop return = upperStop / investment *100
+        BigDecimal upperStopReturn = stock.getUpperStop().divide(investmentPrice).scaleByPowerOfTen(2);
+        // downStop return = downStop / investment *100
+        BigDecimal downStopReturn = stock.getDownStop().divide(investmentPrice).scaleByPowerOfTen(2);
+        // return variance = accuracy * (upperStop return - expected return)^2 + (1 - accuracy)*(downStop return - expected return)^2
+        BigDecimal returnVariance = stock.getAccuracy().multiply(upperStopReturn.subtract(expectedReturn))
+                                    .add(BigDecimal.ONE.subtract(stock.getAccuracy()).multiply(downStopReturn.subtract(expectedReturn)));
+        // Certainty Equivalent = expected return - 1/2*A*return variance
+        return expectedReturn.subtract(returnVariance.multiply(A).multiply(BigDecimal.valueOf(0.5d)));
     }
 
     public List<Stock> getRecommendationByUser(User user, List<Stock> stocks){

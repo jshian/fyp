@@ -11,4 +11,5 @@ public interface StockInTradeRepository extends CrudRepository<StockInTrade, Lon
 
 
     Optional<StockInTrade> findByAccountIdAndStockId(Long accountId, Long StockId);
+
 }

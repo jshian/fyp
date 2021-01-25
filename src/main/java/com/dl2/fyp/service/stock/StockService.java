@@ -4,21 +4,19 @@ import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockEvent;
 import com.dl2.fyp.repository.stock.StockEventRepository;
 import com.dl2.fyp.repository.stock.StockRepository;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.minidev.json.JSONArray;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -131,6 +129,16 @@ public class StockService {
             stocks.add(stock);
         }
         return stocks;
+    }
+
+    public List<Stock> getStockByKeywordAndPaging(String keyword, int pageNumber,int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber,pageSize,Sort.by(Sort.Direction.ASC,"code"));
+        return stockRepository.findStocksByKeyword(keyword, pageable);
+    }
+
+    public List<StockEvent> getStockEventByKeywordAndPaging(String keyword, int pageNumber, int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber,pageSize,Sort.by(Sort.Direction.DESC,"datetime"));
+        return stockEventRepository.findStockEventsByKeyword(keyword, pageable);
     }
 
 }

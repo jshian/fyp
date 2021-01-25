@@ -43,6 +43,11 @@ public class StockController {
         return ResultUtil.success(stock);
     }
 
+    @GetMapping("/GetStocks/{keyword}_{pageNumber}_{pageSize}")
+    public Result getStockByKeyword(@PathVariable String keyword, @PathVariable Integer pageNumber, @PathVariable Integer pageSize){
+        return ResultUtil.success(stockService.getStockByKeywordAndPaging(keyword,pageNumber,pageSize));
+    }
+
     @GetMapping("/GetAllEvent")
     public Result getStockEvent(Principal principal){
         User user = userService.findByFirebaseUid(principal.getName());
@@ -62,6 +67,11 @@ public class StockController {
         return ResultUtil.success(dtoList);
     }
 
+    @GetMapping("/GetStockEvents/{keyword}_{pageNumber}_{pageSize}")
+    public Result getStockEventByKeyword(@PathVariable String keyword, @PathVariable Integer pageNumber, @PathVariable Integer pageSize){
+        return ResultUtil.success(stockService.getStockEventByKeywordAndPaging(keyword,pageNumber,pageSize));
+    }
+
     @GetMapping("/GetAll")
     public Result getAllStock(){
         return ResultUtil.success(stockService.getAllStock());
@@ -74,5 +84,15 @@ public class StockController {
         if (user == null) return ResultUtil.error(-1, "invalid input");
         List<Stock> stocks = stockService.getAllStock();
         return ResultUtil.success(riskService.getRecommendationByUser(user, stocks));
+    }
+
+    @GetMapping("/stockRisk/{code}")
+    public Result getRiskFromStock(Principal principal, @PathVariable String code){
+        User user = userService.findByFirebaseUid(principal.getName());
+        if( user == null || code == null) return ResultUtil.error(-1, "invalid input");
+        Stock stock = stockService.getStockByCode(code);
+        if(stock==null) return ResultUtil.error(-1,"failed to get");
+        else if(stock.getIsDelist()==true) return ResultUtil.error(-1,"the stock is delisted");
+        return ResultUtil.success(riskService.calculateRiskFromStock(stock, user));
     }
 }
