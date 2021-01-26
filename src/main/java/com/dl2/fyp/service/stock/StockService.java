@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -131,14 +132,14 @@ public class StockService {
         return stocks;
     }
 
-    public List<Stock> getStockByKeywordAndPaging(String keyword, int pageNumber,int pageSize){
+    public Page<Stock> getStockByKeywordAndPaging(String keyword, int pageNumber,int pageSize){
         Pageable pageable = PageRequest.of(pageNumber,pageSize,Sort.by(Sort.Direction.ASC,"code"));
-        return stockRepository.findStocksByKeyword(keyword, pageable);
+        return stockRepository.findByCodeContaining(keyword, pageable);
     }
 
-    public List<StockEvent> getStockEventByKeywordAndPaging(String keyword, int pageNumber, int pageSize){
+    public Page<StockEvent> getStockEventByKeywordAndPaging(String keyword, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber,pageSize,Sort.by(Sort.Direction.DESC,"datetime"));
-        return stockEventRepository.findStockEventsByKeyword(keyword, pageable);
+        return stockEventRepository.findByTitleContaining(keyword,pageable);
     }
 
 }

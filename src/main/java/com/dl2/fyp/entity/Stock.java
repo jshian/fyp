@@ -72,4 +72,6 @@ public class Stock {
     @Min(value = 0, message = "invalid negative input")
     @NotNull
     private BigDecimal volatilityProfit = new BigDecimal(0);
+
+    private BigDecimal riskIndex;
 }

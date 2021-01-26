@@ -3,7 +3,6 @@ package com.dl2.fyp.service.risk;
 import com.dl2.fyp.entity.*;
 import com.dl2.fyp.enums.AccountCategory;
 import com.dl2.fyp.repository.account.StockInTradeRepository;
-import com.dl2.fyp.repository.stock.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,6 @@ import java.util.List;
 @Service
 public class RiskService {
     private static Logger LOG = LoggerFactory.getLogger(RiskService.class);
-
-    @Autowired
-    private StockRepository stockRepository;
 
     @Autowired
     private StockInTradeRepository stockInTradeRepository;

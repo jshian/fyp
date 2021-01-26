@@ -14,6 +14,7 @@ import com.dl2.fyp.util.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -45,7 +46,12 @@ public class StockController {
 
     @GetMapping("/GetStocks/{keyword}_{pageNumber}_{pageSize}")
     public Result getStockByKeyword(@PathVariable String keyword, @PathVariable Integer pageNumber, @PathVariable Integer pageSize){
-        return ResultUtil.success(stockService.getStockByKeywordAndPaging(keyword,pageNumber,pageSize));
+        if (pageNumber == null || pageSize == null) return ResultUtil.error(-1,"invalid input");
+        Page<Stock> stocks = stockService.getStockByKeywordAndPaging(keyword,pageNumber,pageSize);
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("total page", stocks.getTotalPages());
+        result.put("stocks", stocks.getContent());
+        return ResultUtil.success(result);
     }
 
     @GetMapping("/GetAllEvent")
@@ -67,9 +73,14 @@ public class StockController {
         return ResultUtil.success(dtoList);
     }
 
-    @GetMapping("/GetStockEvents/{keyword}_{pageNumber}_{pageSize}")
+    @GetMapping("/GetStockEvents/{keyword}/{pageNumber}/{pageSize}")
     public Result getStockEventByKeyword(@PathVariable String keyword, @PathVariable Integer pageNumber, @PathVariable Integer pageSize){
-        return ResultUtil.success(stockService.getStockEventByKeywordAndPaging(keyword,pageNumber,pageSize));
+        if (pageNumber == null || pageSize == null) return ResultUtil.error(-1,"invalid input");
+        Page<StockEvent> events = stockService.getStockEventByKeywordAndPaging(keyword,pageNumber,pageSize);
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("total pages", events.getTotalPages());
+        result.put("events",events.getContent());
+        return ResultUtil.success(result);
     }
 
     @GetMapping("/GetAll")
