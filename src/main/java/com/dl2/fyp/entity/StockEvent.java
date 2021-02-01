@@ -12,6 +12,7 @@ import java.util.Date;
 
 @Data
 @Entity(name = "t_stock_event")
+@Table(indexes = @Index(name = "title_time", columnList = "title,datetime"))
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StockEvent {
     @Id
@@ -26,6 +27,7 @@ public class StockEvent {
     @NotNull
     private BigDecimal severity;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date datetime;
     @Column(name = "title", columnDefinition = "text")
     @NotNull

@@ -11,6 +11,7 @@ import java.util.List;
 
 @Data
 @Entity(name = "t_user")
+@Table(indexes = @Index(name = "firebaseUid", columnList = "firebaseUid", unique = true))
 public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

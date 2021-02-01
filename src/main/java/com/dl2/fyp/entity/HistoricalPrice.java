@@ -10,6 +10,7 @@ import java.util.Date;
 
 @Data
 @Entity(name = "t_historical_price")
+@Table(uniqueConstraints = @UniqueConstraint(name = "code_date",columnNames = {"code","date"}))
 public class HistoricalPrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
