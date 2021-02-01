@@ -29,10 +29,10 @@ public class StockEvent {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date datetime;
-    @Column(name = "title", columnDefinition = "text")
+    @Column(name = "title", columnDefinition = "varchar(255)")
     @NotNull
     private String title;
-    @Column(name = "content", columnDefinition = "text")
+    @Column(name = "content", columnDefinition = "varchar(255)")
     @NotNull
     private String content;
     @Column(name = "link")

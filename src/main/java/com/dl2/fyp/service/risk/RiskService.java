@@ -2,6 +2,7 @@ package com.dl2.fyp.service.risk;
 
 import com.dl2.fyp.entity.*;
 import com.dl2.fyp.enums.AccountCategory;
+import com.dl2.fyp.repository.account.AccountRepository;
 import com.dl2.fyp.repository.account.StockInTradeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -18,6 +20,9 @@ public class RiskService {
 
     @Autowired
     private StockInTradeRepository stockInTradeRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     public BigDecimal calculateRiskFromUserInfo(UserInfo userInfo){
         return new BigDecimal(0);
@@ -58,6 +63,20 @@ public class RiskService {
             for (var stockInTrade: stockAccount.getStockInTradesList()){
                 stockInTradeList.add(stockInTrade.getStock());
             }
+        }
+        for (Stock stock : stocks){
+            if (!stockInTradeList.contains(stock))
+                recommendations.add(stock);
+        }
+        return recommendations;
+    }
+
+    public  List<Stock> getRecommendationByUser2(User user, List<Stock> stocks){
+        List<Stock> recommendations = new LinkedList<>();
+        Account stockAccount = accountRepository.findAccount(user.getId(),AccountCategory.STOCK).orElse(null);
+        List<Stock> stockInTradeList = new LinkedList<>();
+        if (stockAccount != null){
+            stockInTradeList = stockInTradeRepository.findStockByAccount(stockAccount).orElse(null);
         }
         for (Stock stock : stocks){
             if (!stockInTradeList.contains(stock))
