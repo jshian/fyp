@@ -9,21 +9,17 @@ import com.dl2.fyp.enums.AccountCategory;
 import com.dl2.fyp.service.user.UserInfoService;
 import com.dl2.fyp.service.user.UserService;
 import com.dl2.fyp.util.ResultUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.security.Principal;
 
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private static Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;

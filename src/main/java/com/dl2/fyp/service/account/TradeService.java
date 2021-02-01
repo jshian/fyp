@@ -1,7 +1,6 @@
 package com.dl2.fyp.service.account;
 
 import com.dl2.fyp.domain.Result;
-import com.dl2.fyp.dto.stock_event.StockEventDto;
 import com.dl2.fyp.entity.*;
 import com.dl2.fyp.enums.AccountCategory;
 import com.dl2.fyp.repository.account.AccountRepository;
@@ -10,8 +9,6 @@ import com.dl2.fyp.repository.account.TradeRepository;
 import com.dl2.fyp.repository.account.TransactionRepository;
 import com.dl2.fyp.repository.stock.StockRepository;
 import com.dl2.fyp.util.ResultUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +24,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class TradeService {
-    private static Logger LOG = LoggerFactory.getLogger(TradeService.class);
 
     @Autowired
     private StockInTradeRepository stockInTradeRepository;
@@ -47,7 +43,6 @@ public class TradeService {
 
     @Transactional
     public Result addTrade(User user, Trade trade, Long stockId ){
-        LOG.debug("add stock in trade, param={}",trade);
         // get the json input
         Account cashAccount = user.getAccountList().stream().filter(o -> o.getCategory() == AccountCategory.CASH).findFirst().orElse(null);
         Account stockAccount = user.getAccountList().stream().filter(o -> o.getCategory() == AccountCategory.STOCK).findFirst().orElse(null);
@@ -110,7 +105,6 @@ public class TradeService {
         }catch (Exception e){
             return ResultUtil.error(404, "failed to trade");
         }
-        LOG.debug("add stock in trade, result={}",stockInTrade);
         return ResultUtil.success("added trading stock");
     }
 
@@ -167,6 +161,12 @@ public class TradeService {
         return result;
     }
 
+    // sql version not tested
+    public List<Trade> getTradeByStockInTradeId2(Long stockInTradeId, Long days){
+        return tradeRepository.findOrderedTradeListByIdAndDate(stockInTradeId,
+                LocalDate.now(ZoneId.systemDefault()).minusDays(days)).orElse(null);
+    }
+
     public List<Transaction> getTransactionByAccountId(User user, Long accountId, Long days){
         Account account = user.getAccountList().stream()
                 .filter(o -> o.getId() == accountId)
@@ -182,5 +182,11 @@ public class TradeService {
                 ;
         result.sort(Comparator.comparing(Transaction::getDate));
         return result;
+    }
+
+    //sql version not tested
+    public List<Transaction> getTransactionByAccountId2(Long accountId, Long days){
+        return transactionRepository.getOrderedTransactionByAccountIdAndDate(accountId,
+                LocalDate.now(ZoneId.systemDefault()).minusDays(days)).orElse(null);
     }
 }

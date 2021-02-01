@@ -11,8 +11,6 @@ import com.dl2.fyp.service.risk.RiskService;
 import com.dl2.fyp.service.stock.StockService;
 import com.dl2.fyp.service.user.UserService;
 import com.dl2.fyp.util.ResultUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +21,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/stock")
 public class StockController {
-    private static Logger LOG = LoggerFactory.getLogger(StockController.class);
 
     @Autowired
     private StockService stockService;

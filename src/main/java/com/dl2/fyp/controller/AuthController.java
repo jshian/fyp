@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("${jwt.route.authentication.path}")
@@ -26,7 +27,7 @@ public class AuthController {
     private AuthService authService;
 
     @RequestMapping(value = "${jwt.route.authentication.login}", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest jwtAuthenticationRequest) throws AuthenticationException {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest jwtAuthenticationRequest) throws AuthenticationException, IOException {
         final String token = authService.login(jwtAuthenticationRequest.getToken());
         // Return the token
         return ResponseEntity.ok(new JwtAuthenticationResponse(tokenHeadString+token));

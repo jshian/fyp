@@ -16,7 +16,11 @@ public interface StockInTradeRepository extends CrudRepository<StockInTrade, Lon
 
     Optional<StockInTrade> findByAccountIdAndStockId(Long accountId, Long StockId);
 
+    Optional<List<StockInTrade>> findByAccountId(Long accountId);
+
     @Query(value = "select stock from t_stock_in_trade where account = ?1", nativeQuery = true)
     Optional<List<Stock>> findStockByAccount(Account account);
+
+
 
 }

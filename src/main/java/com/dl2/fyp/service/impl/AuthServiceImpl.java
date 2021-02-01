@@ -6,9 +6,7 @@ import com.dl2.fyp.domain.JwtUser;
 import com.dl2.fyp.service.AuthService;
 import com.dl2.fyp.service.firebase.FirebaseService;
 import com.dl2.fyp.util.JwtTokenUtil;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
@@ -21,11 +19,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
+
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -60,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(String token) {
+    public String login(String token) throws IOException {
         if(firebaseApp == null && token!="000"){
             firebaseApp = firebaseService.getFirebaseApp();
         }

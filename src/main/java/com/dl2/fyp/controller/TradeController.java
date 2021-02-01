@@ -8,8 +8,6 @@ import com.dl2.fyp.entity.*;
 import com.dl2.fyp.service.account.TradeService;
 import com.dl2.fyp.service.user.UserService;
 import com.dl2.fyp.util.ResultUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +20,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/account")
 public class TradeController {
-    private static Logger LOG = LoggerFactory.getLogger(TradeController.class);
 
     @Autowired
     private TradeService tradeService;
