@@ -12,7 +12,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,17 +27,15 @@ public class TradeController {
     private UserService userService;
 
     @PostMapping("/trade/Add")
-    public Result addTrade(@RequestBody TradeInputDto tradeInputDto, Principal principal){
-        if(tradeInputDto==null) return ResultUtil.error(-1, "invalid input");
+    public Result addTrade(@RequestBody TradeInputDto tradeInputDto,@RequestBody User user){
         Trade trade = new Trade();
         BeanUtils.copyProperties(tradeInputDto, trade);
-        return tradeService.addTrade(userService.findByFirebaseUid(principal.getName()),trade, tradeInputDto.getStockId());
+        return tradeService.addTrade(user,trade, tradeInputDto.getStockId());
     }
 
+    //TODO
     @PostMapping("/transaction/Add")
-    public Result addTransaction(@RequestBody TransactionInputDto transactionInputDto, Principal principal){
-        if(transactionInputDto==null) return ResultUtil.error(-1, "invalid input");
-        User user = userService.findByFirebaseUid(principal.getName());
+    public Result addTransaction(@RequestBody TransactionInputDto transactionInputDto, @RequestBody User user){
         Account accountIn = user.getAccountList().stream()
                 .filter(o -> o.getId() == transactionInputDto.getAccountInId())
                 .findAny().orElse(null);
@@ -49,20 +46,14 @@ public class TradeController {
     }
 
     @GetMapping("/trade/Get")
-    public Result getTrade(@RequestParam Long stockInTradeId, @RequestParam Long days, Principal principal){
-        User user = userService.findByFirebaseUid(principal.getName());
+    public Result getTrade(@RequestParam Long stockInTradeId, @RequestParam Long days, @RequestBody User user){
         List<Trade> tradeList = tradeService.getTradeByStockInTradeId(user, stockInTradeId, days);
-        if(tradeList==null)
-            return ResultUtil.error(-1, "invalid input");
         return ResultUtil.success(tradeList);
     }
 
     @GetMapping("/transaction/Get")
-    public Result getTransaction(@RequestParam Long accountId, @RequestParam Long days, Principal principal){
-        User user = userService.findByFirebaseUid(principal.getName());
+    public Result getTransaction(@RequestParam Long accountId, @RequestParam Long days, @RequestBody User user){
         List<Transaction> transactionList = tradeService.getTransactionByAccountId(user, accountId, days);
-        if(transactionList==null)
-            return ResultUtil.error(-1, "invalid input");
         List<TransactionDto> dtoList = new ArrayList<>();
         for (Transaction transaction: transactionList) {
             dtoList.add(new TransactionDto(transaction, accountId));

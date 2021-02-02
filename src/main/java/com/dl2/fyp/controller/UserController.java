@@ -11,7 +11,6 @@ import com.dl2.fyp.service.user.UserService;
 import com.dl2.fyp.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -27,19 +26,16 @@ public class UserController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @PostMapping("/count")
-    public Result countUser(){
-        return ResultUtil.success(userService.countAll());
-    }
+//    @PostMapping("/count")
+//    public Result countUser(){
+//        return ResultUtil.success(userService.countAll());
+//    }
 
     @PostMapping("/info/add")
-    public Result addUserInfo(@RequestBody UserInfo userInfo, Principal principal){
-        User user = userService.findByFirebaseUid(principal.getName());
+    public Result addUserInfo(@RequestBody UserInfo userInfo, @RequestBody User user){
         long id = user.getId();
-        if(userInfo == null || user == null)
-            return ResultUtil.error(400, "invalid input");
         if(userService.addUserInfo(userInfo, id) == null){
-            return ResultUtil.error(401,"error");
+            return ResultUtil.error(HttpStatus.FORBIDDEN,"Added user information failed");
         }
         Account cashAccount = new Account();
         cashAccount.setCategory(AccountCategory.CASH);
@@ -49,77 +45,56 @@ public class UserController {
         stockAccount.setCategory(AccountCategory.STOCK);
 
         if (userService.addAccount(cashAccount, id)==null) {
-            return ResultUtil.error(1, "added failed");
+            return ResultUtil.error(HttpStatus.FORBIDDEN, "Added cash account failed");
         }
         if (userService.addAccount(stockAccount, id)==null) {
-            return ResultUtil.error(1, "added failed");
+            return ResultUtil.error(HttpStatus.FORBIDDEN, "Added stock account failed");
         }
-        return ResultUtil.success("added user info");
+        return ResultUtil.success("Added user info");
     }
 
     @GetMapping("/info/get")
-    public ResponseEntity<Result> getUserInfo(Principal principal){
-        User user = userService.findByFirebaseUid(principal.getName());
-        if (user == null)
-        {
-            return new ResponseEntity<Result>(
-                    ResultUtil.error(404,"can't find user")
-                    , HttpStatus.valueOf(404)
-            );
-        }
+    public Result getUserInfo(@RequestBody User user){
         UserInfo userInfo = user.getUserInfo();
         if(userInfo == null)
-        {
-            return new ResponseEntity<Result>(
-                    ResultUtil.error(403,"First Login")
-                    , HttpStatus.valueOf(403)
-            );
-        }
-        return new ResponseEntity<Result>(
-                ResultUtil.success(user.getUserInfo())
-                , HttpStatus.valueOf(200)
-        );
+            return ResultUtil.error(HttpStatus.FORBIDDEN,"First Login");
+        return ResultUtil.success(user.getUserInfo());
     }
 
     @PutMapping("/info/update")
-    public Result updateUserInfo(@RequestBody UserInfo userInfo,Principal principal){
-        User user = userService.findByFirebaseUid(principal.getName());
-        if(user==null)
-            return ResultUtil.error(-1,"invalid id");
+    public Result updateUserInfo(@RequestBody UserInfo userInfo,@RequestBody User user){
         UserInfo oldInfo = user.getUserInfo();
         if(oldInfo==null)
-            return ResultUtil.error(-1, "user info have not been set");
+            return ResultUtil.error(HttpStatus.NOT_FOUND, "User info have not been set");
         UserInfo newInfo = userInfoService.updateUserInfo(oldInfo,userInfo);
         user.setUserInfo(newInfo);
         if(userService.addUser(user) == null)
-            return ResultUtil.error(-1, "update failed");
+            return ResultUtil.error(HttpStatus.FORBIDDEN, "Update failed");
         return ResultUtil.success(user);
     }
 
     @PostMapping("/device/add/{id}")
-    public Result addUserDevice(@RequestBody UserDevice userDevice, @PathVariable Long id){
-        if(userDevice == null || id == null) return ResultUtil.error(-1, "invalid input");
-        if(userService.addUserDevice(userDevice, id) == null){
-            return ResultUtil.error(-1,"error");
+    public Result addUserDevice(@RequestBody UserDevice userDevice,@RequestBody User user){
+        if(userService.addUserDevice(userDevice, user.getId()) == null){
+            return ResultUtil.error(HttpStatus.FORBIDDEN,"Added user device failed");
         }
-        return ResultUtil.success("added user info");
+        return ResultUtil.success("Added user info");
     }
 
     @PostMapping("/account/add/{id}")
-    public Result addAccount(@RequestBody Account account, @PathVariable Long id){
-        if(account == null || id == null) return ResultUtil.error(-1, "invalid input");
-        if (userService.addAccount(account, id)==null) {
-            return ResultUtil.error(1, "added failed");
+    public Result addAccount(@RequestBody Account account,@RequestBody User user){
+        if (userService.addAccount(account, user.getId())==null) {
+            return ResultUtil.error(HttpStatus.FORBIDDEN, "Added account failed");
         }
-        return ResultUtil.success("added account");
+        return ResultUtil.success("Added account");
     }
 
     // for test
-    @PostMapping("/add/{id}")
-    public Result addUser(@PathVariable Long id){
-        User u = userService.addUser(id);
-        if(u == null) ResultUtil.error(-1, "add failed");
-        return ResultUtil.success("added user");
-    }
+//    @PostMapping("/add/{id}")
+//    public Result addUser(@PathVariable Long id){
+//        User u = userService.addUser(id);
+//        if(u == null) ResultUtil.error(HttpStatus.FORBIDDEN, "Add user failed");
+//        return ResultUtil.success("Added user");
+//    }
 
 }

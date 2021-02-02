@@ -10,6 +10,7 @@ import com.dl2.fyp.repository.account.TransactionRepository;
 import com.dl2.fyp.repository.stock.StockRepository;
 import com.dl2.fyp.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +42,7 @@ public class TradeService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-
+    //TODO
     public Result addTrade(User user, Trade trade, Long stockId ){
         // get the json input
         Account cashAccount = user.getAccountList().stream().filter(o -> o.getCategory() == AccountCategory.CASH).findFirst().orElse(null);
@@ -53,8 +54,8 @@ public class TradeService {
         StockInTrade stockInTrade = stockInTradeRepository.findByAccountIdAndStockId(stockAccount.getId(),stock.getId()).orElse(null);
 
         // check input
-        if (stockAccount==null||cashAccount==null) return ResultUtil.error(404,"account not founded");
-        else if (stock==null) return ResultUtil.error(404,"stock not founded");
+        if (stockAccount==null||cashAccount==null) return ResultUtil.error(HttpStatus.NOT_FOUND,"account not founded");
+        else if (stock==null) return ResultUtil.error(HttpStatus.NOT_FOUND,"stock not founded");
         else if (stockInTrade==null){
             if (action==true){
                 stockInTrade = new StockInTrade();
@@ -63,11 +64,11 @@ public class TradeService {
                 stockInTrade.setNumOfShare(0L);
                 stockInTrade.setAverageCost(BigDecimal.ZERO);
             }else
-            return ResultUtil.error(400, "have not hold the stock yet");
+            return ResultUtil.error(HttpStatus.BAD_REQUEST, "have not hold the stock yet");
         }else if (action==true && cashAccount.getAmount().compareTo(price.multiply(new BigDecimal(numOfShare)))<1)
-            return ResultUtil.error(400,"not enough cash in Cash Account");
+            return ResultUtil.error(HttpStatus.BAD_REQUEST,"not enough cash in Cash Account");
         else if (action==false && stockInTrade.getNumOfShare()<numOfShare){
-            return ResultUtil.error(400,"not enough numOfShare in StockInTrade");
+            return ResultUtil.error(HttpStatus.BAD_REQUEST,"not enough numOfShare in StockInTrade");
         }
         try {
             //set stock in trade
@@ -103,15 +104,16 @@ public class TradeService {
             stockInTrade.getTradeList().add(trade);
             stockInTradeRepository.save(stockInTrade);
         }catch (Exception e){
-            return ResultUtil.error(404, "failed to trade");
+            return ResultUtil.error(HttpStatus.NOT_FOUND, "failed to trade");
         }
         return ResultUtil.success("added trading stock");
     }
 
+    //TODO
     public Result addTransaction(Account accountIn, Account accountOut, BigDecimal amount) {
-        if (accountIn==null||accountOut==null) return ResultUtil.error(404,"account not founded");
-        else if (amount.compareTo(BigDecimal.ZERO)<1) return ResultUtil.error(404, "require valid transaction amount");
-        else if (accountOut.getAmount().compareTo(amount)<1 && accountOut.getCategory() != AccountCategory.STOCK) return ResultUtil.error(400, "not enough cash in account");
+        if (accountIn==null||accountOut==null) return ResultUtil.error(HttpStatus.NOT_FOUND,"account not founded");
+        else if (amount.compareTo(BigDecimal.ZERO)<1) return ResultUtil.error(HttpStatus.NOT_FOUND, "require valid transaction amount");
+        else if (accountOut.getAmount().compareTo(amount)<1 && accountOut.getCategory() != AccountCategory.STOCK) return ResultUtil.error(HttpStatus.BAD_REQUEST, "not enough cash in account");
         Transaction transaction = new Transaction();
         try {
             transaction.setAccountIn(accountIn);
@@ -134,7 +136,7 @@ public class TradeService {
             transaction.setAccountOutAmountAfter(accountOutAfter);
             transactionRepository.save(transaction);
         }catch (Exception e){
-            return ResultUtil.error(404, "failed to trade");
+            return ResultUtil.error(HttpStatus.NOT_FOUND, "failed to trade");
         }
 
         return ResultUtil.success("added transaction");

@@ -2,12 +2,13 @@ package com.dl2.fyp.controller;
 
 import com.dl2.fyp.domain.JwtAuthenticationRequest;
 import com.dl2.fyp.domain.JwtAuthenticationResponse;
+import com.dl2.fyp.domain.Result;
 import com.dl2.fyp.entity.User;
 import com.dl2.fyp.service.AuthService;
+import com.dl2.fyp.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,34 +27,28 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @RequestMapping(value = "${jwt.route.authentication.login}", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest jwtAuthenticationRequest) throws AuthenticationException, IOException {
+    @PostMapping("${jwt.route.authentication.login}")
+    public Result createAuthenticationToken(@RequestBody JwtAuthenticationRequest jwtAuthenticationRequest) throws AuthenticationException, IOException {
         final String token = authService.login(jwtAuthenticationRequest.getToken());
         // Return the token
-        return ResponseEntity.ok(new JwtAuthenticationResponse(tokenHeadString+token));
+        return ResultUtil.success(new JwtAuthenticationResponse(tokenHeadString+token));
     }
 
-    @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
-    public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) throws AuthenticationException{
+    @GetMapping("${jwt.route.authentication.refresh}")
+    public Result refreshAndGetAuthenticationToken(HttpServletRequest request) throws AuthenticationException{
         String token = request.getHeader(tokenHeader);
         String refreshedToken = authService.refresh(token);
         if(refreshedToken == null) {
-            return ResponseEntity.badRequest().body(null);
+            return ResultUtil.error(HttpStatus.BAD_REQUEST,null);
         } else {
-            return ResponseEntity.ok(new JwtAuthenticationResponse(refreshedToken));
+            return ResultUtil.success(new JwtAuthenticationResponse(refreshedToken));
         }
     }
 
-    /**
-    @RequestMapping(value = "${jwt.route.authentication.register}", method = RequestMethod.POST)
-    public User register(@RequestBody User addedUser) throws AuthenticationException{
-        return authService.register(addedUser);
-    }
-    **/
 
-    @ExceptionHandler({AuthenticationException.class})
-    public ResponseEntity<String> handleAuthenticationException(AuthenticationException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    @PostMapping("${jwt.route.authentication.register}")
+    public Result register(@RequestBody User user) throws AuthenticationException{
+        return ResultUtil.success(authService.register(user));
     }
 
 

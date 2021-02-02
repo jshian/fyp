@@ -12,9 +12,9 @@ import com.dl2.fyp.service.account.AccountService;
 import com.dl2.fyp.service.user.UserService;
 import com.dl2.fyp.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.*;
 
 @RestController
@@ -27,22 +27,17 @@ public class AccountController {
     private UserService userService;
 
     @GetMapping("/GetCharts")
-    public Result getAllAccountForCharts(Principal principal){
-        User user = userService.findByFirebaseUid(principal.getName());
-        if(user==null) return ResultUtil.error(-1,"invalid input");
+    public Result getAllAccountForCharts(@RequestBody User user){
         List<Account> accounts = user.getAccountList();
-        if(accounts == null) return ResultUtil.error(-1,"account not founded");
+        if(accounts == null) return ResultUtil.error(HttpStatus.NOT_FOUND,"account not founded");
         return ResultUtil.success(accounts);
     }
 
     @GetMapping("/GetAllForStatement")
-    public Result getAllAccountForStatement(Principal principal){
-        User user = userService.findByFirebaseUid(principal.getName());
-        if(user==null)
-            return ResultUtil.error(-1,"invalid input");
+    public Result getAllAccountForStatement(@RequestBody User user){
         List<Account> accounts = user.getAccountList();
         if(accounts == null)
-            return ResultUtil.error(-1,"account not founded");
+            return ResultUtil.error(HttpStatus.NOT_FOUND,"account not founded");
         List<AccountForStatementDto> dtoList = new ArrayList<>();
         for (Account account : accounts){
             dtoList.add(new AccountForStatementDto(account));
@@ -51,9 +46,7 @@ public class AccountController {
     }
 
     @GetMapping(value = "/stockInTrade")
-    public Result getAllStockInTrade(Principal principal){
-        User user = userService.findByFirebaseUid(principal.getName());
-        if(user == null) return ResultUtil.error(-1, "invalid input");
+    public Result getAllStockInTrade(@RequestBody User user){
         List<StockInTrade> list = accountService.getAllStockInTrade(user);
         List<Map> mappedList = new LinkedList<>();
         for (StockInTrade stockInTrade : list) {
@@ -68,16 +61,14 @@ public class AccountController {
                 mappedList.add(map);
             }
         }
-        if (mappedList == null) return ResultUtil.error(-1, "failed to get");
+        if (mappedList == null) return ResultUtil.error(HttpStatus.NOT_FOUND, "failed to get");
         return ResultUtil.success(mappedList);
     }
 
     @GetMapping(value = "/stockInTrade/detail")
-    public Result getAllStockInTradeDetail(Principal principal){
-        User user = userService.findByFirebaseUid(principal.getName());
-        if(user == null) return ResultUtil.error(-1, "invalid input");
+    public Result getAllStockInTradeDetail(@RequestBody User user){
         List<StockInTrade> list = accountService.getAllStockInTrade(user);
-        if (list == null) return ResultUtil.error(-1, "failed to get");
+        if (list == null) return ResultUtil.error(HttpStatus.NOT_FOUND, "failed to get");
         List<StockInTradeDto> dtoList = new ArrayList<>();
         for (StockInTrade stockInTrade: list) {
             dtoList.add(new StockInTradeDto(stockInTrade));

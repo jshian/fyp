@@ -53,12 +53,12 @@ public class UserService{
     }
 
     //for test
-    public User addUser(Long id){
-        User user = new User();
-        user.setFirebaseUid("test");
-        user.setId(id);
-        return addUser(user);
-    }
+//    public User addUser(Long id){
+//        User user = new User();
+//        user.setFirebaseUid("test");
+//        user.setId(id);
+//        return addUser(user);
+//    }
 
     /**
      * add user info and return the user
