@@ -6,8 +6,6 @@ import com.dl2.fyp.repository.stock.StockEventRepository;
 import com.dl2.fyp.repository.stock.StockRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -25,6 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class StockService {
 
     @Autowired
@@ -70,7 +69,6 @@ public class StockService {
         return result;
     }
 
-    @Transactional
     public Stock addStock(Stock stock) throws IllegalArgumentException {
         if (stockRepository.existsById(stock.getId())) return null;
         Stock result;
@@ -78,7 +76,6 @@ public class StockService {
         return result;
     }
 
-    @Transactional
     public Iterable<StockEvent> addStockEvents(List<StockEvent> stockEventList) throws IllegalArgumentException {
         Iterable<StockEvent> result;
         result = stockEventRepository.saveAll(stockEventList);

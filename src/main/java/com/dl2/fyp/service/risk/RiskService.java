@@ -6,6 +6,7 @@ import com.dl2.fyp.repository.account.AccountRepository;
 import com.dl2.fyp.repository.account.StockInTradeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
+@Transactional
 public class RiskService {
 
     @Autowired

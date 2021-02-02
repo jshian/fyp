@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class TradeService {
 
     @Autowired
@@ -41,7 +42,6 @@ public class TradeService {
     private TransactionRepository transactionRepository;
 
 
-    @Transactional
     public Result addTrade(User user, Trade trade, Long stockId ){
         // get the json input
         Account cashAccount = user.getAccountList().stream().filter(o -> o.getCategory() == AccountCategory.CASH).findFirst().orElse(null);
@@ -108,7 +108,6 @@ public class TradeService {
         return ResultUtil.success("added trading stock");
     }
 
-    @Transactional
     public Result addTransaction(Account accountIn, Account accountOut, BigDecimal amount) {
         if (accountIn==null||accountOut==null) return ResultUtil.error(404,"account not founded");
         else if (amount.compareTo(BigDecimal.ZERO)<1) return ResultUtil.error(404, "require valid transaction amount");

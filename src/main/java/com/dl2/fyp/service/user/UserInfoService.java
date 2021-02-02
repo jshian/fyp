@@ -5,6 +5,7 @@ import com.dl2.fyp.service.risk.RiskService;
 import com.dl2.fyp.util.UpdateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -15,6 +16,7 @@ import java.util.Date;
  * user info service
  */
 @Service
+@Transactional
 public class UserInfoService {
 
     @Autowired

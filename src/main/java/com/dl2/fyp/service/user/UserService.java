@@ -14,6 +14,7 @@ import java.util.List;
 
 
 @Service
+@Transactional
 public class UserService{
 
     @Autowired
@@ -27,7 +28,6 @@ public class UserService{
      * @param user
      * @return
      */
-    @Transactional
     public User addUser(User user) throws IllegalArgumentException{
         return userRepository.save(user);
     }
@@ -53,7 +53,6 @@ public class UserService{
     }
 
     //for test
-    @Transactional
     public User addUser(Long id){
         User user = new User();
         user.setFirebaseUid("test");
@@ -67,7 +66,6 @@ public class UserService{
      * @param id
      * @return
      */
-    @Transactional
     public User addUserInfo(UserInfo userInfo, Long id) throws IllegalArgumentException{
         User user = userRepository.findById(id).orElse(null);
         // can't find user record or user info already exists
@@ -81,7 +79,6 @@ public class UserService{
         return user;
     }
 
-    @Transactional
     public UserDevice addUserDevice(UserDevice userDevice, Long id) throws IllegalArgumentException{
         User user = userRepository.findById(id).orElse(null);
         if(user == null) return null;
@@ -96,7 +93,6 @@ public class UserService{
      * @param userId
      * @return
      */
-    @Transactional
     public Account addAccount(Account account, Long userId) throws IllegalArgumentException{
         User user = userRepository.findById(userId).orElse(null);
         if(user == null || account.getCategory()==null) return null;
