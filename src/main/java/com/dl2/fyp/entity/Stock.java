@@ -65,6 +65,9 @@ public class Stock {
     private BigDecimal recommendSellPrice = new BigDecimal(0);
     @Min(value = 0, message = "invalid negative input")
     @NotNull
+    private BigDecimal recommendStopPrice = new BigDecimal(0);
+    @Min(value = 0, message = "invalid negative input")
+    @NotNull
     private Integer holdingPeriod = 0;
     @Min(value = 0, message = "invalid negative input")
     @NotNull

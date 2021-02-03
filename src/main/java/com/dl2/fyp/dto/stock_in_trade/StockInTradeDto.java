@@ -21,7 +21,6 @@ public class StockInTradeDto extends StockInTrade {
         this.setAverageCost(stockInTrade.getAverageCost());
         this.setCode(stockInTrade.getStock().getCode());
         this.setNumOfShare(stockInTrade.getNumOfShare());
-        this.setRiskIndex(stockInTrade.getStock().getRiskIndex());
         this.setExpectedPrice(stockInTrade.getStock().getRecommendSellPrice());
         this.setCurrentPrice(stockInTrade.getStock().getCurrentPrice());
         this.setProfit(
