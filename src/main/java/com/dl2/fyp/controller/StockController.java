@@ -6,6 +6,7 @@ import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockEvent;
 import com.dl2.fyp.entity.StockInTrade;
 import com.dl2.fyp.entity.User;
+import com.dl2.fyp.exception.ServiceException;
 import com.dl2.fyp.service.account.AccountService;
 import com.dl2.fyp.service.risk.RiskService;
 import com.dl2.fyp.service.stock.StockService;
@@ -63,7 +64,7 @@ public class StockController {
         dtoList.sort(Comparator.comparing(StockEventDto::getCode));
 
         if(dtoList==null)
-            return ResultUtil.error(HttpStatus.NOT_FOUND,"failed to get");
+            throw new ServiceException(HttpStatus.NOT_FOUND,"failed to get");
         return ResultUtil.success(dtoList);
     }
 
@@ -91,7 +92,7 @@ public class StockController {
     @GetMapping("/stockRisk/{code}")
     public Result getRiskFromStock(@RequestBody User user, @PathVariable String code){
         Stock stock = stockService.getStockByCode(code);
-        if(stock.getIsDelist()==true) return ResultUtil.error(HttpStatus.NOT_FOUND,"the stock is delisted");
+        if(stock.getIsDelist()) return ResultUtil.error(HttpStatus.NOT_FOUND,"the stock is delisted");
         return ResultUtil.success(riskService.calculateRiskFromStock(stock, user));
     }
 }

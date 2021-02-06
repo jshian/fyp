@@ -52,11 +52,7 @@ public class AccountService {
     }
 
     public List<StockInTrade> getAllStockInTrade2(User user){
-        Account account = null;
-        for (Account _account:user.getAccountList()) {
-            if(_account.getCategory() == AccountCategory.STOCK)
-                account = _account;
-        }
+        Account account = accountRepository.findAccountByUserIdAndType(user.getId(),AccountCategory.STOCK).orElse(null);
         if (account == null) return null;
         return stockInTradeRepository.findByAccountId(account.getId()).orElse(null);
     }
@@ -69,5 +65,9 @@ public class AccountService {
         account.setAmount(accountAmt);
         accountRepository.save(account);
         return true;
+    }
+
+    public Account getAccountById(Long id){
+        return accountRepository.findById(id).orElse(null);
     }
 }

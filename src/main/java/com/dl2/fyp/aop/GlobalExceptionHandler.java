@@ -1,6 +1,7 @@
 package com.dl2.fyp.aop;
 
 import com.dl2.fyp.domain.Result;
+import com.dl2.fyp.exception.ServiceException;
 import com.dl2.fyp.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,5 +29,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({AuthenticationException.class})
     public Result handleAuthenticationException(AuthenticationException e) {
         return ResultUtil.error(HttpStatus.UNAUTHORIZED,e.getMessage());
+    }
+
+    @ExceptionHandler(ServiceException.class)
+    public Result serviceException(ServiceException ex){
+        return ResultUtil.error(ex.getCode(),ex.getMessage());
     }
 }

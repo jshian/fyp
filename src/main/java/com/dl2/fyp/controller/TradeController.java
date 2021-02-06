@@ -5,8 +5,8 @@ import com.dl2.fyp.dto.trade.TradeInputDto;
 import com.dl2.fyp.dto.transaction.TransactionDto;
 import com.dl2.fyp.dto.transaction.TransactionInputDto;
 import com.dl2.fyp.entity.*;
+import com.dl2.fyp.service.account.AccountService;
 import com.dl2.fyp.service.account.TradeService;
-import com.dl2.fyp.service.user.UserService;
 import com.dl2.fyp.util.ResultUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,25 +24,22 @@ public class TradeController {
     private TradeService tradeService;
 
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
 
     @PostMapping("/trade/Add")
     public Result addTrade(@RequestBody TradeInputDto tradeInputDto,@RequestBody User user){
         Trade trade = new Trade();
         BeanUtils.copyProperties(tradeInputDto, trade);
-        return tradeService.addTrade(user,trade, tradeInputDto.getStockId());
+        tradeService.addTrade(user,trade, tradeInputDto.getStockId());
+        return ResultUtil.success("added trading stock");
     }
 
-    //TODO
     @PostMapping("/transaction/Add")
     public Result addTransaction(@RequestBody TransactionInputDto transactionInputDto, @RequestBody User user){
-        Account accountIn = user.getAccountList().stream()
-                .filter(o -> o.getId() == transactionInputDto.getAccountInId())
-                .findAny().orElse(null);
-        Account accountOut = user.getAccountList().stream()
-                .filter(o -> o.getId() == transactionInputDto.getAccountOutId())
-                .findAny().orElse(null);
-        return tradeService.addTransaction(accountIn, accountOut, transactionInputDto.getAmount());
+        Account accountIn =  accountService.getAccountById(transactionInputDto.getAccountInId());
+        Account accountOut = accountService.getAccountById(transactionInputDto.getAccountOutId());
+        tradeService.addTransaction(accountIn, accountOut, transactionInputDto.getAmount());
+        return ResultUtil.success("added transaction");
     }
 
     @GetMapping("/trade/Get")

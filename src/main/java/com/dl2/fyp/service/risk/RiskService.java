@@ -70,9 +70,9 @@ public class RiskService {
         return recommendations;
     }
 
-    public  List<Stock> getRecommendationByUser2(User user, List<Stock> stocks){
+    public List<Stock> getRecommendationByUser2(User user, List<Stock> stocks) throws NullPointerException{
         List<Stock> recommendations = new LinkedList<>();
-        Account stockAccount = accountRepository.findAccount(user.getId(),AccountCategory.STOCK).orElse(null);
+        Account stockAccount = accountRepository.findAccountByUserIdAndType(user.getId(),AccountCategory.STOCK).orElse(null);
         List<Stock> stockInTradeList = new LinkedList<>();
         if (stockAccount != null){
             stockInTradeList = stockInTradeRepository.findStockByAccount(stockAccount).orElse(null);

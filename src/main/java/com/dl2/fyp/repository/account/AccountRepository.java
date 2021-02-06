@@ -14,7 +14,7 @@ public interface AccountRepository extends CrudRepository<Account, Long> {
     Optional<List<Account>> findAllAccount(Long userId);
 
     @Query(value = "select * from t_account where user_id = ?1 and category=?2", nativeQuery = true)
-    Optional<Account> findAccount(Long userId, AccountCategory accountCategory);
+    Optional<Account> findAccountByUserIdAndType(Long userId, AccountCategory accountCategory);
 
 
 }

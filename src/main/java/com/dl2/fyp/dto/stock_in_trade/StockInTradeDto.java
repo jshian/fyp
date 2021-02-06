@@ -2,11 +2,13 @@ package com.dl2.fyp.dto.stock_in_trade;
 
 import com.dl2.fyp.entity.StockInTrade;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class StockInTradeDto extends StockInTrade {
     private String code;
     private BigDecimal currentPrice;
