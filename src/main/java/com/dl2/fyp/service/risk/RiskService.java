@@ -25,6 +25,7 @@ public class RiskService {
     private AccountRepository accountRepository;
 
     public BigDecimal calculateRiskFromUserInfo(UserInfo userInfo){
+
         return new BigDecimal(0);
     }
 
