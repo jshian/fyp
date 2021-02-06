@@ -9,6 +9,8 @@
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.css">
   <!-- IonIcons -->
   <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
@@ -269,8 +271,8 @@ to get the desired effect
 						</td>
 					  </tr>
                   </tbody>
-				  <uib-pagination total-items="filterList.length" items-per-page="10" next-text="Next" previous-text="Previous" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true"></uib-pagination>
-                </table>
+				  </table>
+                  <ui uib-pagination total-items="filterList.length" items-per-page="10" next-text="Next" previous-text="Previous" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true"></ui>
               </div>
             </div>
           </div>

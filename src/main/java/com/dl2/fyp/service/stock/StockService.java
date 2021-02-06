@@ -133,7 +133,11 @@ public class StockService {
     }
 
     public Page<Stock> getStockByKeywordAndPaging(String keyword, int pageNumber,int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber,pageSize,Sort.by(Sort.Direction.ASC,"code"));
+        Pageable pageable = PageRequest.of(
+                pageNumber,
+                pageSize,
+                Sort.by(Sort.Direction.ASC,"code")
+        );
         return stockRepository.findByCodeContaining(keyword, pageable);
     }
 

@@ -78,7 +78,17 @@ portfolioApp.controller('stockGetRecommendationCtrl', function($scope, $filter) 
 
 	$scope.$watch('searchText', function (term) {
 		var obj = term;
-		$scope.filterList = $filter('filter')($scope.stockRecommendations, obj);
+		$scope.filterList = $filter('filter')(
+            $scope.stockRecommendations,
+            obj,
+            function (actual, expected) {
+                if(actual != null && actual.code != null){
+                    return actual.code.toLowerCase().startsWith(expected.toLowerCase());
+                }else{
+                    return false;
+                }
+            }
+        );
 		$scope.currentPage = 1;
 	});
 });

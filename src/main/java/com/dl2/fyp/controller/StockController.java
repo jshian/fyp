@@ -44,10 +44,15 @@ public class StockController {
         return ResultUtil.success(stock);
     }
 
-    @GetMapping("/GetStocks/{keyword}_{pageNumber}_{pageSize}")
-    public Result getStockByKeyword(@PathVariable String keyword, @PathVariable Integer pageNumber, @PathVariable Integer pageSize){
-        if (pageNumber == null || pageSize == null) return ResultUtil.error(-1,"invalid input");
-        Page<Stock> stocks = stockService.getStockByKeywordAndPaging(keyword,pageNumber,pageSize);
+    @GetMapping("/GetStocks")
+    public Result getStockByKeyword(
+            @RequestParam(required=true) String keyword,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            Principal principal
+    ){
+        if (page == null || size == null) return ResultUtil.error(-1,"invalid input");
+        Page<Stock> stocks = stockService.getStockByKeywordAndPaging(keyword,page,size);
         HashMap<String, Object> result = new HashMap<>();
         result.put("total page", stocks.getTotalPages());
         result.put("stocks", stocks.getContent());
@@ -73,10 +78,14 @@ public class StockController {
         return ResultUtil.success(dtoList);
     }
 
-    @GetMapping("/GetStockEvents/{keyword}/{pageNumber}/{pageSize}")
-    public Result getStockEventByKeyword(@PathVariable String keyword, @PathVariable Integer pageNumber, @PathVariable Integer pageSize){
-        if (pageNumber == null || pageSize == null) return ResultUtil.error(-1,"invalid input");
-        Page<StockEvent> events = stockService.getStockEventByKeywordAndPaging(keyword,pageNumber,pageSize);
+    @GetMapping("/GetStockEvents")
+    public Result getStockEventByKeyword(
+            @RequestParam(required=true) String keyword,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ){
+        if (page == null || size == null) return ResultUtil.error(-1,"invalid input");
+        Page<StockEvent> events = stockService.getStockEventByKeywordAndPaging(keyword,page,size);
         HashMap<String, Object> result = new HashMap<>();
         result.put("total pages", events.getTotalPages());
         result.put("events",events.getContent());
