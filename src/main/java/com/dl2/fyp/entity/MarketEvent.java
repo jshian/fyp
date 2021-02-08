@@ -23,13 +23,13 @@ public class MarketEvent {
     private BigDecimal severity;
     @NotNull
     private Integer expectedPeriod;
-    @Column(name = "title", columnDefinition = "text")
+    @Column(name = "title", columnDefinition = "varchar(255)")
     @NotNull
     private String title;
-    @Column(name = "description", columnDefinition = "text")
+    @Column(name = "description", columnDefinition = "varchar(255)")
     @NotNull
     private String description;
-    @Column(name = "source", columnDefinition = "text")
+    @Column(name = "source", columnDefinition = "varchar(255)")
     @NotNull
     private String source;
 }

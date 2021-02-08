@@ -7,8 +7,6 @@ import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockEvent;
 import com.dl2.fyp.service.stock.StockService;
 import com.dl2.fyp.util.ResultUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,29 +19,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/data")
 public class DataController {
-    private static Logger LOG = LoggerFactory.getLogger(DataController.class);
 
     @Autowired
     private StockService stockService;
 
     @GetMapping("/stock/import")
-    public ResponseEntity<Result> importStock(){
+    public Result importStock(){
         Boolean success = stockService.importStocks();
         if (success)
-        {
-            return new ResponseEntity<Result>(
-                    ResultUtil.success()
-                    , HttpStatus.valueOf(200)
-            );
-        }
-        return new ResponseEntity<Result>(
-                ResultUtil.error(400,"Import fails")
-                , HttpStatus.valueOf(400)
-        );
+            return ResultUtil.error(HttpStatus.BAD_REQUEST, "import fails");
+        return ResultUtil.success(HttpStatus.OK);
     }
 
     @PutMapping("/stock/price")
-    public ResponseEntity<Result> updateStockPrice(@RequestBody List<StockPriceInputDto> stockPriceInputDtoList){
+    public Result updateStockPrice(@RequestBody List<StockPriceInputDto> stockPriceInputDtoList){
         List<Stock> stockList = new ArrayList<>();
         for (StockPriceInputDto stockPriceInputDto : stockPriceInputDtoList) {
             Stock stock = stockService.getStockByCode(stockPriceInputDto.getCode());
@@ -52,28 +41,17 @@ public class DataController {
         }
         Iterable<Stock> result = stockService.batchUpdateStock(stockList);
         if (result == null)
-        {
-            return new ResponseEntity<Result>(
-                    ResultUtil.error(400,"update fails")
-                    , HttpStatus.valueOf(400)
-            );
-        }
-        return new ResponseEntity<Result>(
-                ResultUtil.success()
-                , HttpStatus.valueOf(200)
-        );
+            return ResultUtil.error(HttpStatus.BAD_REQUEST, "update fails");
+        return ResultUtil.success(HttpStatus.OK);
     }
 
     @PutMapping("/stock/prediction")
-    public ResponseEntity<Result> updateStockPrediction(){
-        return new ResponseEntity<Result>(
-                ResultUtil.success()
-                , HttpStatus.valueOf(200)
-        );
+    public Result updateStockPrediction(){
+        return ResultUtil.success(HttpStatus.OK);
     }
 
     @PostMapping("/stock/news")
-    public ResponseEntity<Result> addStockEvent(@RequestBody List<StockEventInputDto> stockEventDtoList){
+    public Result addStockEvent(@RequestBody List<StockEventInputDto> stockEventDtoList){
         List<StockEvent> stockEventList = new ArrayList<>();
         for (StockEventInputDto stockEventInputDto : stockEventDtoList) {
             StockEvent stockEvent = new StockEvent();
@@ -84,15 +62,8 @@ public class DataController {
 
         Iterable<StockEvent> result = stockService.addStockEvents(stockEventList);
         if (result == null)
-        {
-            return new ResponseEntity<Result>(
-                    ResultUtil.error(400,"insert fails")
-                    , HttpStatus.valueOf(400)
-            );
-        }
-        return new ResponseEntity<Result>(
-                ResultUtil.success()
-                , HttpStatus.valueOf(200)
-        );
+            return ResultUtil.error(HttpStatus.BAD_REQUEST,"insert fails");
+        return ResultUtil.success(HttpStatus.OK);
+
     }
 }

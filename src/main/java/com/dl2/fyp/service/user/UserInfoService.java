@@ -3,10 +3,9 @@ package com.dl2.fyp.service.user;
 import com.dl2.fyp.entity.UserInfo;
 import com.dl2.fyp.service.risk.RiskService;
 import com.dl2.fyp.util.UpdateUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,8 +16,8 @@ import java.util.Date;
  * user info service
  */
 @Service
+@Transactional
 public class UserInfoService {
-    private static Logger LOG = LoggerFactory.getLogger(UserInfoService.class);
 
     @Autowired
     private RiskService riskService;
@@ -28,7 +27,6 @@ public class UserInfoService {
      * @return
      */
     public UserInfo setUserInfo(UserInfo userInfo){
-        LOG.debug("set user info, parameter:{}", userInfo);
 
         if (!checkInfo(userInfo)) return null;
 
@@ -40,7 +38,6 @@ public class UserInfoService {
                 .add(userInfo.getMiscelExpense())
                 .add(userInfo.getTaxExpense().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP))
         );
-        LOG.debug("set user info, result:{}",userInfo);
         return userInfo;
     }
 
@@ -51,9 +48,7 @@ public class UserInfoService {
      * @return
      */
     public UserInfo updateUserInfo(UserInfo oldInfo, UserInfo newInfo){
-        LOG.debug("create user info, parameter:{}", oldInfo);
         UpdateUtil.copyNullProperties(newInfo, oldInfo);
-        LOG.debug("create user info, result:{}",oldInfo);
         return oldInfo;
     }
 

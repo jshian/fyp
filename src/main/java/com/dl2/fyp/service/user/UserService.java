@@ -1,31 +1,21 @@
 package com.dl2.fyp.service.user;
 
-import com.dl2.fyp.domain.Result;
 import com.dl2.fyp.entity.Account;
 import com.dl2.fyp.entity.User;
 import com.dl2.fyp.entity.UserDevice;
 import com.dl2.fyp.entity.UserInfo;
-import com.dl2.fyp.repository.user.UserDeviceRepository;
 import com.dl2.fyp.repository.user.UserRepository;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.*;
-import com.google.firebase.auth.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
+
 import java.util.List;
 
 
 @Service
+@Transactional
 public class UserService{
-    private static Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -38,17 +28,8 @@ public class UserService{
      * @param user
      * @return
      */
-    @Transactional
-    public User addUser(User user){
-        LOG.debug("add user, param ={}",user);
-        User u;
-        try{
-            u = userRepository.save(user);
-        }catch (IllegalArgumentException e){
-            return null;
-        }
-        LOG.debug("add user, result={}",u);
-        return u;
+    public User addUser(User user) throws IllegalArgumentException{
+        return userRepository.save(user);
     }
 
 
@@ -57,10 +38,7 @@ public class UserService{
     }
 
     public User findByFirebaseUid(String firebaseUid){
-        if(firebaseUid == null) return null;
-        LOG.debug("find one user, param={}", firebaseUid);
         User user = userRepository.findByFirebaseUid(firebaseUid);
-        LOG.debug("find one user, result={}", user);
         return user;
     }
 
@@ -70,20 +48,8 @@ public class UserService{
      * @return
      */
     public User find(Long id){
-        if(id == null) return null;
-        LOG.debug("find one user, param={}", id);
         User user = userRepository.findById(id).orElse(null);
-        LOG.debug("find one user, result={}", user);
         return user;
-    }
-
-    //for test
-    @Transactional
-    public User addUser(Long id){
-        User user = new User();
-        user.setFirebaseUid("test");
-        user.setId(id);
-        return addUser(user);
     }
 
     /**
@@ -92,9 +58,7 @@ public class UserService{
      * @param id
      * @return
      */
-    @Transactional
-    public User addUserInfo(UserInfo userInfo, Long id){
-        LOG.debug("add user info, param={}",userInfo);
+    public User addUserInfo(UserInfo userInfo, Long id) throws IllegalArgumentException{
         User user = userRepository.findById(id).orElse(null);
         // can't find user record or user info already exists
         if (user == null || user.getUserInfo()!=null)
@@ -103,27 +67,15 @@ public class UserService{
         if (info == null)
             return null;
         user.setUserInfo(info);
-        try{
-            userRepository.save(user);
-        }catch (Exception e){
-            return null;
-        }
-        LOG.debug("add user info, result={}",userInfo);
+        userRepository.save(user);
         return user;
     }
 
-    @Transactional
-    public UserDevice addUserDevice(UserDevice userDevice, Long id){
-        LOG.debug("add user device, param={}",userDevice);
+    public UserDevice addUserDevice(UserDevice userDevice, Long id) throws IllegalArgumentException{
         User user = userRepository.findById(id).orElse(null);
         if(user == null) return null;
-        try {
-            user.getUserDevice().add(userDevice);
-            userRepository.save(user);
-        }catch (IllegalArgumentException e){
-            return null;
-        }
-        LOG.debug("add user device, result={}",userDevice);
+        user.getUserDevice().add(userDevice);
+        userRepository.save(user);
         return userDevice;
     }
 
@@ -133,25 +85,18 @@ public class UserService{
      * @param userId
      * @return
      */
-    @Transactional
-    public Account addAccount(Account account, Long userId){
-        LOG.debug("add account, param:{}", account);
+    public Account addAccount(Account account, Long userId) throws IllegalArgumentException{
         User user = userRepository.findById(userId).orElse(null);
         if(user == null || account.getCategory()==null) return null;
-        try {
-            List<Account> list = user.getAccountList();
-            if (list == null) return null;
-            for (Account a : list) {
-                if (a.getCategory().getCategory().toLowerCase().equals(account.getCategory().getCategory().toLowerCase())){
-                    return null;
-                }
+        List<Account> list = user.getAccountList();
+        if (list == null) return null;
+        for (Account a : list) {
+            if (a.getCategory().getCategory().toLowerCase().equals(account.getCategory().getCategory().toLowerCase())) {
+                return null;
             }
-            list.add(account);
-            userRepository.save(user);
-        } catch (IllegalArgumentException e) {
-            return null;
         }
-        LOG.debug("add account, result:{}", account);
+        list.add(account);
+        userRepository.save(user);
         return account;
     }
 }

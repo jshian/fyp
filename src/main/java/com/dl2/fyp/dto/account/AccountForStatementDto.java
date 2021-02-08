@@ -5,11 +5,13 @@ import com.dl2.fyp.entity.Account;
 import com.dl2.fyp.entity.StockInTrade;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class AccountForStatementDto extends Account {
 
     private List<StockInTradeForStatementDto> stockInTrades = new ArrayList<>();

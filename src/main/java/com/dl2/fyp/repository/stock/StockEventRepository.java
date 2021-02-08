@@ -3,7 +3,10 @@ package com.dl2.fyp.repository.stock;
 import com.dl2.fyp.entity.Account;
 import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockEvent;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -20,4 +23,6 @@ public interface StockEventRepository extends CrudRepository<StockEvent, Long> {
             countQuery = "select count(*) from t_stock_event where title like %?1%",
             nativeQuery = true)
     List<StockEvent> findStockEventsByKeyword(String keyword, Pageable pageable);
+
+    Page<StockEvent> findByTitleContaining(String keyword, Pageable pageable);
 }

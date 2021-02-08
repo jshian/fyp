@@ -18,6 +18,7 @@ import java.util.List;
 
 @Data
 @Entity(name = "t_stock")
+@Table(indexes = @Index(name = "code_risk",columnList = "code, riskIndex", unique = true))
 public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,4 +73,6 @@ public class Stock {
     @Min(value = 0, message = "invalid negative input")
     @NotNull
     private BigDecimal volatilityProfit = new BigDecimal(0);
+
+    private BigDecimal riskIndex;
 }
