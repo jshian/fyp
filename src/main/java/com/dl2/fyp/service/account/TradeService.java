@@ -1,6 +1,5 @@
 package com.dl2.fyp.service.account;
 
-import com.dl2.fyp.domain.Result;
 import com.dl2.fyp.entity.*;
 import com.dl2.fyp.enums.AccountCategory;
 import com.dl2.fyp.exception.ServiceException;
@@ -9,7 +8,6 @@ import com.dl2.fyp.repository.account.StockInTradeRepository;
 import com.dl2.fyp.repository.account.TradeRepository;
 import com.dl2.fyp.repository.account.TransactionRepository;
 import com.dl2.fyp.repository.stock.StockRepository;
-import com.dl2.fyp.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
