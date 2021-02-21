@@ -251,47 +251,6 @@ to get the desired effect
 						<hr>
 					</div>
 					<div>
-						<h4>Investment</h4>
-						<br>
-						<div class="form-group row">
-							<div class="col-sm-3">
-								<label>Investment Goal: </label>
-							</div>
-							<div class="col-sm-3">
-								{{userInfo.investmentGoal| currency:"$"}}
-							</div>
-						</div>
-						<div class="form-group row">
-							<div class="col-sm-3">
-								<label>Target Years: </label>
-							</div>
-							<div class="col-sm-3 input-group">
-								{{userInfo.targetYears}}
-							</div>
-						</div>
-						<div class="form-group row">
-							<div class="col-sm-3">
-								<label>Expected Profit Level: </label>
-							</div>
-							<div class="col-sm-3 input-group">
-								<span class="col-sm-6">Low</span>
-								<span class="col-sm-6" align="right">High</span>
-								<input type="range" disabled ng-model="userInfo.expectedProfit" class="custom-range" min="0" max="1" step="0.2">
-							</div>
-						</div>
-						<div class="form-group row">
-							<div class="col-sm-3">
-								<label>Expected Risk Level: </label>
-							</div>
-							<div class="col-sm-3 input-group">
-								<span class="col-sm-6">Low</span>
-								<span class="col-sm-6" align="right">High</span>
-								<input type="range" disabled ng-model="userInfo.expectedRisk" class="custom-range" min="0" max="1" step="0.2">
-							</div>
-						</div>
-						<hr>
-					</div>
-					<div>
 						<h4>Financial Situation</h4>
 						<br>
 						<div class="form-group row">
@@ -450,52 +409,6 @@ to get the desired effect
 									</span>
 								 </div>
 								<input class="form-control" type="number" ng-model="userNewInfo.taxExpense"/>
-							</div>
-						</div>
-						<hr>
-					</div>
-					<div>
-						<h4>Investment</h4>
-						<br>
-						<div class="form-group row">
-							<div class="col-sm-3">
-								<label>Investment Goal: </label>
-							</div>
-							<div class="col-sm-3 input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">
-									  <i class="fas fa-dollar-sign"></i>
-									</span>
-								 </div>
-								<input class="form-control" type="number" ng-model="userNewInfo.investmentGoal"/>
-							</div>
-						</div>
-						<div class="form-group row">
-							<div class="col-sm-3">
-								<label>Target Years: </label>
-							</div>
-							<div class="col-sm-3 input-group">
-								<input class="form-control" type="number" ng-model="userNewInfo.targetYears"/>
-							</div>
-						</div>
-						<div class="form-group row">
-							<div class="col-sm-3">
-								<label>Expected Profit Level: </label>
-							</div>
-							<div class="col-sm-3 input-group">
-								<span class="col-sm-6">Low</span>
-								<span class="col-sm-6" align="right">High</span>
-								<input type="range" ng-model="userNewInfo.expectedProfit" class="custom-range" min="0" max="1" step="0.2">
-							</div>
-						</div>
-						<div class="form-group row">
-							<div class="col-sm-3">
-								<label>Expected Risk Level: </label>
-							</div>
-							<div class="col-sm-3 input-group">
-								<span class="col-sm-6">Low</span>
-								<span class="col-sm-6" align="right">High</span>
-								<input type="range" ng-model="userNewInfo.expectedRisk" class="custom-range" min="0" max="1" step="0.2">
 							</div>
 						</div>
 						<hr>
