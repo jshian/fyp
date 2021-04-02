@@ -37,14 +37,11 @@ public class Trade {
     @CreatedDate
     private Date date;
 
-    @NotNull
     @Min(value = 0, message = "invalid negative input")
     private BigDecimal costAfter;
 
-    @NotNull
     private BigDecimal profit;
 
-    @NotNull
     private BigDecimal profitPercentage;
 
     // 1 for buy 0 for sell

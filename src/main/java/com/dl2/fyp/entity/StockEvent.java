@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Data
 @Entity(name = "t_stock_event")
-@Table(indexes = @Index(name = "title_time", columnList = "title,datetime"))
+@Table(indexes = @Index(name = "stock_time", columnList = "stock_id,datetime"))
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StockEvent {
     @Id
@@ -24,17 +24,14 @@ public class StockEvent {
     @JsonIgnore
     private Stock stock;
     @Range(min=0,max=1,message = "Out of range")
-    @NotNull
     private BigDecimal severity;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date datetime;
 
     @Column(name = "title", columnDefinition = "text")
-    @NotNull
     private String title;
     @Column(name = "content", columnDefinition = "text")
-    @NotNull
     private String content;
     @Column(name = "link")
     @NotNull

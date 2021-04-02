@@ -48,7 +48,6 @@ public class Stock {
     private Date lastUpdated = new Date();
 
     @Min(value = 0, message = "invalid negative input")
-    @NotNull
     private BigDecimal currentPrice = new BigDecimal(-1);
     private BigDecimal upperStop;
     private BigDecimal downStop;
@@ -59,22 +58,16 @@ public class Stock {
 
 
     @Min(value = 0, message = "invalid negative input")
-    @NotNull
     private BigDecimal recommendBuyPrice = new BigDecimal(0);
     @Min(value = 0, message = "invalid negative input")
-    @NotNull
     private BigDecimal recommendSellPrice = new BigDecimal(0);
     @Min(value = 0, message = "invalid negative input")
-    @NotNull
     private BigDecimal recommendStopPrice = new BigDecimal(0);
     @Min(value = 0, message = "invalid negative input")
-    @NotNull
     private Integer holdingPeriod = 0;
     @Min(value = 0, message = "invalid negative input")
-    @NotNull
     private BigDecimal dividendProfit = new BigDecimal(0);
     @Min(value = 0, message = "invalid negative input")
-    @NotNull
     private BigDecimal volatilityProfit = new BigDecimal(0);
 
     private BigDecimal riskIndex;
