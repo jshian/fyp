@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity(name = "t_user_device")
+@Table(indexes = @Index(name = "firebaseDeviceId", columnList = "firebaseDeviceId", unique = true))
 public class UserDevice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

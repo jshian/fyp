@@ -113,9 +113,8 @@ public class UserService{
     }
 
     @Transactional
-    public UserDevice addUserDevice(UserDevice userDevice, Long id){
+    public UserDevice addUserDevice(UserDevice userDevice, User user){
         LOG.debug("add user device, param={}",userDevice);
-        User user = userRepository.findById(id).orElse(null);
         if(user == null) return null;
         try {
             user.getUserDevice().add(userDevice);

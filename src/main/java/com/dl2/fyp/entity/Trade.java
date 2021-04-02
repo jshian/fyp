@@ -13,6 +13,7 @@ import java.util.Date;
 
 @Data
 @Entity(name = "t_trade")
+@Table(indexes = @Index(name = "date", columnList = "date"))
 @EntityListeners(AuditingEntityListener.class)
 public class Trade {
     @Id

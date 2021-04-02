@@ -100,10 +100,11 @@ public class UserController {
         return ResultUtil.success(user);
     }
 
-    @PostMapping("/device/add/{id}")
-    public Result addUserDevice(@RequestBody UserDevice userDevice, @PathVariable Long id){
-        if(userDevice == null || id == null) return ResultUtil.error(-1, "invalid input");
-        if(userService.addUserDevice(userDevice, id) == null){
+    @PostMapping("/device/add")
+    public Result addUserDevice(@RequestBody UserDevice userDevice, Principal principal){
+        User user = userService.findByFirebaseUid(principal.getName());
+        if(userDevice == null || user == null) return ResultUtil.error(-1, "invalid input");
+        if(userService.addUserDevice(userDevice, user) == null){
             return ResultUtil.error(-1,"error");
         }
         return ResultUtil.success("added user info");

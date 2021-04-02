@@ -53,16 +53,8 @@ public class UserInfo {
     @NotNull
     @Min(value = 0, message = "invalid negative input")
     private BigDecimal miscelExpense;
-    @NotNull
-    @Range(min = 0, max = 1, message = "Out of range")
-    private BigDecimal expectedProfit;
-    @NotNull
-    @Range(min = 0, max = 1, message = "Out of range")
-    private BigDecimal expectedRisk;
-    @NotNull
     @Min(value = 0, message = "invalid negative input")
     private BigDecimal investmentGoal;
-    @NotNull
     @Min(value = 0, message = "invalid negative input")
     private Short targetYears;
     @NotNull

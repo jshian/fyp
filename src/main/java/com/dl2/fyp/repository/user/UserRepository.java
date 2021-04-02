@@ -1,8 +1,7 @@
 package com.dl2.fyp.repository.user;
 
+
 import com.dl2.fyp.entity.User;
-import com.dl2.fyp.entity.UserDevice;
-import com.dl2.fyp.enums.AccountCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
