@@ -19,7 +19,6 @@ public class UserInfo {
     private Long id;
 
     @Range(min = 0, max = 1, message = "Out of range")
-    @NotNull
     private BigDecimal acceptableRisk;
 
     @NotNull
@@ -57,19 +56,14 @@ public class UserInfo {
     private BigDecimal investmentGoal;
     @Min(value = 0, message = "invalid negative input")
     private Short targetYears;
-    @NotNull
     @Min(value = 0, message = "invalid negative input")
     private BigDecimal totalAsset;
-    @NotNull
     @Min(value = 0, message = "invalid negative input")
     private BigDecimal debt;
-    @NotNull
     @Min(value = 0, message = "invalid negative input")
     private BigDecimal debtRate;
-    @NotNull
     @Min(value = 0, message = "invalid negative input")
     private BigDecimal equity;
-    @NotNull
     @Min(value = 0, message = "invalid negative input")
     private BigDecimal cashFlow;
     @NotNull

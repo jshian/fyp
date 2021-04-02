@@ -22,15 +22,10 @@ public class HistoricalPrice {
     private String code;
     @NotNull
     private Date date;
-    @NotNull
     private BigDecimal open;
-    @NotNull
     private BigDecimal high;
-    @NotNull
     private BigDecimal low;
-    @NotNull
     private BigDecimal close;
-    @NotNull
     private BigDecimal volume;
 
 }

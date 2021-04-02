@@ -38,11 +38,9 @@ public class StockInTrade {
     @Valid
     private List<Trade> tradeList = new ArrayList<>();
 
-    @NotNull
     @Min(value = 0, message = "invalid negative input")
     private Long numOfShare;
 
-    @NotNull
     @Min(value = 0, message = "invalid negative input")
     private BigDecimal averageCost;
 }
