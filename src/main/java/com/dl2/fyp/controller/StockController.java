@@ -1,6 +1,7 @@
 package com.dl2.fyp.controller;
 
 import com.dl2.fyp.domain.Result;
+import com.dl2.fyp.dto.stock.RecommendationDto;
 import com.dl2.fyp.dto.stock_event.StockEventDto;
 import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockEvent;
@@ -15,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -44,21 +47,6 @@ public class StockController {
         return ResultUtil.success(stock);
     }
 
-    @GetMapping("/GetStocks")
-    public Result getStockByKeyword(
-            @RequestParam(required=true) String keyword,
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            Principal principal
-    ){
-        if (page == null || size == null) return ResultUtil.error(-1,"invalid input");
-        Page<Stock> stocks = stockService.getStockByKeywordAndPaging(keyword,page,size);
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("total page", stocks.getTotalPages());
-        result.put("stocks", stocks.getContent());
-        return ResultUtil.success(result);
-    }
-
     @GetMapping("/GetAllEvent")
     public Result getStockEvent(Principal principal){
         User user = userService.findByFirebaseUid(principal.getName());
@@ -71,25 +59,11 @@ public class StockController {
                 dtoList.add(new StockEventDto(stockEvent));
             }
         }
-        dtoList.sort(Comparator.comparing(StockEventDto::getDatetime).reversed());
         dtoList.sort(Comparator.comparing(StockEventDto::getCode));
+        dtoList.sort(Comparator.comparing(StockEventDto::getDatetime).reversed());
         if(dtoList==null)
             return ResultUtil.error(-1,"failed to get");
         return ResultUtil.success(dtoList);
-    }
-
-    @GetMapping("/GetStockEvents")
-    public Result getStockEventByKeyword(
-            @RequestParam(required=true) String keyword,
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size
-    ){
-        if (page == null || size == null) return ResultUtil.error(-1,"invalid input");
-        Page<StockEvent> events = stockService.getStockEventByKeywordAndPaging(keyword,page,size);
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("total pages", events.getTotalPages());
-        result.put("events",events.getContent());
-        return ResultUtil.success(result);
     }
 
     @GetMapping("/GetAll")
@@ -103,7 +77,29 @@ public class StockController {
         User user = userService.findByFirebaseUid(principal.getName());
         if (user == null) return ResultUtil.error(-1, "invalid input");
         List<Stock> stocks = stockService.getAllStock();
-        return ResultUtil.success(riskService.getRecommendationByUser(user, stocks));
+        return ResultUtil.success(stocks);
+    }
+
+    @GetMapping("/recommendation/portfolio")
+    public ResponseEntity<Result> getStockPortfolio(Principal principal){
+        User user = userService.findByFirebaseUid(principal.getName());
+        if (user == null)
+            return new ResponseEntity<Result>(
+                    ResultUtil.error(0,"Cannot find user")
+                    , HttpStatus.valueOf(404)
+            );
+        List<RecommendationDto> recommendations = riskService.getRecommendationByUser(user, stockService.getAllStock());
+        if(recommendations != null && recommendations.size() > 0)
+            return new ResponseEntity<Result>(
+                    ResultUtil.success(recommendations)
+                    , HttpStatus.valueOf(200)
+            );
+        else
+            return new ResponseEntity<Result>(
+                    ResultUtil.error(1,"Not enough cash")
+                    , HttpStatus.valueOf(401)
+            );
+
     }
 
     @GetMapping("/stockRisk/{code}")

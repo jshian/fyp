@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 @Entity(name = "t_predict_price")
-@Table(uniqueConstraints = @UniqueConstraint(name = "code_date",columnNames = {"code","date"}))
+@Table(indexes = @Index(name = "code_day",columnList = "code, day", unique = true))
 public class PredictedPrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +25,7 @@ public class PredictedPrice {
     private Date date;
     @NotNull
     private BigDecimal price;
+    @NotNull
+    private Byte  day;
 
 }

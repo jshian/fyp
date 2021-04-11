@@ -5,6 +5,9 @@ import com.dl2.fyp.dto.stock_event.StockEventInputDto;
 import com.dl2.fyp.dto.stock.StockPriceInputDto;
 import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockEvent;
+import com.dl2.fyp.entity.StockInTrade;
+import com.dl2.fyp.entity.UserDevice;
+import com.dl2.fyp.service.firebase.FirebaseService;
 import com.dl2.fyp.service.stock.StockService;
 import com.dl2.fyp.util.ResultUtil;
 import org.slf4j.Logger;
@@ -15,7 +18,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -23,6 +29,8 @@ import java.util.List;
 public class DataController {
     private static Logger LOG = LoggerFactory.getLogger(DataController.class);
 
+    @Autowired
+    private FirebaseService firebaseService;
     @Autowired
     private StockService stockService;
 
@@ -66,10 +74,28 @@ public class DataController {
 
     @PutMapping("/stock/prediction")
     public ResponseEntity<Result> updateStockPrediction(){
+
         return new ResponseEntity<Result>(
                 ResultUtil.success()
                 , HttpStatus.valueOf(200)
         );
+    }
+
+    @GetMapping("/stock/refresh")
+    public ResponseEntity<Result> refreshStockPrediction(String date){
+        if(date == null){
+            date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        }
+        if(stockService.refreshPrediction(date))
+            return new ResponseEntity<Result>(
+                    ResultUtil.success()
+                    , HttpStatus.valueOf(200)
+            );
+        else
+            return new ResponseEntity<Result>(
+                    ResultUtil.error(0,"Error")
+                    , HttpStatus.valueOf(400)
+            );
     }
 
     @PostMapping("/stock/news")
@@ -83,6 +109,15 @@ public class DataController {
         }
 
         Iterable<StockEvent> result = stockService.addStockEvents(stockEventList);
+        for (StockEvent stockEvent : stockEventList){
+            List<String> tokens = new ArrayList<>();
+            for (StockInTrade stockInTrade : stockEvent.getStock().getStockInTradeList()){
+                for (UserDevice userDevice : stockInTrade.getAccount().getUser().getUserDevice()){
+                    tokens.add(userDevice.getFirebaseDeviceId());
+                }
+            }
+            firebaseService.sendPushNotification(tokens, stockEvent.getStock().getCode(), stockEvent.getTitle());
+        }
         if (result == null)
         {
             return new ResponseEntity<Result>(

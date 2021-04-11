@@ -18,13 +18,12 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Range(min = 0, max = 1, message = "Out of range")
+    @Range(min = 0, max = 4, message = "Out of range")
     private BigDecimal acceptableRisk;
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Past
-    @CreatedDate
     private Date dateOfBirth;
     @NotNull
     private Boolean maritalStatus;

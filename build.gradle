@@ -1,11 +1,22 @@
+buildscript {
+
+    repositories {
+        google()  // Google's Maven repository
+    }
+
+    dependencies {
+        classpath 'com.google.gms:google-services:4.3.5'  // Google Services plugin
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.3.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
 }
-
+apply plugin: 'com.google.gms.google-services'
 group = 'com.dl2'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.5'
 sourceCompatibility = '11'
 
 configurations {
@@ -16,6 +27,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    google()
 }
 
 //ext {

@@ -247,9 +247,9 @@ to get the desired effect
                     <th>Stock</th>
                     <th>Sector</th>
                     <th>Current Price</th>
-                    <th>Recommended Buy-in Price</th>
                     <th>Expected Price</th>
-                    <th>Expected Profit</th>
+                    <th>Recommended Stop</th>
+                    <th>Sell Out Date</th>
                     <th>Action</th>
                   </tr>
                   </thead>
@@ -258,9 +258,9 @@ to get the desired effect
 						<td>{{stockRecommendation.code}}</td>
 						<td>{{stockRecommendation.sector}}</td>
 						<td>{{stockRecommendation.currentPrice|currency:"$"}}</td>
-						<td>{{stockRecommendation.recommendBuyPrice|currency:"$"}}</td>
-						<td>{{stockRecommendation.recommendSellPrice|currency:"$"}}</td>
-						<td>{{stockRecommendation.expectedProfit|currency:"$"}}</td>
+						<td>{{stockRecommendation.upperStop|currency:"$"}}</td>
+						<td>{{stockRecommendation.downStop|currency:"$"}}</td>
+						<td>{{(stockRecommendation.sellOutDate !== null) ? (stockRecommendation.sellOutDate | date: 'dd/MM/yyyy') : "Not Recommended"}}</td>
 						<td>
 							<span>
 								<button ng-click="selectStock($event, true)" ng-attr-for="{{stockRecommendation.code}}" class="btn btn-success" data-toggle="modal" data-target="#trade-modal">Buy</button>
