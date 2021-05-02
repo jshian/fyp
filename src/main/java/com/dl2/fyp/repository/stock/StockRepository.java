@@ -13,6 +13,9 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
     @Query(value = "select * from t_stock where code = ?1", nativeQuery = true)
     Stock findByCode(String code);
 
+    @Query(value = "select code from t_stock where isDelist = 0 order by code", nativeQuery = true)
+    List<String> getAllCode();
+
     @Query(value = "select * from t_stock where code like %?1% order by ?#{#pageable}",
             countQuery = "select count(*) from t_stock where code like %?1%",
             nativeQuery = true)

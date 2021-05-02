@@ -15,23 +15,20 @@
   <link rel="stylesheet" href="css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Select2 -->
   <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
   
 	<!-- REQUIRED SCRIPTS -->
-    <!-- Angular Js -->
-    <script src="plugins/angularjs/angular.min.js"></script>
-    <script src="https://code.angularjs.org/1.4.7/angular-animate.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.js"></script>
-    <script src="plugins/angular-ui/ui-bootstrap-tpls-2.5.0.min.js"></script>
-
-  <!-- jQuery -->
+	<!-- jQuery -->
 	<script src="plugins/jquery/jquery.min.js"></script>
+	<!-- Angular Js -->
+	<script src="plugins/angularjs/angular.min.js"></script>
+<script src="https://code.angularjs.org/1.4.7/angular-animate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.js"></script>
+	<script src="plugins/angular-ui/ui-bootstrap-tpls-2.5.0.min.js"></script>
 	<!-- jQuery UI -->
 	<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
 	<!-- Bootstrap 4 -->
@@ -51,18 +48,19 @@
 	<script src="plugins/flot-old/jquery.flot.resize.min.js"></script>
 	<!-- FLOT PIE PLUGIN - also used to draw donut charts -->
 	<script src="plugins/flot-old/jquery.flot.pie.min.js"></script>
-  <!-- Bootstrap Switch -->
-  <script src="https://rawgit.com/nostalgiaz/bootstrap-switch/master/dist/js/bootstrap-switch.js"></script>
+	<!-- Select2 -->
+	<script src="plugins/select2/js/select2.full.min.js"></script>
+	<!-- Bootstrap Switch -->
+<script src="https://rawgit.com/nostalgiaz/bootstrap-switch/master/dist/js/bootstrap-switch.js"></script>
 
   <script src="https://rawgit.com/frapontillo/angular-bootstrap-switch/develop/common/module.js"></script>
   <script src="https://rawgit.com/frapontillo/angular-bootstrap-switch/develop/src/directives/bsSwitch.js"></script>
-  <!-- OPTIONAL SCRIPTS -->
+	<!-- OPTIONAL SCRIPTS -->
 	<script src="plugins/chart.js/Chart.min.js"></script>
 	<script src="js/pages/dashboard3.js"></script>
 	
 	<!-- Angular Module-->
-	<script src="js/angular/index-angular.js"></script>
-	
+	<script src="js/angular/stock-angular.js"></script>
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -74,7 +72,7 @@ to get the desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="hold-transition sidebar-mini"  ng-app="index">
+<body class="hold-transition sidebar-mini" ng-app="stock" ng-controller="pageCtrl">
 <div class="wrapper">
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -157,12 +155,13 @@ to get the desired effect
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Dashboard</h1>
+            <h1 class="m-0 text-dark">{{data.stock.code}}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard</li>
+              <li class="breadcrumb-item"><a href="Index.html">Home</a></li>
+              <li class="breadcrumb-item">Stock</li>
+              <li class="breadcrumb-item active">{{data.stock.code}}</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -174,59 +173,87 @@ to get the desired effect
     <div class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-lg-6" >
-            <div class="card" ng-controller="accountGetAccountChartsCtrl">
-              <div class="card-header border-0">
-                <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Portfolio Overview</h3>
-                  <a href="PortfolioManagement.html">View Portfolio</a>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="d-flex">
-                  <p class="d-flex flex-column">
-                    <span class="text-bold text-lg">{{totalAsset| currency:"$"}}</span>
-                    <span>Total Asset</span>
-                  </p>
-                </div>
-                <!-- /.d-flex -->
-
-                <div class="position-relative mb-4">
-                  <div id="account-donut-chart" style="height: 200px;"></div>
-                </div>
-				
-              </div>
-            </div>
-            <!-- /.card -->
-			
-			<div class="card" ng-controller="stockGetNewsCtrl">
-              <div class="card-header border-0">
-                <h3 class="card-title">Stock News</h3>
-                <div class="card-tools">
-
-                </div>
-              </div>
+          <div class="col-lg-12" >
+            <div class="card">
               <div class="card-body" >
-                <table id="stock-news-table" class="table table-bordered table-striped">
+                <h4>{{data.stock.name}}</h4>
+                <br>
+                <div class="form-group row">
+                  <div class="col-sm-3">
+                    <label>Current Price: </label>
+                  </div>
+                  <div class="col-sm-3">
+                    {{data.stock.currentPrice| currency:"$"}}
+                  </div>
+                  <div class="col-sm-3">
+                    <label>Sector: </label>
+                  </div>
+                  <div class="col-sm-3">
+                    {{data.stock.sector}}
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-3">
+                    <label>Is Recommended: </label>
+                  </div>
+                  <div class="col-sm-3">
+                    {{(data.stock.sellOutDate !== null) ? "Yes" : "No"}}
+                  </div>
+                  <div class="col-sm-3">
+                    <label>Risk Index: </label>
+                  </div>
+                  <div class="col-sm-3">
+                    {{data.stock.riskIndex}}
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-3">
+                    <label>Recommended Sell-out Price : </label>
+                  </div>
+                  <div class="col-sm-3">
+                    {{data.stock.upperStop| currency:"$"}}
+                  </div>
+                  <div class="col-sm-3">
+                    <label>Recommended Stop Price : </label>
+                  </div>
+                  <div class="col-sm-3">
+                    {{data.stock.downStop| currency:"$"}}
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-3">
+                    <label>Predicted Sell-out Date : </label>
+                  </div>
+                  <div class="col-sm-3">
+                    {{(data.stock.sellOutDate !== null) ? (data.stock.sellOutDate | date: 'dd/MM/yyyy') : "Not Recommended"}}
+                  </div>
+                </div>
+                <hr>
+                <br>
+                <canvas id="canvas"></canvas>
+                <hr>
+                <h4>News</h4>
+                <br>
+                <table id="event-table" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>Date</th>
-					<th>Related Stock</th>
                     <th>Title</th>
+                    <th>Severity</th>
                     <th>Detail</th>
                   </tr>
                   </thead>
                   <tbody>
-				  <tr ng-repeat="stockNew in stockNews | start: (currentPage - 1) * perPage | limitTo: perPage"">
+                  <tr ng-repeat="stockNew in data.eventList | start: (currentPage - 1) * perPage | limitTo: perPage">
                     <td>
-                      {{stockNew.datetime | date: 'dd-MMM'}}
-                    </td>
-                    <td>
-                      <a ng-href="{{'/Stock.html?code='+stockNew.code}}" target="_blank">{{stockNew.code}}</a>
+                      {{stockNew.datetime | date}}
                     </td>
                     <td>
                       {{stockNew.title}}
-					</td>
+                    </td>
+                    <td>
+                      {{stockNew.severity}}
+                    </td>
                     <td>
                       <a ng-href="{{stockNew.link}}" target="_blank" class="text-muted">
                         <i class="fas fa-search"></i>
@@ -235,77 +262,9 @@ to get the desired effect
                   </tr>
                   </tbody>
                 </table>
-                <ui uib-pagination total-items="stockNews.length" items-per-page="5" next-text="Next" previous-text="Previous" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true"></ui>
-
-                <!-- /.d-flex -->
+                <ui uib-pagination total-items="data.eventList.length" items-per-page="5" next-text="Next" previous-text="Previous" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-link-numbers="true"></ui>
               </div>
             </div>
-            
-          </div>
-          <!-- /.col-md-6 -->
-          <div class="col-lg-6" ng-controller="accountGetStockInTradeChartsCtrl">
-			<div class="card">
-              <div class="card-header border-0">
-                <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Stock Overview</h3>
-                  <a href="PortfolioManagement.html">View Portfolio</a>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="d-flex">
-                  <p class="d-flex flex-column">
-                    <span class="text-bold text-lg">{{stockSum| currency:"$"}}</span>
-                    <span>Net Liquidation Value</span>
-                  </p>
-                </div>
-                <!-- /.d-flex -->
-
-                <div class="position-relative mb-4">
-                  <div id="stock-donut-chart" style="height: 200px;"></div>
-                </div>
-				
-              </div>
-            </div>
-            <!-- /.card -->
-
-            
-			<div class="card">
-              <div class="card-header border-0">
-                <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Stock Watchlist</h3>
-                  <a href="HistoricalStatement.html">View Statements</a>
-                </div>
-              </div>
-              <div class="card-body">
-                <table id="stock-table" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>Stock</th>
-                    <th>No. of Share</th>
-                    <th>Current Price (Cost)</th>
-                    <th>Total Amount</th>
-                    <th>P/L</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-					  <tr ng-repeat="stock in stocks">
-						<td><a ng-href="{{'/Stock.html?code='+stock.symbol}}" target="_blank">{{stock.symbol}}</a></td>
-						<td>{{stock.noOfShare| number}}</td>
-						<td>{{stock.currentPrice| currency:"$"}} ({{stock.cost| currency:"$"}})</td>
-						<td>{{stock.amount| currency:"$"}}</td>
-						<td>
-						  <small ng-class="stock.textClass">
-							<i ng-class="stock.arrowClass"></i>
-							{{stock.changePercent| number:2}}%
-						  </small>
-						  {{stock.change| currency:"$"}}
-						</td>
-					  </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <!-- /.card -->
           </div>
           <!-- /.col-md-6 -->
         </div>
@@ -333,7 +292,8 @@ to get the desired effect
   </footer>
 </div>
 <!-- ./wrapper -->
-<script src="js/pages/common.js"></script>
-<script src="js/pages/index.js"></script>
+
+<script src="js/pages/stock.js">
+</script>
 </body>
 </html>

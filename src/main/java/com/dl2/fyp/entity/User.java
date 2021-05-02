@@ -1,7 +1,9 @@
 package com.dl2.fyp.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -22,9 +24,9 @@ public class User{
     @Valid
     private UserInfo userInfo;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Valid
+    @JsonIgnore
     private List<Account> accountList;
 
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)

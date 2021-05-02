@@ -59,8 +59,8 @@ public class TradeService {
 
         // check input
         if (stockAccount==null||cashAccount==null) return ResultUtil.error(404,"account not founded");
-        else if (stock==null) return ResultUtil.error(404,"stock not founded");
-        else if (stockInTrade==null){
+        if (stock==null) return ResultUtil.error(404,"stock not founded");
+        if (stockInTrade==null){
             if (action==true){
                 stockInTrade = new StockInTrade();
                 stockInTrade.setAccount(stockAccount);
@@ -68,10 +68,11 @@ public class TradeService {
                 stockInTrade.setNumOfShare(0L);
                 stockInTrade.setAverageCost(BigDecimal.ZERO);
             }else
-            return ResultUtil.error(400, "have not hold the stock yet");
-        }else if (action==true && cashAccount.getAmount().compareTo(price.multiply(new BigDecimal(numOfShare)))<1)
+                return ResultUtil.error(400, "have not hold the stock yet");
+        }
+        if (action==true && cashAccount.getAmount().compareTo(price.multiply(new BigDecimal(numOfShare)))<1)
             return ResultUtil.error(400,"not enough cash in Cash Account");
-        else if (action==false && stockInTrade.getNumOfShare()<numOfShare){
+        if (action==false && stockInTrade.getNumOfShare()<numOfShare){
             return ResultUtil.error(400,"not enough numOfShare in StockInTrade");
         }
         try {

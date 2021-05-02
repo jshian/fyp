@@ -23,7 +23,7 @@ public class StockEvent {
     @JoinColumn(name = "stock_id")
     @JsonIgnore
     private Stock stock;
-    @Range(min=0,max=1,message = "Out of range")
+    @Range(min=-1,max=1,message = "Out of range")
     private BigDecimal severity;
 
     @Temporal(TemporalType.TIMESTAMP)

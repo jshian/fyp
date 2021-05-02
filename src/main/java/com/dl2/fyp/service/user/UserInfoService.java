@@ -33,13 +33,13 @@ public class UserInfoService {
         if (!checkInfo(userInfo)) return null;
 
         setDefault(userInfo);
-        userInfo.setAcceptableRisk(riskService.calculateRiskFromUserInfo(userInfo));
         userInfo.setMonthlyExpense(
                 userInfo.getHousingExpense()
                 .add(userInfo.getLivingExpense())
                 .add(userInfo.getMiscelExpense())
                 .add(userInfo.getTaxExpense().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP))
         );
+        userInfo.setAcceptableRisk(riskService.calculateRiskFromUserInfo(userInfo));
         LOG.debug("set user info, result:{}",userInfo);
         return userInfo;
     }

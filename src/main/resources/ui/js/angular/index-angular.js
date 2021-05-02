@@ -2,8 +2,15 @@ var getAllStockApiUrl = "/stock/GetAll";
 var accountGetChartsApiUrl = "/account/GetCharts";
 var accountGetStockInTradeApiUrl = "/account/stockInTrade";
 var stockGetStockEventApiUrl = "/stock/GetAllEvent";
-var indexApp = angular.module('index', []);
+var indexApp = angular.module('index', ['frapontillo.bootstrap-switch', 'ui.bootstrap']);
 
+indexApp.filter('start', function () {
+	return function (input, start) {
+		if (!input || !input.length) { return; }
+		start = +start;
+		return input.slice(start);
+	};
+});
 
 indexApp.controller('stockGetNewsCtrl', function($scope, $http) {
   //$http.get("/stock/news/{userId}")
@@ -19,9 +26,15 @@ indexApp.controller('stockGetNewsCtrl', function($scope, $http) {
 		success: function(data)
 			{
 				$scope.stockNews = data.data;
+				$scope.currentPage = 1;
 				$scope.$apply();
 			}
 	});
+	$scope.perPage = 5;
+    $scope.maxSize = 5;
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+    };
 });
 
 

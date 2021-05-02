@@ -1,11 +1,12 @@
 package com.dl2.fyp.controller;
 
 import com.dl2.fyp.domain.Result;
+import com.dl2.fyp.dto.stock.PortfolioDto;
+import com.dl2.fyp.dto.stock.PriceDto;
+import com.dl2.fyp.dto.stock.RecommendationDto;
+import com.dl2.fyp.dto.stock.StockPageDto;
 import com.dl2.fyp.dto.stock_event.StockEventDto;
-import com.dl2.fyp.entity.Stock;
-import com.dl2.fyp.entity.StockEvent;
-import com.dl2.fyp.entity.StockInTrade;
-import com.dl2.fyp.entity.User;
+import com.dl2.fyp.entity.*;
 import com.dl2.fyp.service.account.AccountService;
 import com.dl2.fyp.service.risk.RiskService;
 import com.dl2.fyp.service.stock.StockService;
@@ -15,9 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -35,6 +40,44 @@ public class StockController {
     @Autowired
     private RiskService riskService;
 
+    @GetMapping("/page/{code}")
+    public ResponseEntity<Result> index(@PathVariable String code){
+        if (code == null) return ResponseEntity.badRequest().body(ResultUtil.error(-1, "invalid input"));
+        Stock stock = stockService.getStockByCode(code);
+        if(stock==null || stock.getIsDelist())
+            return ResponseEntity.badRequest().body(ResultUtil.error(-1,"failed to get"));
+        List<StockEventDto> dtoList = new LinkedList<>();
+        for(StockEvent stockEvent : stockService.getStockEvent(stock.getId())){
+            dtoList.add(new StockEventDto(stockEvent));
+        }
+        dtoList.sort(Comparator.comparing(StockEventDto::getDatetime).reversed());
+        List<String> labels = new LinkedList<>();
+        List<PriceDto> historicalPriceList = new LinkedList<>();
+        List<PriceDto> predictedPriceList = new LinkedList<>();
+        for(HistoricalPrice historicalPrice : stockService.getHistoricalPriceByCode(code)){
+            PriceDto price = new PriceDto(historicalPrice);
+            PriceDto priceForPrediction = new PriceDto(historicalPrice);
+            priceForPrediction.setY(null);
+            labels.add(price.getX());
+            historicalPriceList.add(price);
+            predictedPriceList.add(priceForPrediction);
+        }
+        for(PredictedPrice predictedPrice : stockService.getPredictedPriceByCode(code)){
+            PriceDto price = new PriceDto(predictedPrice);
+            try{
+                if (labels.size() == 0 || predictedPrice.getDate().after(new SimpleDateFormat("yyyy-MM-dd").parse(labels.get(labels.size()-1)))){
+                    labels.add(price.getX());
+                }
+            }catch (Exception ex){
+                labels.add(price.getX());
+            }
+            predictedPriceList.add(price);
+        }
+
+        StockPageDto stockPageDto = new StockPageDto(stock, dtoList, labels, historicalPriceList, predictedPriceList);
+        return ResponseEntity.ok(ResultUtil.success(stockPageDto));
+    }
+
     @GetMapping("/{code}")
     public Result getStockByCode(@PathVariable String code){
         if (code == null) return ResultUtil.error(-1, "invalid input");
@@ -42,21 +85,6 @@ public class StockController {
         if(stock==null)
             return ResultUtil.error(-1,"failed to get");
         return ResultUtil.success(stock);
-    }
-
-    @GetMapping("/GetStocks")
-    public Result getStockByKeyword(
-            @RequestParam(required=true) String keyword,
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            Principal principal
-    ){
-        if (page == null || size == null) return ResultUtil.error(-1,"invalid input");
-        Page<Stock> stocks = stockService.getStockByKeywordAndPaging(keyword,page,size);
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("total page", stocks.getTotalPages());
-        result.put("stocks", stocks.getContent());
-        return ResultUtil.success(result);
     }
 
     @GetMapping("/GetAllEvent")
@@ -71,25 +99,11 @@ public class StockController {
                 dtoList.add(new StockEventDto(stockEvent));
             }
         }
-        dtoList.sort(Comparator.comparing(StockEventDto::getDatetime).reversed());
         dtoList.sort(Comparator.comparing(StockEventDto::getCode));
+        dtoList.sort(Comparator.comparing(StockEventDto::getDatetime).reversed());
         if(dtoList==null)
             return ResultUtil.error(-1,"failed to get");
         return ResultUtil.success(dtoList);
-    }
-
-    @GetMapping("/GetStockEvents")
-    public Result getStockEventByKeyword(
-            @RequestParam(required=true) String keyword,
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size
-    ){
-        if (page == null || size == null) return ResultUtil.error(-1,"invalid input");
-        Page<StockEvent> events = stockService.getStockEventByKeywordAndPaging(keyword,page,size);
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("total pages", events.getTotalPages());
-        result.put("events",events.getContent());
-        return ResultUtil.success(result);
     }
 
     @GetMapping("/GetAll")
@@ -103,7 +117,41 @@ public class StockController {
         User user = userService.findByFirebaseUid(principal.getName());
         if (user == null) return ResultUtil.error(-1, "invalid input");
         List<Stock> stocks = stockService.getAllStock();
-        return ResultUtil.success(riskService.getRecommendationByUser(user, stocks));
+        return ResultUtil.success(stocks);
+    }
+
+    @GetMapping("/recommendation/portfolio")
+    public ResponseEntity<Result> getStockPortfolio(Principal principal){
+        User user = userService.findByFirebaseUid(principal.getName());
+        if (user == null)
+            return new ResponseEntity<Result>(
+                    ResultUtil.error(0,"Cannot find user")
+                    , HttpStatus.valueOf(404)
+            );
+        List<RecommendationDto> recommendations = riskService.getRecommendationByUser(user, stockService.getAllStock());
+        PortfolioDto portfolioDto = new PortfolioDto();
+        portfolioDto.setPortfolio(recommendations);
+        UserInfo userInfo = user.getUserInfo();
+        portfolioDto.setMonthlyExpense(userInfo.getMonthlyExpense());
+        portfolioDto.setUrgentSaving(userInfo.getMonthlyExpense().multiply(new BigDecimal(6)));
+        portfolioDto.setInvestmentGoal(userInfo.getMonthlyExpense().multiply(new BigDecimal(300)));
+        portfolioDto.setTotalAsset(userInfo.getTotalAsset());
+        if (portfolioDto.getTotalAsset().compareTo(portfolioDto.getInvestmentGoal()) >=0){
+            portfolioDto.setPortfolioType("Defensive");
+        }else{
+            portfolioDto.setPortfolioType("Aggressive");
+        }
+        if(recommendations != null && recommendations.size() > 0)
+            return new ResponseEntity<Result>(
+                    ResultUtil.success(portfolioDto)
+                    , HttpStatus.valueOf(200)
+            );
+        else
+            return new ResponseEntity<Result>(
+                    ResultUtil.error(1,"Not enough cash")
+                    , HttpStatus.valueOf(401)
+            );
+
     }
 
     @GetMapping("/stockRisk/{code}")

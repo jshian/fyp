@@ -1,7 +1,11 @@
 package com.dl2.fyp.service.stock;
 
+import com.dl2.fyp.entity.HistoricalPrice;
+import com.dl2.fyp.entity.PredictedPrice;
 import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockEvent;
+import com.dl2.fyp.repository.stock.HistoricalPriceRepository;
+import com.dl2.fyp.repository.stock.PredictedPriceRepository;
 import com.dl2.fyp.repository.stock.StockEventRepository;
 import com.dl2.fyp.repository.stock.StockRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,9 +22,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +41,10 @@ public class StockService {
     @Autowired
     private StockRepository stockRepository;
 
+    @Autowired
+    private HistoricalPriceRepository historicalPriceRepository;
+    @Autowired
+    private PredictedPriceRepository predictedPriceRepository;
     @Autowired
     private StockEventRepository stockEventRepository;
 
@@ -69,6 +83,18 @@ public class StockService {
             return null;
         }
         return result;
+    }
+
+    public List<HistoricalPrice> getHistoricalPriceByCode(String code) {
+        return historicalPriceRepository.getHistoricalPriceByCode(code);
+    }
+
+    public List<PredictedPrice> getPredictedPriceByCode(String code) {
+        return predictedPriceRepository.getPredictedPriceByCode(code);
+    }
+
+    public List<String> getAllCode(){
+        return stockRepository.getAllCode();
     }
 
     @Transactional
@@ -127,23 +153,56 @@ public class StockService {
     public List<Stock> getAllStock(){
         List<Stock> stocks = new ArrayList<>();
         for (Stock stock : stockRepository.findAll()) {
-            stocks.add(stock);
+            if (!stock.getIsDelist())
+                stocks.add(stock);
         }
         return stocks;
     }
 
-    public Page<Stock> getStockByKeywordAndPaging(String keyword, int pageNumber,int pageSize){
-        Pageable pageable = PageRequest.of(
-                pageNumber,
-                pageSize,
-                Sort.by(Sort.Direction.ASC,"code")
-        );
-        return stockRepository.findByCodeContaining(keyword, pageable);
-    }
+    @Transactional
+    public boolean refreshPrediction(String date){
+        try{
+            for (Stock stock : stockRepository.findAll()) {
+                if (!stock.getIsDelist()){
+                    BigDecimal expectedReturn = stock.getUpperStop().divide(stock.getCurrentPrice(),2, RoundingMode.HALF_UP);
+                    // upperStop return = upperStop / investment *100
+                    BigDecimal upperStopReturn = stock.getUpperStop().divide(stock.getCurrentPrice(),2, RoundingMode.HALF_UP);
+                    // downStop return = downStop / investment *100
+                    BigDecimal downStopReturn = stock.getDownStop().divide(stock.getCurrentPrice(),2, RoundingMode.HALF_UP);
+                    // return variance = accuracy * (upperStop return - expected return)^2 + (1 - accuracy)*(downStop return - expected return)^2
+                    BigDecimal riskIndex = (stock.getAccuracy().multiply((upperStopReturn.subtract(expectedReturn)).pow(2))
+                            .add(BigDecimal.ONE.subtract(stock.getAccuracy()).multiply((downStopReturn.subtract(expectedReturn)).pow(2)))).sqrt(new MathContext(2, RoundingMode.DOWN));
 
-    public Page<StockEvent> getStockEventByKeywordAndPaging(String keyword, int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber,pageSize,Sort.by(Sort.Direction.DESC,"datetime"));
-        return stockEventRepository.findByTitleContaining(keyword,pageable);
+                    int holdingPeriod = 0;
+                    if (stock.getDownStop().compareTo(stock.getCurrentPrice())<0 && stock.getUpperStop().compareTo(stock.getCurrentPrice())>0){
+                        List<PredictedPrice> prices = predictedPriceRepository.getPredictedPriceByCode(stock.getCode());
+                        for (PredictedPrice price : prices){
+                            if(price.getPrice().compareTo(stock.getDownStop()) <= 0){
+                                break;
+                            }else if (price.getPrice().compareTo(stock.getUpperStop()) > -1){
+                                if(price.getDate() != null && price.getDate().after(new SimpleDateFormat( "yyyyMMdd" ).parse(date))){
+                                    LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyyMMdd"));
+                                    holdingPeriod = (int) Math.abs(ChronoUnit.DAYS.between(
+                                            Instant.ofEpochMilli(price.getDate().getTime())
+                                                    .atZone(ZoneId.systemDefault())
+                                                    .toLocalDate()
+                                            , localDate));
+                                    stock.setSellOutDate(price.getDate());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    stock.setHoldingPeriod(holdingPeriod);
+                    stock.setRiskIndex(riskIndex);
+                    stockRepository.save(stock);
+                }
+            }
+            return true;
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+            return false;
+        }
     }
-
 }

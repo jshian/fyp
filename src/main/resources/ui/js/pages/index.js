@@ -1,27 +1,15 @@
 //<page config>
 $('#stock-table').DataTable({
-      "paging": true,
+      "paging": false,
       "lengthChange": false,
       "searching": false,
       "ordering": false,
       "info": false,
       "autoWidth": false,
-      "responsive": false,
-	  "pageLength": 5
+      "responsive": false
     });
 $('#stock-news-table').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": false,
-      "info": false,
-      "autoWidth": false,
-      "responsive": false,
-	  "pageLength": 5
-    });
-$('#market-news-table').DataTable({
-      "paging": true,
-	  "pageLength": 5,
+      "paging": false,
       "lengthChange": false,
       "searching": false,
       "ordering": false,

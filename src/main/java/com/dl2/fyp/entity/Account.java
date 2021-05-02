@@ -1,7 +1,9 @@
 package com.dl2.fyp.entity;
 
 import com.dl2.fyp.enums.AccountCategory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -12,6 +14,12 @@ import java.util.List;
 @Data
 @Entity(name = "t_account")
 public class Account {
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
+    @ToString.Exclude
+    private User user;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

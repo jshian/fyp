@@ -21,7 +21,7 @@ public class StockInTradeDto extends StockInTrade {
         this.setAverageCost(stockInTrade.getAverageCost());
         this.setCode(stockInTrade.getStock().getCode());
         this.setNumOfShare(stockInTrade.getNumOfShare());
-        this.setExpectedPrice(stockInTrade.getStock().getRecommendSellPrice());
+        this.setExpectedPrice(stockInTrade.getStock().getUpperStop());
         this.setCurrentPrice(stockInTrade.getStock().getCurrentPrice());
         this.setProfit(
                 this.getCurrentPrice()
@@ -34,5 +34,6 @@ public class StockInTradeDto extends StockInTrade {
                 .divide(stockInTrade.getAverageCost(),2, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(100))
         );
+        this.setRiskIndex(stockInTrade.getStock().getRiskIndex());
     }
 }

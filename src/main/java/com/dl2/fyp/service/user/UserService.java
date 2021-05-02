@@ -145,6 +145,7 @@ public class UserService{
                     return null;
                 }
             }
+            account.setUser(user);
             list.add(account);
             userRepository.save(user);
         } catch (IllegalArgumentException e) {

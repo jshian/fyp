@@ -2,6 +2,7 @@ var getAllStockApiUrl = "/stock/GetAll";
 var addTradeApiUrl = "/account/trade/Add";
 var stockGetRecommendationApiUrl = "/stock/recommendation";
 var accountGetStockInTradeApiUrl = "/account/stockInTrade/detail";
+var getPortfolioApiUrl = "/stock/recommendation/portfolio";
 var portfolioApp = angular.module('portfolio', ['frapontillo.bootstrap-switch', 'ui.bootstrap']);
 
 portfolioApp.controller('pageCtrl', function($scope, $http) {
@@ -41,6 +42,13 @@ portfolioApp.controller('pageCtrl', function($scope, $http) {
 		$scope.$broadcast('on-traded');
 	}
 });
+portfolioApp.filter('start', function () {
+	return function (input, start) {
+		if (!input || !input.length) { return; }
+		start = +start;
+		return input.slice(start);
+	};
+});
 //For Portfolio Managemet
 portfolioApp.controller('stockGetRecommendationCtrl', function($scope, $filter) {
   //$http.get("/account/stockInTrade/GetAll/{userId}")
@@ -65,7 +73,6 @@ portfolioApp.controller('stockGetRecommendationCtrl', function($scope, $filter) 
 				}
 		});
 	}
-	$scope.$on('on-traded', getStockRecommendations);
 	getStockRecommendations();
 	$scope.stockRecommendations= stockRecommendations;
 	
@@ -91,13 +98,6 @@ portfolioApp.controller('stockGetRecommendationCtrl', function($scope, $filter) 
         );
 		$scope.currentPage = 1;
 	});
-});
-portfolioApp.filter('start', function () {
-	return function (input, start) {
-		if (!input || !input.length) { return; }
-		start = +start;
-		return input.slice(start);
-	};
 });
 portfolioApp.controller('accountGetStockInTradeCtrl', function($scope, $http) {
   //$http.get("/account/stockInTrade/GetAll/{userId}")
@@ -168,4 +168,25 @@ portfolioApp.controller('stockTradeCtrl', function($scope, $http) {
 					}
 			});
 		}
+	});
+	
+portfolioApp.controller('stockPortfolioCtrl', function($scope, $http) {
+  //$http.get("/account/stockInTrade/GetAll/{userId}")
+  //.then(function (response) {$scope.names = response.data.records;});
+		var portfolio = [];
+        $.ajax({
+            type: "GET",
+            url: getPortfolioApiUrl,
+            headers :
+            {
+                "Authorization" : getCookie("Authorization")
+            },
+            success: function(data)
+                {
+                    portfolio = data.data.portfolio;
+                    $scope.portfolio = portfolio;
+                    $scope.portfolioMetaData = data.data;
+                    $scope.$apply();
+                }
+        });
 	});
