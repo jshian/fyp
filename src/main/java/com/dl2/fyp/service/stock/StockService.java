@@ -1,8 +1,10 @@
 package com.dl2.fyp.service.stock;
 
+import com.dl2.fyp.entity.HistoricalPrice;
 import com.dl2.fyp.entity.PredictedPrice;
 import com.dl2.fyp.entity.Stock;
 import com.dl2.fyp.entity.StockEvent;
+import com.dl2.fyp.repository.stock.HistoricalPriceRepository;
 import com.dl2.fyp.repository.stock.PredictedPriceRepository;
 import com.dl2.fyp.repository.stock.StockEventRepository;
 import com.dl2.fyp.repository.stock.StockRepository;
@@ -39,6 +41,8 @@ public class StockService {
     @Autowired
     private StockRepository stockRepository;
 
+    @Autowired
+    private HistoricalPriceRepository historicalPriceRepository;
     @Autowired
     private PredictedPriceRepository predictedPriceRepository;
     @Autowired
@@ -79,6 +83,18 @@ public class StockService {
             return null;
         }
         return result;
+    }
+
+    public List<HistoricalPrice> getHistoricalPriceByCode(String code) {
+        return historicalPriceRepository.getHistoricalPriceByCode(code);
+    }
+
+    public List<PredictedPrice> getPredictedPriceByCode(String code) {
+        return predictedPriceRepository.getPredictedPriceByCode(code);
+    }
+
+    public List<String> getAllCode(){
+        return stockRepository.getAllCode();
     }
 
     @Transactional

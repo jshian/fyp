@@ -34,5 +34,6 @@ public class StockInTradeDto extends StockInTrade {
                 .divide(stockInTrade.getAverageCost(),2, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(100))
         );
+        this.setRiskIndex(stockInTrade.getStock().getRiskIndex());
     }
 }

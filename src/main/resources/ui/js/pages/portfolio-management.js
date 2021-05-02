@@ -1,4 +1,13 @@
-
+$('#portfolio-table').DataTable({
+      "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": false,
+      "info": false,
+      "autoWidth": false,
+      "responsive": false,
+		"pageLength": 20
+    });
 $('#stock-recommendation-table').DataTable({
       "paging": false,
       "lengthChange": false,
