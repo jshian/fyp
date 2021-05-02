@@ -36,8 +36,12 @@ public class RiskService {
     @Value("${fire.yearly-return}")
     private double yearlyReturn;
 
-    public BigDecimal calculateRiskFromUserInfo(UserInfo userInfo){
-        double progress = userInfo.getTotalAsset().doubleValue() / (userInfo.getMonthlyExpense().doubleValue() * 12 / yearlyReturn);
+    public BigDecimal calculateRiskFromUserInfo(User user, UserInfo userInfo){
+        double count = 0;
+        for (Account account : user.getAccountList()){
+            count += account.getAmount().doubleValue();
+        }
+        double progress = count / (userInfo.getMonthlyExpense().doubleValue() * 12 / yearlyReturn);
         if(progress > 1){
             progress = 1;
         }
@@ -51,7 +55,7 @@ public class RiskService {
      * @return -1 if the stock is delisted, return risk index otherwise
      */
     public BigDecimal calculateRiskFromStock(Stock stock, User user){
-        BigDecimal A = calculateRiskFromUserInfo(user.getUserInfo());
+        BigDecimal A = calculateRiskFromUserInfo(user, user.getUserInfo());
 
         BigDecimal expectedReturn = stock.getUpperStop().divide(stock.getCurrentPrice(), 2, RoundingMode.HALF_UP);
         // Certainty Equivalent = expected return - 1/2*A*return variance
@@ -88,7 +92,7 @@ public class RiskService {
             }
         }
 
-        double A = calculateRiskFromUserInfo(user.getUserInfo()).doubleValue();
+        double A = calculateRiskFromUserInfo(user, user.getUserInfo()).doubleValue();
         if(A/4 > 0.5){
             Collections.sort(profitStocks, Comparator.comparing(Stock::getUpperStop).reversed());
         }else{

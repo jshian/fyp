@@ -39,7 +39,6 @@ public class UserInfoService {
                 .add(userInfo.getMiscelExpense())
                 .add(userInfo.getTaxExpense().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP))
         );
-        userInfo.setAcceptableRisk(riskService.calculateRiskFromUserInfo(userInfo));
         LOG.debug("set user info, result:{}",userInfo);
         return userInfo;
     }

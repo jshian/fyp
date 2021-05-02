@@ -39,7 +39,7 @@ portfolioApp.controller('pageCtrl', function($scope, $http) {
 	}
 	$scope.$on('on-traded', updateInfo);
 	function updateInfo(){
-		$scope.$broadcast('on-traded');
+		$scope.$broadcast('traded');
 	}
 });
 portfolioApp.filter('start', function () {
@@ -132,7 +132,7 @@ portfolioApp.controller('accountGetStockInTradeCtrl', function($scope, $http) {
 				}
 		});
 	}
-	$scope.$on('on-traded', getStockInTrades);
+	$scope.$on('traded', getStockInTrades);
 	getStockInTrades();
 	$scope.stockInTrades = stockInTrades;
 });
