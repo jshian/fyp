@@ -135,7 +135,11 @@ public class StockController {
         portfolioDto.setMonthlyExpense(userInfo.getMonthlyExpense());
         portfolioDto.setUrgentSaving(userInfo.getMonthlyExpense().multiply(new BigDecimal(6)));
         portfolioDto.setInvestmentGoal(userInfo.getMonthlyExpense().multiply(new BigDecimal(300)));
-        portfolioDto.setTotalAsset(userInfo.getTotalAsset());
+        double count = 0;
+        for (Account account : user.getAccountList()){
+            count += account.getAmount().doubleValue();
+        }
+        portfolioDto.setTotalAsset(new BigDecimal(count));
         if (portfolioDto.getTotalAsset().compareTo(portfolioDto.getInvestmentGoal()) >=0){
             portfolioDto.setPortfolioType("Defensive");
         }else{
