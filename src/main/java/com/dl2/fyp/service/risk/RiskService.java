@@ -150,7 +150,9 @@ public class RiskService {
                 existingRecommendation.setNoOfShare(recommendation.getNoOfShare() + existingRecommendation.getNoOfShare());
                 existingRecommendation.setCashEquivalent(recommendation.getCashEquivalent() + existingRecommendation.getCashEquivalent());
             }else{
-                recommendationDtos.add(recommendation);
+                if(recommendation.getNoOfShare() > 0){
+                    recommendationDtos.add(recommendation);
+                }
             }
             count += 1;
 
@@ -165,7 +167,9 @@ public class RiskService {
                 existingRecommendation.setNoOfShare(recommendation.getNoOfShare() + existingRecommendation.getNoOfShare());
                 existingRecommendation.setCashEquivalent(recommendation.getCashEquivalent() + existingRecommendation.getCashEquivalent());
             }else{
-                recommendationDtos.add(recommendation);
+                if(recommendation.getNoOfShare() > 0){
+                    recommendationDtos.add(recommendation);
+                }
             }
             count += 1;
         }
