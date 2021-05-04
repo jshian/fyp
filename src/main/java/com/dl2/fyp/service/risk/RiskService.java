@@ -73,13 +73,18 @@ public class RiskService {
             }
         }
         Boolean isRetired = true;
+
+        double totalCashAmt = 0;
+        for (Account account : user.getAccountList()){
+            totalCashAmt += account.getAmount().doubleValue();
+        }
         for (Stock stock : stocks){
             if (!stockInTradeList.contains(stock) && stock.getHoldingPeriod() > 0){
                 BigDecimal ce = calculateRiskFromStock(stock, user);
                 UserInfo userInfo = user.getUserInfo();
                 double basicGrowth = Math.pow((1.0001853),stock.getHoldingPeriod())-1;
                 double expectedGrowth = basicGrowth;
-                if(userInfo.getTotalAsset().compareTo(userInfo.getMonthlyExpense().multiply(new BigDecimal(12)).divide(new BigDecimal(yearlyReturn),2,RoundingMode.HALF_UP)) < 0){
+                if(new BigDecimal(totalCashAmt).compareTo(userInfo.getMonthlyExpense().multiply(new BigDecimal(12)).divide(new BigDecimal(yearlyReturn),2,RoundingMode.HALF_UP)) < 0){
                     expectedGrowth = Math.pow((1.0003445),stock.getHoldingPeriod())-1;
                     isRetired = false;
                 }
@@ -111,8 +116,7 @@ public class RiskService {
             return null;
         }
         int count = 0;
-        double cashLeft = cashAccount.getAmount().doubleValue();
-        double totalCashAmt = cashAccount.getAmount().doubleValue();
+        double cashLeft = totalCashAmt;
         List<RecommendationDto> recommendationDtos = new ArrayList<>();
         while (count < 10 || cashLeft > 0){
             if(isRetired){
@@ -139,14 +143,30 @@ public class RiskService {
             recommendation.setId(count);
             recommendation.setType("Profit");
             recommendation.setMappedStock(count + 1);
-            recommendationDtos.add(recommendation);
+            final RecommendationDto finalRecommendation = recommendation;
+            RecommendationDto existingRecommendation = recommendationDtos.stream().filter(recommendationDto -> recommendationDto.getStock().getCode() == finalRecommendation.getStock().getCode()).findFirst().orElse(null);
+            if (existingRecommendation != null){
+                existingRecommendation.setProportion(recommendation.getProportion() + existingRecommendation.getProportion());
+                existingRecommendation.setNoOfShare(recommendation.getNoOfShare() + existingRecommendation.getNoOfShare());
+                existingRecommendation.setCashEquivalent(recommendation.getCashEquivalent() + existingRecommendation.getCashEquivalent());
+            }else{
+                recommendationDtos.add(recommendation);
+            }
             count += 1;
 
             recommendation = getRecommendationFromProportion(balancedStock, 0.2-profitSize, cashLeft, totalCashAmt);
             recommendation.setId(count);
             recommendation.setType("Balanced");
             recommendation.setMappedStock(count - 1);
-            recommendationDtos.add(recommendation);
+            final RecommendationDto finalRecommendation2 = recommendation;
+            existingRecommendation = recommendationDtos.stream().filter(recommendationDto -> recommendationDto.getStock().getCode() == finalRecommendation2.getStock().getCode()).findFirst().orElse(null);
+            if (existingRecommendation != null){
+                existingRecommendation.setProportion(recommendation.getProportion() + existingRecommendation.getProportion());
+                existingRecommendation.setNoOfShare(recommendation.getNoOfShare() + existingRecommendation.getNoOfShare());
+                existingRecommendation.setCashEquivalent(recommendation.getCashEquivalent() + existingRecommendation.getCashEquivalent());
+            }else{
+                recommendationDtos.add(recommendation);
+            }
             count += 1;
         }
 

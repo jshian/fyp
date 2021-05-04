@@ -174,6 +174,7 @@ public class StockService {
                             .add(BigDecimal.ONE.subtract(stock.getAccuracy()).multiply((downStopReturn.subtract(expectedReturn)).pow(2)))).sqrt(new MathContext(2, RoundingMode.DOWN));
 
                     int holdingPeriod = 0;
+                    stock.setSellOutDate(null);
                     if (stock.getDownStop().compareTo(stock.getCurrentPrice())<0 && stock.getUpperStop().compareTo(stock.getCurrentPrice())>0){
                         List<PredictedPrice> prices = predictedPriceRepository.getPredictedPriceByCode(stock.getCode());
                         for (PredictedPrice price : prices){
