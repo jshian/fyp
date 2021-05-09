@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.Principal;
 
 
@@ -94,6 +95,12 @@ public class UserController {
         if(oldInfo==null)
             return ResultUtil.error(-1, "user info have not been set");
         UserInfo newInfo = userInfoService.updateUserInfo(oldInfo,userInfo);
+        newInfo.setMonthlyExpense(
+                newInfo.getHousingExpense()
+                        .add(newInfo.getLivingExpense())
+                        .add(newInfo.getMiscelExpense())
+                        .add(newInfo.getTaxExpense().divide(BigDecimal.valueOf(12),2, RoundingMode.HALF_UP))
+        );
         user.setUserInfo(newInfo);
         if(userService.addUser(user) == null)
             return ResultUtil.error(-1, "update failed");

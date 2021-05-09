@@ -39,6 +39,13 @@ public class RiskService {
     public BigDecimal calculateRiskFromUserInfo(User user, UserInfo userInfo){
         double count = 0;
         for (Account account : user.getAccountList()){
+            if (account.getCategory() == AccountCategory.STOCK){
+                double sum = 0;
+                for(StockInTrade stockInTrade : account.getStockInTradesList()){
+                    sum += stockInTrade.getStock().getCurrentPrice().doubleValue()*stockInTrade.getNumOfShare();
+                }
+                account.setAmount(new BigDecimal(sum));
+            }
             count += account.getAmount().doubleValue();
         }
         double progress = count / (userInfo.getMonthlyExpense().doubleValue() * 12 / yearlyReturn);
@@ -76,6 +83,13 @@ public class RiskService {
 
         double totalCashAmt = 0;
         for (Account account : user.getAccountList()){
+            if (account.getCategory() == AccountCategory.STOCK){
+                double sum = 0;
+                for(StockInTrade stockInTrade : account.getStockInTradesList()){
+                    sum += stockInTrade.getStock().getCurrentPrice().doubleValue()*stockInTrade.getNumOfShare();
+                }
+                account.setAmount(new BigDecimal(sum));
+            }
             totalCashAmt += account.getAmount().doubleValue();
         }
         for (Stock stock : stocks){
@@ -111,10 +125,6 @@ public class RiskService {
         System.out.println(profitStocks.size());
         System.out.println(balancedStocks.size());
 
-        Account cashAccount = user.getAccountList().stream().takeWhile(account -> account.getCategory() == AccountCategory.CASH).findFirst().orElse(null);
-        if (cashAccount == null || cashAccount.getAmount().doubleValue() <= 0){
-            return null;
-        }
         int count = 0;
         double cashLeft = totalCashAmt;
         List<RecommendationDto> recommendationDtos = new ArrayList<>();

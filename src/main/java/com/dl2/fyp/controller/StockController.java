@@ -7,6 +7,7 @@ import com.dl2.fyp.dto.stock.RecommendationDto;
 import com.dl2.fyp.dto.stock.StockPageDto;
 import com.dl2.fyp.dto.stock_event.StockEventDto;
 import com.dl2.fyp.entity.*;
+import com.dl2.fyp.enums.AccountCategory;
 import com.dl2.fyp.service.account.AccountService;
 import com.dl2.fyp.service.risk.RiskService;
 import com.dl2.fyp.service.stock.StockService;
@@ -137,6 +138,13 @@ public class StockController {
         portfolioDto.setInvestmentGoal(userInfo.getMonthlyExpense().multiply(new BigDecimal(300)));
         double count = 0;
         for (Account account : user.getAccountList()){
+            if (account.getCategory() == AccountCategory.STOCK){
+                double sum = 0;
+                for(StockInTrade stockInTrade : account.getStockInTradesList()){
+                    sum += stockInTrade.getStock().getCurrentPrice().doubleValue()*stockInTrade.getNumOfShare();
+                }
+                account.setAmount(new BigDecimal(sum));
+            }
             count += account.getAmount().doubleValue();
         }
         portfolioDto.setTotalAsset(new BigDecimal(count));

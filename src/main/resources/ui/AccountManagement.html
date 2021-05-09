@@ -255,14 +255,6 @@ to get the desired effect
 						<br>
 						<div class="form-group row">
 							<div class="col-sm-3">
-								<label>Total Asset: </label>
-							</div>
-							<div class="col-sm-3">
-								{{userInfo.totalAsset| currency:"$"}}
-							</div>
-						</div>
-						<div class="form-group row">
-							<div class="col-sm-3">
 								<label>Total Debt: </label>
 							</div>
 							<div class="col-sm-3">
@@ -273,14 +265,6 @@ to get the desired effect
 							</div>
 							<div class="col-sm-3">
 								{{userInfo.debtRate}}%
-							</div>
-						</div>
-						<div class="form-group row">
-							<div class="col-sm-3">
-								<label>Cash Flow: </label>
-							</div>
-							<div class="col-sm-3">
-								{{userInfo.cashFlow| currency:"$"}}
 							</div>
 						</div>
 						<div class="form-group row">
@@ -418,19 +402,6 @@ to get the desired effect
 						<br>
 						<div class="form-group row">
 							<div class="col-sm-3">
-								<label>Total Asset: </label>
-							</div>
-							<div class="col-sm-3 input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">
-									  <i class="fas fa-dollar-sign"></i>
-									</span>
-								 </div>
-								<input class="form-control" type="number" ng-model="userNewInfo.totalAsset"/>
-							</div>
-						</div>
-						<div class="form-group row">
-							<div class="col-sm-3">
 								<label>Total Debt: </label>
 							</div>
 							<div class="col-sm-3 input-group">
@@ -451,19 +422,6 @@ to get the desired effect
 									  <i class="fas fa-percent"></i>
 									</span>
 								 </div>
-							</div>
-						</div>
-						<div class="form-group row">
-							<div class="col-sm-3">
-								<label>Cash Flow: </label>
-							</div>
-							<div class="col-sm-3 input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text">
-									  <i class="fas fa-dollar-sign"></i>
-									</span>
-								 </div>
-								<input class="form-control" type="number" ng-model="userNewInfo.cashFlow"/>
 							</div>
 						</div>
 						<div class="form-group row">

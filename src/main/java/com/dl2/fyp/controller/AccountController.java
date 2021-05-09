@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.*;
 
@@ -35,6 +36,15 @@ public class AccountController {
         User user = userService.findByFirebaseUid(principal.getName());
         if(user==null) return ResultUtil.error(-1,"invalid input");
         List<Account> accounts = user.getAccountList();
+        for (Account account :accounts){
+            if (account.getCategory() == AccountCategory.STOCK){
+                double sum = 0;
+                for(StockInTrade stockInTrade : account.getStockInTradesList()){
+                    sum += stockInTrade.getStock().getCurrentPrice().doubleValue()*stockInTrade.getNumOfShare();
+                }
+                account.setAmount(new BigDecimal(sum));
+            }
+        }
         if(accounts == null) return ResultUtil.error(-1,"account not founded");
         return ResultUtil.success(accounts);
     }
